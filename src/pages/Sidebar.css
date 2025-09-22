@@ -1,0 +1,84 @@
+.sidebar {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.sidebar-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  font-size: 1.5rem;
+}
+
+.logo-text h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.logo-text p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+}
+
+.sidebar-menu {
+  margin-top: 2rem;
+  flex: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: #111827; /* text-gray-900 */
+}
+
+.menu-item:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.menu-item.active {
+  background-color: #e5e7eb; /* gray-200 */
+  
+}
+
+.menu-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.badge {
+  margin-left: auto;
+  background-color: #ef4444; /* red-500 */
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.theme-btn {
+  background-color: #f3f4f6;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
