@@ -16,21 +16,23 @@ function App() {
   const renderPage = () => {
     switch (activePage) {
       case "Upload":
-        return <UploadPage />;
+        return <UploadPage setActivePage={setActivePage}/>;
       case "Review":
         return <ReviewPage />;
       case "Processing":
         return <ProcessingPage />;
       case "Dashboard":
-        return <DashboardPage />;
+        return <DashboardPage setActivePage={setActivePage} />;
       case "Configuration":
         return <ConfigurationPage />;
       default:
-        return <UploadPage />;
+        return <UploadPage setActivePage={setActivePage}/>;
     }
   };
 
   return (
+    
+    
     <div className="app-container">
       <Header />
       <div className="content-wrapper">
@@ -38,6 +40,7 @@ function App() {
         <main className="main-content">{renderPage()}</main>
       </div>
     </div>
+    
   );
 }
 

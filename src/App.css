@@ -4,6 +4,9 @@ body, html, #root {
   padding: 0;
   height: 100%;
   width: 100%;
+  
+  
+ 
 }
 
 /* Container for entire app */
@@ -12,6 +15,8 @@ body, html, #root {
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
+ 
+  
 }
 
 /* Header stays on top, content fills the rest */
@@ -19,13 +24,18 @@ body, html, #root {
   display: flex;
   flex: 1;
   width: 100%;
+
+   
 }
 
 /* Sidebar styling */
 .main-content {
   flex: 1;
-  padding: 5rem;
+  padding-left: 21rem;
   background-color: #f9f9f9; /* optional light background */
+  position: relative;
+  top:53px;
+  
 }
 
 /* Optional: remove sidebar padding/margin if needed */

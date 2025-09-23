@@ -1,0 +1,12 @@
+.upload-page{
+    font-family: "Inter", "Roboto", Arial, sans-serif;
+    font-size: 16px; /* increase base font size */
+    line-height: 1.5;
+    color: #1f2937; /* Darker text color for better readability */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #f9fafb;
+
+}

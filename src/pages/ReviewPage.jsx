@@ -50,8 +50,18 @@ const ReviewPage = () => {
       tax: 9.1,
       discount: 20,
       amount: 8000.0,
-      confidence: 74,
+      confidence: 76,
     },
+    {
+        id: 5,
+      description: "Lambda Function Executions",
+      qty: 50000000,
+      unitPrice: 0.00,
+      tax: 10,
+      discount: 0.00,
+      amount: 10.00,
+      confidence: 65,
+    }
   ]);
 
   const handleDetailChange = (field, value) => {
@@ -61,12 +71,12 @@ const ReviewPage = () => {
   return (
     <div className="review-page p-6 space-y-6">
       {/* Header */}
-      <div className="header-row flex justify-between items-center">
-        <button className="button back-button">← Back</button>
+      <div className="header-row-title-reviewpage">
+        <button className="button back-button"> ←Back</button>
         <h2 className="title font-bold">
           Review Invoice: adobe_creative_cloud_teams.pdf
         </h2>
-        <div className="status-actions flex space-x-2">
+        <div className="status-actions flex space-x-6">
           <span className="status needs-review">Needs Review</span>
           <button className="button save-button">Save Changes</button>
         </div>
@@ -75,40 +85,49 @@ const ReviewPage = () => {
       {/* Invoice Details and Amount Summary */}
       <div className="details-summary flex space-x-6">
         {/* Invoice Details */}
-<div className="invoice-details">
-  <h3 className="section-title font-semibold">Invoice Details</h3>
-  {Object.entries(invoiceDetails).map(([key, value]) => (
-    <div key={key} className="detail-row">
-      {/* Label on top */}
-      <label className="label capitalize" htmlFor={key}>
-        {key.replace(/([A-Z])/g, " $1")}
-        {/* Confidence Badge */}
-        <span className="confidence-badge">
-          {key === "invoiceNumber" ? "98%" :
-           key === "vendor" ? "95%" :
-           key === "invoiceDate" ? "92%" :
-           key === "poNumber" ? "88%" :
-           key === "currency" ? "99%" :
-           key === "taxRate" ? "85%" : ""}
-        </span>
-      </label>
-      {/* input + Edit button container */}
-      <div className="input-with-button">
-        <input
-          id={key}
-          type="text"
-          value={value}
-          className="input-text"
-          readOnly
-        />
-        <button className="button edit-input-button" aria-label={`Edit ${key}`}>
-          ✏️
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
+        <div className="invoice-details">
+          <h3 className="section-title font-semibold">Invoice Details</h3>
+          {Object.entries(invoiceDetails).map(([key, value]) => (
+            <div key={key} className="detail-row">
+              {/* Label on top */}
+              <label className="label capitalize" htmlFor={key}>
+                {key.replace(/([A-Z])/g, " $1")}
+                {/* Confidence Badge */}
+                <span className="confidence-badge">
+                  {key === "invoiceNumber"
+                    ? "98%"
+                    : key === "vendor"
+                    ? "95%"
+                    : key === "invoiceDate"
+                    ? "92%"
+                    : key === "poNumber"
+                    ? "88%"
+                    : key === "currency"
+                    ? "99%"
+                    : key === "taxRate"
+                    ? "85%"
+                    : ""}
+                </span>
+              </label>
+              {/* input + Edit button container */}
+              <div className="input-with-button">
+                <input
+                  id={key}
+                  type="text"
+                  value={value}
+                  className="input-text"
+                  readOnly
+                />
+                <button
+                  className="button edit-input-button"
+                  aria-label={`Edit ${key}`}
+                >
+                  ✏️
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Amount Summary */}
         <div className="amount-summary w-64 bg-white p-4 rounded shadow space-y-2">
@@ -133,45 +152,48 @@ const ReviewPage = () => {
       </div>
 
       {/* Line Items Table */}
-      <div className="line-items bg-white p-4 rounded shadow overflow-x-auto">
-        <table className="items-table min-w-full table-auto border-collapse">
+      <div className="line-items">
+        <h3 className="section-title font-semibold mb-4">Line Items</h3>
+        <table className="items-table">
           <thead>
-            <tr className="header-row bg-gray-100">
-              <th className="table-header border px-2 py-1">Description</th>
-              <th className="table-header border px-2 py-1">Qty</th>
-              <th className="table-header border px-2 py-1">Unit Price</th>
-              <th className="table-header border px-2 py-1">Tax %</th>
-              <th className="table-header border px-2 py-1">Discount</th>
-              <th className="table-header border px-2 py-1">Amount</th>
-              <th className="table-header border px-2 py-1">Confidence</th>
-              <th className="table-header border px-2 py-1">Actions</th>
+            <tr className="header-row">
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Tax %</th>
+              <th>Discount</th>
+              <th>Amount</th>
+              <th>Confidence</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {lineItems.map((item) => (
-              <tr key={item.id} className="item-row hover:bg-gray-50">
-                <td className="table-cell border px-2 py-1">
-                  {item.description}
-                </td>
-                <td className="table-cell border px-2 py-1">{item.qty}</td>
-                <td className="table-cell border px-2 py-1">
-                  ${item.unitPrice.toFixed(2)}
-                </td>
-                <td className="table-cell border px-2 py-1">{item.tax}%</td>
-                <td className="table-cell border px-2 py-1">
-                  ${item.discount.toFixed(2)}
-                </td>
-                <td className="table-cell border px-2 py-1 font-bold">
-                  ${item.amount.toFixed(2)}
-                </td>
-                <td className="table-cell border px-2 py-1">
-                  {item.confidence}%
-                </td>
-                <td className="table-cell border px-2 py-1">
-                  <button className="button edit-button">✏️</button>
-                </td>
-              </tr>
-            ))}
+            {lineItems.map((item) => {
+              let confidenceClass = "confidence-badge moderate";
+              if (item.confidence >= 80)
+                confidenceClass = "confidence-badge high";
+              if (item.confidence < 70)
+                confidenceClass = "confidence-badge low";
+
+              return (
+                <tr key={item.id} className="item-row">
+                  <td>{item.description}</td>
+                  <td>{item.qty}</td>
+                  <td>${item.unitPrice.toFixed(2)}</td>
+                  <td>{item.tax}%</td>
+                  <td>${item.discount.toFixed(2)}</td>
+                  <td className="amount">${Math.round(item.amount)}</td>
+                  <td>
+                    <span className={confidenceClass}>{item.confidence}%</span>
+                  </td>
+                  <td>
+                    <button className="edit-button" aria-label="Edit">
+                      ✏️
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
