@@ -261,22 +261,22 @@
 }
 
 .status-green {
-  background: #e7f7ed;
+  background: #b9f9d1;
   color: #18b56c;
 }
 
 .status-yellow {
-  background: #fffde8;
+  background: #fdf9cf;
   color: #fcc419;
 }
 
 .status-red {
-  background: #fdeaea;
+  background: #f6d2d2;
   color: #f26c6c;
 }
 
 .status-blue {
-  background: #f2f6fd;
+  background: #c6d9fb;
   color: #547ae7;
 }
 

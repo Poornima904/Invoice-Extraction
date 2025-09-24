@@ -1,0 +1,80 @@
+.api-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.api-row input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #f3f4f6;
+}
+
+.api-row input:focus {
+  outline: 2px solid #6366f1;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #f3f4f6;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Status styling */
+.status-tag {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-tag.disconnected {
+  background: #dc2626;
+  color: white;
+}
+
+.status-tag.connected {
+  background: #d52818;
+  color: white;
+}
+
+/* Style for both input and select */
+/* Match input + select styling */
+.form-group select,
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #f3f4f6;
+  font-size: 14px;
+  color: #333;
+  appearance: none; /* remove default dropdown arrow */
+}
+
+/* Add custom arrow */
+.form-group select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center; /* shift arrow left */
+  background-size: 16px;
+  cursor: pointer;
+}
+
+/* Focus effect */
+.form-group select:focus,
+.form-group input[type="text"]:focus {
+  outline: 2px solid #6366f1;
+}
+
+
+

@@ -8,7 +8,8 @@ import UploadPage from "./pages/UploadPage";
 import ReviewPage from "./pages/ReviewPage";
 import ProcessingPage from "./pages/ProcessingPage";
 import DashboardPage from "./pages/DashboardPage";
-import ConfigurationPage from "./pages/ConfigurationPage";
+import ConfigurationPage from "./components/Configuration";
+
 
 function App() {
   const [activePage, setActivePage] = useState("Upload"); // default page

@@ -1,0 +1,134 @@
+.config-card h3 {
+  margin: 0 0 20px 0;
+}
+
+.hint {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  background: #fff; /* cleaner background */
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.field-label {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 220px; /* fixed width for labels */
+  color: #222;
+}
+
+.required-tag {
+  background: #d62828;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.field-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1; /* takes remaining space instead of margin-left */
+}
+
+.arrow {
+  color: #888;
+}
+
+.pdf-label {
+  flex: 0 0 250px; /* fixed width input */
+  padding: 6px 10px;
+  background: #f5f5f7;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  border-radius: 24px;
+  transition: 0.3s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+input:checked + .slider {
+  background-color: #4caf50; /* green ON */
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.regex-table {
+  width: 100%;
+  border-spacing: 0;
+  margin-bottom: 12px;
+}
+
+.regex-table th {
+  text-align: left;
+  font-weight: 600;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+}
+
+.regex-table td {
+  padding: 8px 12px;
+}
+
+.regex-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f5f5f7;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-secondary.full-width {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+.form-row {
+  margin-bottom: 16px; /* fixed */
+}
