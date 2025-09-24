@@ -256,9 +256,13 @@ const styles = {
     fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
     color: "#111827",
     padding: 20,
-    maxWidth: "1198px",
+    width: "1206px",
     margin: "0 auto",
     background: "#fff",
+  
+    position: "relative",
+    left: "-19rem",
+    top: "2rem",
   },
 
   header: {

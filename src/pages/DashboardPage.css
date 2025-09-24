@@ -2,11 +2,14 @@
   background: #f9fafb;
   padding: 2rem;
   font-family: 'Inter', Arial, sans-serif;
+  position: relative;
+  left: -20.5rem;
+    max-width: 95% !important;
   
 }
 .dashboard-header-row {
   display: flex;
-  gap: 2rem;
+  gap: 1.2rem;
   margin-bottom: 2rem;
 }
 .dashboard-card {

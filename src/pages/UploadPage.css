@@ -8,5 +8,7 @@
     flex-direction: column;
     gap: 1.5rem;
     background-color: #f9fafb;
+    position: relative;
+    right: 7.9rem;
 
 }
