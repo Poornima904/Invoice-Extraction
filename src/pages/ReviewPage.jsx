@@ -72,7 +72,7 @@ const ReviewPage = () => {
     <div className="review-page p-6 space-y-6">
       {/* Header */}
       <div className="header-row-title-reviewpage">
-        <button className="button back-button"> ←Back</button>
+        <button className="button back-button" > ← Back</button>
         <h2 className="title font-bold">
           Review Invoice: adobe_creative_cloud_teams.pdf
         </h2>
