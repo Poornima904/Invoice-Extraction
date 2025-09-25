@@ -1,5 +1,15 @@
 import React, { useState } from "react";
+import { MdEdit } from "react-icons/md";
 import "./ReviewPage.css";
+
+const detailConfig = [
+  { key: "invoiceNumber", label: "Invoice Number" },
+  { key: "vendor", label: "Vendor" },
+  { key: "invoiceDate", label: "Invoice Date" },
+  { key: "poNumber", label: "PO Number" },
+  { key: "currency", label: "Currency" },
+  { key: "taxRate", label: "Tax Rate (%)" },
+];
 
 const ReviewPage = () => {
   const [invoiceDetails, setInvoiceDetails] = useState({
@@ -10,6 +20,8 @@ const ReviewPage = () => {
     currency: "USD",
     taxRate: 9.1,
   });
+
+  const [editing, setEditing] = useState({});
 
   const [lineItems, setLineItems] = useState([
     {
@@ -53,28 +65,37 @@ const ReviewPage = () => {
       confidence: 76,
     },
     {
-        id: 5,
+      id: 5,
       description: "Lambda Function Executions",
       qty: 50000000,
-      unitPrice: 0.00,
+      unitPrice: 0.0,
       tax: 10,
-      discount: 0.00,
-      amount: 10.00,
+      discount: 0,
+      amount: 10.0,
       confidence: 65,
-    }
+    },
   ]);
 
   const handleDetailChange = (field, value) => {
     setInvoiceDetails((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleEditClick = (field) => {
+    setEditing((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleSave = (field) => {
+    setEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
   return (
     <div className="review-page p-6 space-y-6">
       {/* Header */}
       <div className="header-row-title-reviewpage">
-        <button className="button back-button" > ← Back</button>
+        <button className="button back-button">← Back</button>
         <h2 className="title font-bold">
-          Review Invoice: adobe_creative_cloud_teams.pdf
+          {" "}
+          Review Invoice: adobe_creative_cloud_teams.pdf{" "}
         </h2>
         <div className="status-actions flex space-x-6">
           <span className="status needs-review">Needs Review</span>
@@ -87,12 +108,10 @@ const ReviewPage = () => {
         {/* Invoice Details */}
         <div className="invoice-details">
           <h3 className="section-title font-semibold">Invoice Details</h3>
-          {Object.entries(invoiceDetails).map(([key, value]) => (
+          {detailConfig.map(({ key, label }) => (
             <div key={key} className="detail-row">
-              {/* Label on top */}
               <label className="label capitalize" htmlFor={key}>
-                {key.replace(/([A-Z])/g, " $1")}
-                {/* Confidence Badge */}
+                {label}
                 <span className="confidence-badge">
                   {key === "invoiceNumber"
                     ? "98%"
@@ -109,22 +128,49 @@ const ReviewPage = () => {
                     : ""}
                 </span>
               </label>
-              {/* input + Edit button container */}
-              <div className="input-with-button">
-                <input
-                  id={key}
-                  type="text"
-                  value={value}
-                  className="input-text"
-                  readOnly
-                />
-                <button
-                  className="button edit-input-button"
-                  aria-label={`Edit ${key}`}
-                >
-                  ✏️
-                </button>
-              </div>
+
+              {!editing[key] ? (
+                <div className="input-field-row1">
+                  <span
+                    className="detail-value"
+                    tabIndex={0}
+                    onClick={() => handleEditClick(key)}
+                    onKeyDown={(e) => e.key === "Enter" && handleEditClick(key)}
+                  >
+                    {invoiceDetails[key]}
+                  </span>
+                  <button
+                    className="button edit-input-button bw-icon"
+                    aria-label={`Edit ${label}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditClick(key);
+                    }}
+                  >
+                    <MdEdit size={18} />
+                  </button>
+                </div>
+              ) : (
+                <div className="input-field-row1">
+                  <input
+                    id={key}
+                    type="text"
+                    value={invoiceDetails[key]}
+                    onChange={(e) => handleDetailChange(key, e.target.value)}
+                    className="input-text wide"
+                    autoFocus
+                    onBlur={() => handleSave(key)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSave(key)}
+                  />
+                  <button
+                    className="button edit-input-button bw-icon"
+                    aria-label={`Save ${label}`}
+                    onClick={() => handleSave(key)}
+                  >
+                    <MdEdit size={18} />
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
