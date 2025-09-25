@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FaArrowLeft, FaSpinner, FaRedo, FaClock, FaCheck } from "react-icons/fa";
 
@@ -74,14 +75,14 @@ export default function ProcessingPage() {
     <div className="ProcessingPage" style={styles.page}>
       {/* Header */}
       <div style={styles.header}>
-        <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <button style={styles.backBtn}><FaArrowLeft />&nbsp;Back</button>
           <div style={{ fontSize: 15, color: "#111827" }}>
             Processing Status: <strong>office_supplies_quarterly.pdf</strong>
           </div>
         </div>
 
-        <div style={{ marginLeft: "auto", display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
           <button style={styles.processingBtn}><FaSpinner style={{ marginRight: 8 }} /> Processing</button>
           <button style={styles.rerunBtn}><FaRedo style={{ marginRight: 8 }} /> Re-Run Extraction</button>
         </div>
@@ -106,10 +107,10 @@ export default function ProcessingPage() {
         {/* Steps Area */}
         <div
           style={{
-             ...styles.stepsArea,
-             paddingTop: ICON_SIZE / 2,
-             paddingBottom: ICON_SIZE / 2 + 50,
-             height: totalSegments * STEP_ROW_HEIGHT + ICON_SIZE + 100,
+            ...styles.stepsArea,
+            paddingTop: ICON_SIZE / 2,
+            paddingBottom: ICON_SIZE / 2 + 50,
+            height: totalSegments * STEP_ROW_HEIGHT + ICON_SIZE + 100,
           }}
         >
           {/* Base Vertical Line */}
@@ -249,18 +250,19 @@ export default function ProcessingPage() {
   );
 }
 
-// Styles object
+/* ---- styles ---- */
 const styles = {
   page: {
     fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
     color: "#111827",
     padding: 20,
-    maxWidth: "1240px",
+    maxWidth: "1182px",
+    margin: "0 auto",
     background: "#fff",
+  
     position: "relative",
-    left: "240px",
+    left: "7rem",
     top: "2rem",
-    boxSizing: "border-box",
   },
 
   header: {
@@ -268,7 +270,6 @@ const styles = {
     alignItems: "center",
     gap: 16,
     marginBottom: 18,
-    flexWrap: "wrap",
   },
   backBtn: {
     display: "inline-flex",
@@ -280,7 +281,6 @@ const styles = {
     background: "#fff",
     cursor: "pointer",
     fontSize: 14,
-    flexShrink: 0,
   },
   processingBtn: {
     display: "inline-flex",
@@ -310,8 +310,6 @@ const styles = {
     borderRadius: 12,
     padding: 20,
     marginBottom: 20,
-    maxWidth: "100%",
-    boxSizing: "border-box",
   },
   timelineHeader: {
     display: "flex",
@@ -398,6 +396,7 @@ const styles = {
     color: "#374151",
   },
 
+  /* --- Updated Progress bar for Validation --- */
   validationProgressContainer: {
     width: "100%",
     height: 4,
@@ -415,14 +414,12 @@ const styles = {
     display: "flex",
     gap: 20,
     marginTop: 20,
-    flexWrap: "wrap",
   },
   infoCard: {
-    flex: "1 1 300px",
+    flex: 1,
     border: "1px solid #e5e7eb",
     borderRadius: 12,
     padding: 20,
-    boxSizing: "border-box",
   },
   infoRowItem: {
     display: "flex",
@@ -441,6 +438,7 @@ const styles = {
     fontWeight: 700,
   },
 
+  /* --- Button Styling --- */
   downloadButton: {
     border: "none",
     padding: "10px 20px",

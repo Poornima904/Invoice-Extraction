@@ -10,14 +10,13 @@ import ProcessingPage from "./pages/ProcessingPage";
 import DashboardPage from "./pages/DashboardPage";
 import ConfigurationPage from "./components/Configuration";
 
-
 function App() {
   const [activePage, setActivePage] = useState("Upload"); // default page
 
   const renderPage = () => {
     switch (activePage) {
       case "Upload":
-        return <UploadPage setActivePage={setActivePage}/>;
+        return <UploadPage setActivePage={setActivePage} />;
       case "Review":
         return <ReviewPage />;
       case "Processing":
@@ -27,13 +26,11 @@ function App() {
       case "Configuration":
         return <ConfigurationPage />;
       default:
-        return <UploadPage setActivePage={setActivePage}/>;
+        return <UploadPage setActivePage={setActivePage} />;
     }
   };
 
   return (
-    
-    
     <div className="app-container">
       <Header />
       <div className="content-wrapper">
@@ -41,7 +38,6 @@ function App() {
         <main className="main-content">{renderPage()}</main>
       </div>
     </div>
-    
   );
 }
 
