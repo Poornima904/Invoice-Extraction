@@ -1,13 +1,13 @@
 .sidebar {
   position: fixed; /* fix the sidebar to the left */
   left: 0;
-  top: 53px;
+  top: 60px;
   width: 224px;
   height: calc(100vh - 53px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #fff;
+  background-color:rgb(180 175 170 / 11%);
   border-right: 1px solid #e5e7eb;
   padding: 0 1rem;
   box-shadow: 0 1px 8px rgba(0,0,0,0.04);
