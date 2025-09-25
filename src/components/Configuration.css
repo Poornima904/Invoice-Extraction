@@ -3,9 +3,9 @@
   font-family: Arial, sans-serif;
   color: #222;
   position: relative;
-  left: -20rem;
+  left: 15rem;
   top: 1rem;
-  width: 118%;
+  max-width: 81%;
 }
 
 /* Wrap header + tabs */
