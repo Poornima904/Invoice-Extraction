@@ -3,7 +3,7 @@
   left: 0;
   top: 53px;
   width: 224px;
-  height: 100vh;
+  height: calc(100vh - 53px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -12,6 +12,25 @@
   padding: 0 1rem;
   box-shadow: 0 1px 8px rgba(0,0,0,0.04);
   z-index: 100;
+}
+
+/* Sidebar responsiveness */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
 }
 
 .sidebar-header {

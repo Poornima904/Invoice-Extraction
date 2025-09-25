@@ -1,34 +1,44 @@
 .upload-page {
   font-family: "Inter", "Roboto", Arial, sans-serif;
-  font-size: 16px; /* base font size */
+  font-size: 16px;
   line-height: 1.5;
-  color: #1f2937; /* darker text */
+  color: #1f2937;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   background-color: #f9fafb;
 
-  /* center and limit width for larger screens */
-  max-width: 800px;
-  margin: 0 auto;
+  /* aware of sidebar */
+  max-width: 100%;
+  margin-left: 224px; /* same width as sidebar */
   box-sizing: border-box;
 }
 
-/* Make it adapt on tablets */
-@media (max-width: 768px) {
+/* Tablet */
+@media (max-width: 1024px) {
   .upload-page {
+    margin-left: 180px; /* smaller sidebar */
     padding: 1.5rem;
     font-size: 15px;
-    max-width: 100%;
   }
 }
 
-/* Make it adapt on phones */
-@media (max-width: 480px) {
+/* Mobile */
+@media (max-width: 768px) {
   .upload-page {
+    margin-left: 0;   /* sidebar stacks on top */
     padding: 1rem;
     font-size: 14px;
     gap: 1rem;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .upload-page {
+    padding: 0.75rem;
+    font-size: 13px;
+    gap: 0.75rem;
   }
 }

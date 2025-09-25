@@ -1,43 +1,72 @@
-/* Remove default body margin/padding */
+/* Reset body/html/root */
 body, html, #root {
   margin: 0;
   padding: 0;
   height: 100%;
-  max-width: 100%;
+  width: 100%;          /* 🔑 Use full width */
   overflow-x: hidden;
-  
-  
- 
 }
 
-/* Container for entire app */
+/* App container */
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 80%;
-  max-width: 90vw;
- 
-  
+  min-height: 100vh;
+  width: 100%;          /* 🔑 Remove 90vw restriction */
+  box-sizing: border-box;
 }
 
-/* Header stays on top, content fills the rest */
+/* Content wrapper: sidebar + main */
 .content-wrapper {
   display: flex;
   flex: 1;
-  max-width: 100%;
-
-   
+  width: 100%;
 }
 
-/* Sidebar styling */
+/* Sidebar fixed width */
+.sidebar {
+  width: 224px;
+  flex-shrink: 0;
+}
+
+/* Main content fills rest */
 .main-content {
   flex: 1;
-  padding-left: 21rem;
-  background-color: #f9f9f9; /* optional light background */
-  position: relative;
-  top:53px;
-  left:15rem;
-  
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 53px);  /* adjust for header */
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* Optional: remove sidebar padding/margin if needed */
+/* ✅ Tablet */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 180px;
+  }
+  .main-content {
+    padding: 1.5rem;
+  }
+}
+
+/* ✅ Mobile */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;  /* stack sidebar on top */
+  }
+  .sidebar {
+    width: 100%;
+  }
+  .main-content {
+    padding: 1rem;
+    min-height: auto;
+  }
+}
+
+/* ✅ Small phones */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 0.75rem;
+    font-size: 14px;
+  }
+}

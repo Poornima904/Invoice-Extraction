@@ -7,16 +7,13 @@ const styles = {
     margin: "20px auto",
     fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
   },
-  card: {
-    border: "1px solid #ccc",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 24,
-    backgroundColor: "#fff",
-        width: "161%",
-    position: "relative",
-    right: "20rem",
-  },
+ card: {
+  border: "1px solid #ccc",
+  borderRadius: 8,
+  padding: 16,
+  marginBottom: 24,
+  backgroundColor: "#fff",
+},
   uploadBox: {
     border: "2px dashed #ccc",
     borderRadius: 8,
