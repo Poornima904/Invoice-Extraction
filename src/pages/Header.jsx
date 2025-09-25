@@ -3,7 +3,7 @@ import { HelpCircle, Menu } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 w-full bg-[rgba(0,0,0,0.784)] bg-black/80  border-b border-gray-200 py-3 px-4 sm:px-6 flex items-center justify-between z-50 shadow-sm">
+    <header className="fixed top-0 left-0 w-full bg-black  border-b border-gray-200 py-3 px-4 sm:px-6 flex items-center justify-between z-50 shadow-sm">
       
       {/* Left: Logo */}
       <div className="flex items-center gap-2 sm:gap-3">
