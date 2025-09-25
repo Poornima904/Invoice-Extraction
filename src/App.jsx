@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import "./App.css";
 import Header from "./pages/Header";
 import Sidebar from "./pages/Sidebar";
 
-// Import your actual pages
+// Pages
 import UploadPage from "./pages/UploadPage";
 import ReviewPage from "./pages/ReviewPage";
 import ProcessingPage from "./pages/ProcessingPage";
@@ -11,7 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ConfigurationPage from "./components/Configuration";
 
 function App() {
-  const [activePage, setActivePage] = useState("Upload"); // default page
+  const [activePage, setActivePage] = useState("Upload");
 
   const renderPage = () => {
     switch (activePage) {
@@ -31,11 +30,22 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Header />
-      <div className="content-wrapper">
+    <div className="flex flex-col min-h-screen w-full">
+      <Header className="sticky top-0 z-50" />
+
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div className="hidden md:block md:w-1/5">
+          <Sidebar activePage={activePage} setActivePage={setActivePage} />
+        </div>
+
+        {/* Mobile Sidebar */}
         <Sidebar activePage={activePage} setActivePage={setActivePage} />
-        <main className="main-content">{renderPage()}</main>
+
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-8 bg-white min-h-[calc(100vh-53px)] mt-[53px] transition-all duration-300">
+          {renderPage()}
+        </main>
       </div>
     </div>
   );

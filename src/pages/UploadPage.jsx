@@ -1,369 +1,174 @@
 import React, { useState, useCallback } from "react";
-import "./UploadPage.css";
-
-const styles = {
-  card: {
-    border: "1px solid #ccc",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 24,
-    backgroundColor: "#fff",
-  },
-  uploadBox: {
-    border: "2px dashed #ccc",
-    borderRadius: 8,
-    padding: "30px 15px",
-    textAlign: "center",
-    color: "#555",
-    cursor: "pointer",
-  },
-  uploadIcon: { fontSize: 28, marginBottom: 8 },
-  chooseFileButton: {
-    marginTop: 10,
-    padding: "8px 16px",
-    border: "1px solid #e5e7eb",
-    borderRadius: 6,
-    backgroundColor: "#ffffff",
-    color: "#111827",
-    cursor: "pointer",
-    fontSize: 14,
-    fontWeight: 600,
-    transition: "all 0.2s ease",
-  },
-  smallText: { color: "#999", marginTop: 15, fontSize: 14 },
-  table: { width: "100%", borderCollapse: "collapse" },
-  th: {
-    textAlign: "left",
-    borderBottom: "1px solid #ddd",
-    padding: "10px 8px",
-    fontWeight: 600,
-    fontSize: 13,
-  },
-  td: {
-    padding: "10px 8px",
-    fontSize: 13,
-    borderBottom: "1px solid #eee",
-    color: "#333",
-    verticalAlign: "middle",
-  },
-  statusBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    padding: "4px 10px",
-    borderRadius: 16,
-    fontWeight: 600,
-    fontSize: 11,
-    gap: "5px",
-  },
-  actionContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  actionButton: {
-    background: "white",
-    border: "1px solid #e5e7eb",
-    borderRadius: "6px",
-    cursor: "pointer",
-    padding: "6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "34px",
-    height: "34px",
-    transition: "all 0.2s ease",
-  },
-  fileIcon: { marginRight: 5, color: "#888", fontSize: 13 },
-};
-
-function formatDate(date) {
-  return date.toISOString().slice(0, 10);
-}
-
-function getStatusStyle(status) {
-  switch (status) {
-    case "Processed":
-      return {
-        backgroundColor: "#d1fae5",
-        color: "#065f46",
-        icon: "✔️",
-      };
-    case "Needs Review":
-      return {
-        backgroundColor: "#fef3c7",
-        color: "#92400e",
-        icon: "⚠️",
-      };
-    case "Processing":
-      return {
-        backgroundColor: "#e0f2fe",
-        color: "#0369a1",
-        icon: "🔄",
-      };
-    case "Failed":
-      return {
-        backgroundColor: "#fee2e2",
-        color: "#b91c1c",
-        icon: "❌",
-      };
-    default:
-      return {
-        backgroundColor: "#e5e7eb",
-        color: "#374151",
-        icon: "❔",
-      };
-  }
-}
 
 export default function UploadPage({ setActivePage }) {
   const [uploads, setUploads] = useState([
-    {
-      id: 1,
-      fileName: "invoice_124876.pdf",
-      uploadDate: "2024-01-15",
-      vendor: "Microsoft Corporation",
-      amount: "USD 24,850",
-      status: "Processed",
-      file: null,
-    },
-    {
-      id: 2,
-      fileName: "purchase_order_3321.pdf",
-      uploadDate: "2024-02-12",
-      vendor: "Amazon Web Services",
-      amount: "USD 13,200",
-      status: "Needs Review",
-      file: null,
-    },
-    {
-      id: 3,
-      fileName: "vendor_invoice_998.pdf",
-      uploadDate: "2024-02-20",
-      vendor: "Apple Inc.",
-      amount: "USD 8,750",
-      status: "Processing",
-      file: null,
-    },
-    {
-      id: 4,
-      fileName: "invoice_march_2024.pdf",
-      uploadDate: "2024-03-01",
-      vendor: "Google LLC",
-      amount: "USD 15,400",
-      status: "Failed",
-      file: null,
-    },
-    {
-      id: 5,
-      fileName: "vendor_payment_212.pdf",
-      uploadDate: "2024-03-15",
-      vendor: "Netflix Inc.",
-      amount: "USD 2,850",
-      status: "Processed",
-      file: null,
-    },
+    { id: 1, fileName: "invoice_124876.pdf", uploadDate: "2024-01-15", vendor: "Microsoft Corporation", amount: "USD 24,850", status: "Processed", file: null },
+    { id: 2, fileName: "purchase_order_3321.pdf", uploadDate: "2024-02-12", vendor: "Amazon Web Services", amount: "USD 13,200", status: "Needs Review", file: null },
+    { id: 3, fileName: "vendor_invoice_998.pdf", uploadDate: "2024-02-20", vendor: "Apple Inc.", amount: "USD 8,750", status: "Processing", file: null },
+    { id: 4, fileName: "invoice_march_2024.pdf", uploadDate: "2024-03-01", vendor: "Google LLC", amount: "USD 15,400", status: "Failed", file: null },
+    { id: 5, fileName: "vendor_payment_212.pdf", uploadDate: "2024-03-15", vendor: "Netflix Inc.", amount: "USD 2,850", status: "Processed", file: null },
   ]);
 
   const handleFiles = useCallback(
     (files) => {
-      const pdfFiles = Array.from(files).filter(
-        (file) => file.type === "application/pdf"
-      );
-      if (pdfFiles.length === 0) {
-        alert("Please upload PDF files only.");
-        return;
-      }
-
-      const newUploads = pdfFiles.map((file, index) => ({
-        id: Date.now() + index,
+      const pdfFiles = Array.from(files).filter((file) => file.type === "application/pdf");
+      if (!pdfFiles.length) return alert("Please upload PDF files only.");
+      const newUploads = pdfFiles.map((file, idx) => ({
+        id: Date.now() + idx,
         fileName: file.name,
-        uploadDate: formatDate(new Date()),
+        uploadDate: new Date().toISOString().slice(0, 10),
         vendor: "Unknown Vendor",
         amount: "USD 0",
         status: "Processing",
         file,
       }));
-
-      setUploads((prev) => [...newUploads, ...prev]);
+      setUploads(prev => [...newUploads, ...prev]);
     },
-    [setUploads]
+    []
   );
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    handleFiles(e.dataTransfer.files);
-  };
-
+  const handleDrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
   const handleDragOver = (e) => e.preventDefault();
-
-  const handleChooseFile = (e) => {
-    handleFiles(e.target.files);
-  };
+  const handleChooseFile = (e) => handleFiles(e.target.files);
 
   const handleDownload = (upload) => {
-    if (!upload.file) {
-      alert("No file available to download.");
-      return;
-    }
+    if (!upload.file) return alert("No file available to download.");
     const link = document.createElement("a");
     link.href = URL.createObjectURL(upload.file);
     link.download = upload.fileName;
     link.click();
   };
 
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Processed": return "bg-green-100 text-green-800";
+      case "Needs Review": return "bg-yellow-100 text-yellow-800";
+      case "Processing": return "bg-blue-100 text-blue-800";
+      case "Failed": return "bg-red-100 text-red-700";
+      default: return "bg-gray-200 text-gray-700";
+    }
+  };
+
   return (
-    <div className="upload-page">
-      <div style={styles.card}>
-        <h3 style={{ marginBottom: 14, fontWeight: 600, fontSize: 15 }}>
-          Upload Invoices
-        </h3>
+    <div className="upload-page max-w-8xl mx-auto p-4 sm:p-6 space-y-6 font-sans ">
+
+      {/* Upload Section */}
+      <div className="bg-white rounded-xl shadow p-4 sm:p-6">
+        <h3 className="text-lg font-semibold mb-4">Upload Invoices</h3>
         <div
-          style={styles.uploadBox}
+          className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-10 text-center text-gray-500 cursor-pointer flex flex-col items-center"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          <div style={styles.uploadIcon}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none"
-              stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-              viewBox="0 0 24 24">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 5 17 10"></polyline>
-              <line x1="12" y1="5" x2="12" y2="15"></line>
-            </svg>
-          </div>
-          <p style={{ fontSize: 14 }}>Drag & drop PDF invoices here, or</p>
-          <input
-            type="file"
-            id="fileInput"
-            multiple
-            accept="application/pdf"
-            style={{ display: "none" }}
-            onChange={handleChooseFile}
-          />
-          <label htmlFor="fileInput" style={styles.chooseFileButton}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-10 h-10 sm:w-12 sm:h-12 mb-2 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m16-6l-5-5-5 5m5-5v16" />
+          </svg>
+          <p className="text-sm sm:text-base">Drag & drop PDF invoices here, or</p>
+          <input type="file" id="fileInput" multiple accept="application/pdf" className="hidden" onChange={handleChooseFile} />
+          <label htmlFor="fileInput" className="mt-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-800 font-semibold cursor-pointer hover:bg-gray-100 text-sm sm:text-base">
             Choose Files
           </label>
-          <p style={styles.smallText}>
-            Supports batch upload • PDF files only
-          </p>
+          <p className="text-xs sm:text-sm text-gray-400 mt-3">Supports batch upload • PDF files only</p>
         </div>
       </div>
 
-      <div style={styles.card}>
-        <h3 style={{ marginBottom: 14, fontWeight: 600, fontSize: 15 }}>
-          Recent Uploads
-        </h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              {[
-                "File Name",
-                "Upload Date",
-                "Vendor",
-                "Amount",
-                "Status",
-                "Actions",
-              ].map((header) => (
-                <th key={header} style={styles.th}>
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {uploads.map((upload) => {
-              const statusStyle = getStatusStyle(upload.status);
-              return (
-                <tr key={upload.id}>
-                  <td style={styles.td}>
-                    <span style={styles.fileIcon}>📄</span>
-                    {upload.fileName}
-                  </td>
-                  <td style={styles.td}>{upload.uploadDate}</td>
-                  <td style={styles.td}>{upload.vendor}</td>
-                  <td style={styles.td}>{upload.amount}</td>
-                  <td style={styles.td}>
-                    <span
-                      style={{
-                        ...styles.statusBadge,
-                        backgroundColor: statusStyle.backgroundColor,
-                        color: statusStyle.color,
-                      }}
-                    >
-                      {statusStyle.icon} {upload.status}
+      {/* Recent Uploads Section */}
+      <div className="bg-white rounded-xl shadow p-4 sm:p-6 space-y-4">
+        <h3 className="text-lg font-semibold mb-2">Recent Uploads</h3>
+
+        {uploads.length === 0 && (
+          <p className="text-center text-gray-400">No uploads yet.</p>
+        )}
+
+        {/* Mobile Cards */}
+        <div className="space-y-3 sm:hidden">
+          {uploads.map(upload => (
+            <div key={upload.id} className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold truncate">{upload.fileName}</span>
+                <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusStyle(upload.status)}`}>
+                  {upload.status}
+                </span>
+              </div>
+              <div className="text-sm text-gray-600 flex justify-between">
+                <span>{upload.uploadDate}</span>
+                <span>{upload.vendor}</span>
+                <span>{upload.amount}</span>
+              </div>
+              <div className="flex gap-2 mt-1">
+                <button
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                  onClick={() => {
+                    if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
+                    else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
+                    else setActivePage("Dashboard");
+                  }}
+                >
+                  View
+                </button>
+                <button
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                  onClick={() => handleDownload(upload)}
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden sm:block overflow-x-auto">
+          <table className="w-full table-auto divide-y divide-gray-200 text-sm sm:text-base">
+            <thead className="bg-gray-50">
+              <tr>
+                {["File Name", "Upload Date", "Vendor", "Amount", "Status", "Actions"].map(header => (
+                  <th key={header} className="px-2 py-2 text-left font-semibold text-gray-700">{header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {uploads.map(upload => (
+                <tr key={upload.id} className="hover:bg-gray-50">
+                  <td className="px-2 py-2">{upload.fileName}</td>
+                  <td className="px-2 py-2">{upload.uploadDate}</td>
+                  <td className="px-2 py-2">{upload.vendor}</td>
+                  <td className="px-2 py-2">{upload.amount}</td>
+                  <td className="px-2 py-2">
+                    <span className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${getStatusStyle(upload.status)}`}>
+                      {upload.status}
                     </span>
                   </td>
-                  <td style={styles.td}>
-                    <div style={styles.actionContainer}>
-                      <button
-                        style={styles.actionButton}
-                        title="View"
-                        onClick={() => {
-                          if (
-                            upload.status === "Needs Review" ||
-                            upload.status === "Processed"
-                          ) {
-                            setActivePage("Review");
-                          } else if (
-                            upload.status === "Processing" ||
-                            upload.status === "Failed"
-                          ) {
-                            setActivePage("Processing");
-                          } else {
-                            setActivePage("Dashboard");
-                          }
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                          <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                      </button>
-                      <button
-                        style={styles.actionButton}
-                        title="Download"
-                        onClick={() => handleDownload(upload)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                          <polyline points="7 10 12 15 17 10"></polyline>
-                          <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                      </button>
-                    </div>
+                  <td className="px-2 py-2 flex gap-2">
+                    <button
+                      className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                      onClick={() => {
+                        if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
+                        else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
+                        else setActivePage("Dashboard");
+                      }}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                      onClick={() => handleDownload(upload)}
+                    >
+                      Download
+                    </button>
                   </td>
                 </tr>
-              );
-            })}
-            {uploads.length === 0 && (
-              <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: 16, color: "#999" }}>
-                  No uploads yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   );

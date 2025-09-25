@@ -3,10 +3,9 @@
   font-family: Arial, sans-serif;
   color: #222;
   position: relative;
-  left: 15rem;
+  left: -20rem;
   top: 1rem;
-  max-width: 81%;
-  box-sizing: border-box;
+  width: 118%;
 }
 
 /* Wrap header + tabs */
@@ -14,48 +13,62 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* spacing between header and tabs */
 }
 
 .config-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Wrap to new lines on small */
 }
 
 .config-header h2 {
   margin: 0;
-  flex-grow: 1;
 }
 
-.btn-primary,
-.btn-secondary {
+.btn-primary {
+  background: #0a0a23;
+  color: white;
+  padding: 8px 14px;
   margin-left: 10px;
-  white-space: nowrap;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #eee;
+  color: #333;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* Tabs (pill style) */
 .tabs {
   display: flex;
   justify-content: space-between;
+  /* spreads items */
   background: #f2f2f7;
   border-radius: 25px;
   padding: 4px;
   margin: 0;
   width: 100%;
-  flex-wrap: wrap; /* Wrap tabs on small */
+  /* span full width */
 }
 
 .tab-item {
   flex: 1;
+  /* make each tab take equal space */
   text-align: center;
+  /* center label */
   padding: 8px 0;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
   color: #333;
   transition: all 0.2s ease;
-  min-width: 100px;
 }
 
 .tab-item.active {
@@ -70,10 +83,8 @@
   padding: 20px;
   box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  box-sizing: border-box;
 }
 
-/* Form groups and controls */
 .form-group {
   margin-bottom: 18px;
 }
@@ -92,7 +103,6 @@
   border-radius: 6px;
 }
 
-/* Range slider and labels */
 .range-labels {
   display: flex;
   justify-content: space-between;
@@ -107,21 +117,18 @@
 .form-row {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap; /* wrap on smaller screens */
 }
 
 .form-row .form-group {
   flex: 1;
-  min-width: 200px;
   margin-bottom: 0;
 }
 
-/* Buttons */
 button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
+  /* space between icon and text */
 }
 
 .btn-icon {
@@ -133,6 +140,7 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* space between icon and text */
 }
 
 .settings-icon {
@@ -146,12 +154,14 @@ input[type="range"] {
   width: 100%;
   margin: 12px 0;
   background: transparent;
+  /* gradient is set inline */
   cursor: pointer;
-  border-radius: 6px;
 }
 
+/* Track (no color, gradient handled inline) */
 input[type="range"]::-webkit-slider-runnable-track {
   height: 12px;
+  /* fatter track */
   border-radius: 6px;
 }
 
@@ -160,15 +170,19 @@ input[type="range"]::-moz-range-track {
   border-radius: 6px;
 }
 
+/* Thumb */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 22px;
   width: 22px;
   border-radius: 50%;
   background: #fff;
+  /* white thumb */
   border: 2px solid #000;
+  /* black border for visibility */
   cursor: pointer;
   margin-top: -5px;
+  /* centers thumb */
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -176,7 +190,9 @@ input[type="range"]::-moz-range-thumb {
   width: 22px;
   border-radius: 50%;
   background: #fff;
+  /* white thumb */
   border: 2px solid #000;
+  /* black border for visibility */
   cursor: pointer;
 }
 
@@ -185,18 +201,17 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   gap: 16px;
   margin-top: 12px;
-  flex-wrap: wrap;
 }
 
 .theme-item {
-  flex: 1 1 100px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  min-width: 80px;
 }
 
+/* keep your original wide rectangle box */
 .theme-box {
   width: 100%;
   height: 45px;
@@ -218,21 +233,25 @@ input[type="range"]::-moz-range-thumb {
   display: block;
 }
 
-/* Theme Boxes colors */
+/* Theme Boxes */
 .theme-item:nth-child(1) .theme-box {
   background: #000;
+  /* black for primary */
 }
 
 .theme-item:nth-child(2) .theme-box {
   background: #aaa;
+  /* medium grey */
 }
 
 .theme-item:nth-child(3) .theme-box {
   background: #aaa;
+  /* lighter grey */
 }
 
 .theme-item:nth-child(4) .theme-box {
   background: #aaa;
+  /* very light grey */
 }
 
 .theme-header-row {
@@ -240,79 +259,33 @@ input[type="range"]::-moz-range-thumb {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
-  flex-wrap: wrap;
 }
 
 .theme-header-row .hint {
   margin: 0;
   font-size: 13px;
   color: gray;
-  flex: 1 1 200px;
 }
 
 .theme-header-row button {
   padding: 6px 12px;
   font-size: 13px;
-  flex-shrink: 0;
 }
 
-/* Theme divider */
 .theme-divider {
   border: none;
   border-top: 1px solid #ddd;
+  /* light gray */
   margin: 10px 0 16px;
 }
 
-/* Responsive styles */
-@media (max-width: 900px) {
-  .config-container {
-    left: 0;
-    max-width: 100%;
-    padding: 10px;
-  }
-
-  .config-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .tabs {
-    flex-wrap: wrap;
-  }
-
-  .tab-item {
-    flex: 1 1 48%;
-    margin-bottom: 8px;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .form-row .form-group {
-    width: 100%;
-  }
-
-  .theme-options {
-    justify-content: center;
-  }
-
-  .theme-item {
-    flex: 1 1 45%;
-    min-width: unset;
-  }
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* space between icon and text */
 }
 
-@media (max-width: 600px) {
-  .tab-item {
-    flex: 1 1 100%;
-  }
+.btn-icon {
+  font-size: 16px;
 }
