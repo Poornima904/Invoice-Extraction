@@ -3,8 +3,10 @@ import { HelpCircle, Menu } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 w-full bg-black  border-b border-gray-200 py-3 px-4 sm:px-6 flex items-center justify-between z-50 shadow-sm">
+    <header
       
+      className="fixed left-0 right-0 bg-black border-b border-gray-200 py-3 px-4 sm:px-6 flex items-center justify-between z-50 shadow-sm"
+    >
       {/* Left: Logo */}
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded text-sm font-semibold text-white">
@@ -21,7 +23,6 @@ export default function Header() {
 
       {/* Right: Help + Share */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Show full buttons on sm+, menu icon on xs */}
         <div className="hidden sm:flex items-center gap-3">
           <button className="p-2 rounded-full text-white hover:text-gray-700 transition-colors">
             <HelpCircle size={20} />
@@ -31,7 +32,6 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile menu icon */}
         <div className="flex sm:hidden">
           <button className="p-2 rounded-full text-white hover:text-gray-700 transition-colors">
             <Menu size={20} />

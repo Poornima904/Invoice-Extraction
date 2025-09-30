@@ -1,25 +1,44 @@
+// App.js
+
 import React, { useState } from "react";
 import Header from "./pages/Header";
 import Sidebar from "./pages/Sidebar";
 
-// Pages
 import UploadPage from "./pages/UploadPage";
 import ReviewPage from "./pages/ReviewPage";
 import ProcessingPage from "./pages/ProcessingPage";
 import DashboardPage from "./pages/DashboardPage";
 import ConfigurationPage from "./components/Configuration";
 
+const invoices = [
+  { id: 1, status: "Processed" },
+  { id: 2, status: "Needs Review" },
+  { id: 3, status: "Processing" },
+  { id: 4, status: "Needs Review" },
+  { id: 5, status: "Processing" },
+];
+
 function App() {
+  const [expanded, setExpanded] = useState(true);
   const [activePage, setActivePage] = useState("Upload");
+
+  // Compute counts for badges
+  const reviewCount = invoices.filter(inv => inv.status === "Needs Review").length;
+  const processingCount = invoices.filter(inv => inv.status === "Processing").length;
+
+  const HEADER_HEIGHT = 53;
+  const SIDEBAR_WIDTH_EXPANDED = 224;
+  const SIDEBAR_WIDTH_COLLAPSED = 64;
+  const sidebarWidth = expanded ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED;
 
   const renderPage = () => {
     switch (activePage) {
       case "Upload":
         return <UploadPage setActivePage={setActivePage} />;
       case "Review":
-        return <ReviewPage />;
+        return <ReviewPage setActivePage={setActivePage} />;
       case "Processing":
-        return <ProcessingPage />;
+        return <ProcessingPage setActivePage={setActivePage} />;
       case "Dashboard":
         return <DashboardPage setActivePage={setActivePage} />;
       case "Configuration":
@@ -30,23 +49,30 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      <Header className="sticky top-0 z-50" />
+    <div>
+      <Header />
+      <Sidebar
+        expanded={expanded}
+        toggleExpand={setExpanded}
+        activePage={activePage}
+        setActivePage={setActivePage}
+        reviewCount={reviewCount}
+        processingCount={processingCount}
+      />
 
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <div className="hidden md:block md:w-1/5">
-          <Sidebar activePage={activePage} setActivePage={setActivePage} />
-        </div>
-
-        {/* Mobile Sidebar */}
-        <Sidebar activePage={activePage} setActivePage={setActivePage} />
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 md:p-8 bg-white min-h-[calc(100vh-53px)] mt-[53px] transition-all duration-300">
-          {renderPage()}
-        </main>
-      </div>
+      <main
+        style={{
+          marginLeft: sidebarWidth,
+          paddingTop: HEADER_HEIGHT,
+          transition: "margin-left 0.3s cubic-bezier(.4,0,.2,1)",
+          minHeight: "100vh",
+          backgroundColor: "white",
+          paddingLeft: 16,
+          paddingRight: 16,
+        }}
+      >
+        <div className="max-w-[1500px] mx-auto">{renderPage()}</div>
+      </main>
     </div>
   );
 }

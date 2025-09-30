@@ -16,15 +16,15 @@ const LLMSettings = () => {
   const gradientPercent = ((tokens - 500) / 3500) * 100;
 
   return (
-    <div className="bg-white p-5 rounded-lg shadow mb-5">
-      <h3 className="text-lg font-semibold mb-4">Model Configuration</h3>
+    <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 mb-5">
+      <h3 className="text-lg font-semibold mb-4 text-gray-900">Model Configuration</h3>
 
       {/* LLM Model */}
       <div className="mb-4">
-        <label className="block font-semibold mb-2">LLM Model</label>
+        <label className="block font-semibold mb-2 text-gray-800">LLM Model</label>
         <select
           defaultValue="GPT-4"
-          className="w-full px-3 py-2 rounded-md bg-gray-100 text-gray-800 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-3 py-2 rounded-md bg-gray-100 text-gray-800 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
         >
           <option>GPT-4 (Recommended)</option>
           <option>GPT-3.5</option>
@@ -34,14 +34,14 @@ const LLMSettings = () => {
 
       {/* API Key */}
       <div className="mb-4">
-        <label className="block font-semibold mb-2">API Key</label>
+        <label className="block font-semibold mb-2 text-gray-800">API Key</label>
         <div className="flex gap-2 mt-1">
           <input
             type="text"
             placeholder="Enter your API key"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 px-3 py-2 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
           />
           <button
             onClick={handleTest}
@@ -53,7 +53,7 @@ const LLMSettings = () => {
       </div>
 
       {/* Status */}
-      <p className="mb-4">
+      <p className="mb-4 text-gray-900">
         Status:{" "}
         <span
           className={`px-3 py-1 rounded-full text-sm font-semibold ${
@@ -68,7 +68,7 @@ const LLMSettings = () => {
 
       {/* Max Tokens */}
       <div>
-        <label className="block font-semibold mb-2">Max Tokens</label>
+        <label className="block font-semibold mb-2 text-gray-800">Max Tokens</label>
         <input
           type="range"
           min="500"
@@ -76,11 +76,11 @@ const LLMSettings = () => {
           value={tokens}
           onChange={(e) => setTokens(e.target.value)}
           style={{
-            background: `linear-gradient(to right, #000 ${gradientPercent}%, #ccc ${gradientPercent}%)`,
+            background: `linear-gradient(to right, #3b82f6 ${gradientPercent}%, #d1d5db ${gradientPercent}%)`,
           }}
-          className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+          className="w-full h-2 rounded-lg appearance-none cursor-pointer transition"
         />
-        <div className="flex justify-between text-sm mt-1 mb-2">
+        <div className="flex justify-between text-sm mt-1 mb-2 text-gray-600">
           <span>500</span>
           <span>{tokens} tokens</span>
           <span>4000</span>

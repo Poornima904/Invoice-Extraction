@@ -13,9 +13,9 @@ const ExtractionRules = () => {
   return (
     <>
       {/* Field Mapping Card */}
-      <div className="bg-white rounded-md p-5 shadow mt-5">
-        <h3 className="m-0 mb-5 text-lg font-semibold">Field Mapping</h3>
-        <p className="text-gray-500 text-sm mb-3">
+      <div className="bg-white rounded-md p-5 shadow mt-5 hover:shadow-lg transition-shadow duration-300">
+        <h3 className="m-0 mb-5 text-lg font-semibold text-gray-900">Field Mapping</h3>
+        <p className="text-gray-600 text-sm mb-3">
           Map system fields to PDF labels for better extraction accuracy.
         </p>
 
@@ -23,25 +23,25 @@ const ExtractionRules = () => {
           {fields.map((field, idx) => (
             <div
               key={idx}
-              className="flex items-center bg-white rounded-lg p-3 border border-gray-300 shadow-sm"
+              className="flex items-center bg-white rounded-lg p-3 border border-gray-300 shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex items-center gap-2 w-[220px] font-semibold text-gray-800">
                 {field.label}
                 {field.required && (
-                  <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full select-none">
                     Required
                   </span>
                 )}
               </div>
 
               <div className="flex items-center gap-3 flex-1">
-                <span className="text-gray-500">↔</span>
+                <span className="text-gray-500 select-none">↔</span>
                 <input
                   type="text"
                   value={field.pdf}
-                  className="flex-0 w-[250px] p-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                  className="flex-0 w-[250px] p-2 bg-gray-100 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
-                <label className="relative inline-block w-11 h-6">
+                <label className="relative inline-block w-11 h-6 cursor-pointer">
                   <input
                     type="checkbox"
                     defaultChecked={field.required}
@@ -56,15 +56,15 @@ const ExtractionRules = () => {
       </div>
 
       {/* Custom Regex Rules Card */}
-      <div className="bg-white rounded-md p-5 shadow mt-5">
-        <h3 className="m-0 mb-5 text-lg font-semibold">Custom Regex Rules</h3>
+      <div className="bg-white rounded-md p-5 shadow mt-5 hover:shadow-lg transition-shadow duration-300">
+        <h3 className="m-0 mb-5 text-lg font-semibold text-gray-900">Custom Regex Rules</h3>
         <table className="w-full border-separate border-spacing-0 mb-3">
           <thead>
             <tr>
-              <th className="text-left font-semibold px-3 py-2 text-sm text-gray-800">
+              <th className="text-left font-semibold px-3 py-2 text-sm text-gray-900">
                 Field Name
               </th>
-              <th className="text-left font-semibold px-3 py-2 text-sm text-gray-800">
+              <th className="text-left font-semibold px-3 py-2 text-sm text-gray-900">
                 Regex Pattern
               </th>
             </tr>
@@ -75,14 +75,14 @@ const ExtractionRules = () => {
                 <input
                   type="text"
                   placeholder="e.g., Reference Number"
-                  className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                  className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </td>
               <td className="px-3 py-2">
                 <input
                   type="text"
                   placeholder="e.g., REF-\\d{4}-\\d{4}"
-                  className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                  className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </td>
             </tr>

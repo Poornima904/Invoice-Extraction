@@ -1,83 +1,109 @@
-import React, { useState } from "react";
-import { 
-  ArrowUpTrayIcon, 
-  DocumentIcon, 
-  ClockIcon, 
-  ChartBarIcon, 
-  Cog6ToothIcon,
-  Bars3Icon,
-  XMarkIcon
-} from "@heroicons/react/24/outline";
+import React from "react";
+import {
+  FiUpload,
+  FiEye,
+  FiSettings,
+  FiBarChart2,
+  FiActivity,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 
-const Sidebar = ({ activePage, setActivePage }) => {
-  const [isOpen, setIsOpen] = useState(true); // sidebar open by default
+const MENU = [
+  { name: "Upload", icon: FiUpload },
+  { name: "Review", icon: FiEye, countKey: "reviewCount" },
+  { name: "Processing", icon: FiActivity, countKey: "processingCount" },
+  { name: "Dashboard", icon: FiBarChart2 },
+  { name: "Configuration", icon: FiSettings },
+];
 
-  const menuItems = [
-    { name: "Upload", icon: <ArrowUpTrayIcon className="w-6 h-6 stroke-current text-gray-900" /> },
-    { name: "Review", icon: <DocumentIcon className="w-6 h-6 stroke-current text-gray-900" />, badge: 4 },
-    { name: "Processing", icon: <ClockIcon className="w-6 h-6 stroke-current text-gray-900" />, badge: 4 },
-    { name: "Dashboard", icon: <ChartBarIcon className="w-6 h-6 stroke-current text-gray-900" /> },
-    { name: "Configuration", icon: <Cog6ToothIcon className="w-6 h-6 stroke-current text-gray-900" /> },
-  ];
+export default function Sidebar({
+  expanded,
+  toggleExpand,
+  activePage,
+  setActivePage,
+  reviewCount = 0,
+  processingCount = 0,
+}) {
+  const HEADER_HEIGHT = 53; // px
+  const SIDEBAR_WIDTH_EXPANDED = 224;
+  const SIDEBAR_WIDTH_COLLAPSED = 64;
+  const sidebarWidth = expanded ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED;
+
+  const counts = { reviewCount, processingCount };
 
   return (
-    <>
-      {/* Mobile Hamburger */}
-      <button
-        className="md:hidden fixed top-2 left-4 z-50 bg-gray-100 p-2 rounded-md shadow"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
-      </button>
-
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full bg-gray-100 shadow-md z-40 transform transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:w-1/5 w-3/4 flex flex-col`}
-      >
-        {/* Sidebar Header */}
-        <div className="flex-none pt-5 pb-3 px-4 border-b border-gray-200 mt-15">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-lg text-xl">⚡</div>
-            <div>
-              <h2 className="text-gray-900 font-bold text-lg m-0">InvoiceAI</h2>
-              <p className="text-gray-400 text-xs font-medium m-0">Extraction Platform</p>
-            </div>
+    <aside
+      style={{
+        position: "fixed",
+        left: 0,
+        top: HEADER_HEIGHT,
+        width: sidebarWidth,
+        height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+        background: "#f7f9fa",
+        borderRight: "1px solid #e5e7eb",
+        zIndex: 40,
+        display: "flex",
+        flexDirection: "column",
+        transition: "width 0.3s cubic-bezier(.4,0,.2,1)",
+        boxShadow: "0 0 6px rgba(0,0,0,.02)",
+      }}
+      onMouseEnter={() => !expanded && toggleExpand(true)}
+      onMouseLeave={() => expanded && toggleExpand(false)}
+    >
+      {/* Branding */}
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-200">
+        <div className="flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-lg text-2xl font-bold">⚡</div>
+        {expanded && (
+          <div>
+            <h2 className="text-gray-900 font-bold text-lg m-0 leading-none">InvoiceAI</h2>
+            <p className="text-gray-400 text-sm">Extraction Platform</p>
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Sidebar Menu (scrollable) */}
-        <div className="flex-1 overflow-y-auto mt-4 px-2 space-y-2">
-          {menuItems.map((item) => (
-            <div
-              key={item.name}
-              onClick={() => setActivePage(item.name)}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer font-medium transition-colors ${
-                activePage === item.name ? "bg-gray-100 font-bold" : "text-gray-900 hover:bg-gray-100"
-              }`}
+      {/* Toggle Button */}
+      <div className="flex items-center justify-end px-3 py-3 border-b border-gray-100">
+        <button
+          onClick={() => toggleExpand(!expanded)}
+          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
+          aria-label="Toggle sidebar"
+        >
+          {expanded ? <FiChevronLeft size={18} /> : <FiChevronRight size={18} />}
+        </button>
+      </div>
+
+      {/* Menu */}
+      <nav className="flex flex-col px-2 mt-2 gap-1">
+        {MENU.map(({ name, icon: Icon, countKey }) => {
+          const count = countKey ? counts[countKey] : 0;
+          const isActive = activePage === name;
+
+          return (
+            <button
+              key={name}
+              onClick={() => setActivePage(name)}
+              className={`flex items-center justify-between p-3 rounded-lg transition cursor-pointer
+                ${isActive ? "bg-indigo-100 font-semibold text-indigo-700" : "text-gray-700 hover:bg-indigo-50"}`}
+              title={name}
+              aria-current={isActive ? "page" : undefined}
             >
-              {item.icon}
-              <span className="flex-1">{item.name}</span>
-              {item.badge && (
-                <span className="ml-auto bg-gray-200 text-gray-900 text-sm font-semibold px-2 py-0.5 rounded-full border border-gray-200">
-                  {item.badge}
+              <div className="flex items-center gap-4">
+                <span className={`flex items-center justify-center min-w-[24px] h-6 ${isActive ? "text-indigo-700" : "text-gray-500 group-hover:text-indigo-700"}`}>
+                  <Icon size={22} />
+                </span>
+                {expanded && <span>{name}</span>}
+              </div>
+
+              {expanded && count > 0 && (
+                <span className="flex-shrink-0 bg-red-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full select-none">
+                  {count}
                 </span>
               )}
-            </div>
-          ))}
-        </div>
-
-        {/* Sidebar Footer */}
-        <div className="flex-none flex justify-between items-center py-4 px-4 border-t border-gray-200">
-          <div className="bg-gray-100 text-gray-900 text-sm font-semibold rounded-full px-3 py-1 tracking-wide">v1.2.0</div>
-          <button className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-100 text-gray-900 font-medium hover:bg-gray-200 transition">
-            Theme
-          </button>
-        </div>
-      </div>
-    </>
+            </button>
+          );
+        })}
+      </nav>
+    </aside>
   );
-};
-
-export default Sidebar;
+}

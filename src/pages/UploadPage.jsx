@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { FiEye, FiDownload } from "react-icons/fi";
 
 export default function UploadPage({ setActivePage }) {
   const [uploads, setUploads] = useState([
@@ -50,32 +51,46 @@ export default function UploadPage({ setActivePage }) {
   };
 
   return (
-    <div className="upload-page max-w-8xl mx-auto p-4 sm:p-6 space-y-6 font-sans ">
+    <div className="upload-page max-w-8xl mx-auto p-4 sm:p-6 space-y-6 font-sans">
 
       {/* Upload Section */}
       <div className="bg-white rounded-xl shadow p-4 sm:p-6">
         <h3 className="text-lg font-semibold mb-4">Upload Invoices</h3>
         <div
-          className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-10 text-center text-gray-500 cursor-pointer flex flex-col items-center"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-10 h-10 sm:w-12 sm:h-12 mb-2 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m16-6l-5-5-5 5m5-5v16" />
-          </svg>
-          <p className="text-sm sm:text-base">Drag & drop PDF invoices here, or</p>
-          <input type="file" id="fileInput" multiple accept="application/pdf" className="hidden" onChange={handleChooseFile} />
-          <label htmlFor="fileInput" className="mt-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-800 font-semibold cursor-pointer hover:bg-gray-100 text-sm sm:text-base">
-            Choose Files
-          </label>
-          <p className="text-xs sm:text-sm text-gray-400 mt-3">Supports batch upload • PDF files only</p>
-        </div>
+  className="border-2 border-dashed border-[#53DEBA] bg-[#EEFDF6] rounded-xl p-8 md:p-14 text-center flex flex-col items-center justify-center shadow transition hover:bg-[#d5fbe6]"
+  onDrop={handleDrop}
+  onDragOver={handleDragOver}
+>
+  {/* Centered circular up-arrow icon */}
+  <div className="mx-auto mb-4">
+    <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] rounded-full shadow-lg">
+      <svg
+        className="w-8 h-8"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </div>
+  </div>
+  <div className="text-xl font-semibold text-[#333] mb-1">Drop your PDF invoices here</div>
+  <div className="text-gray-500 text-sm mb-4">or click below to browse and select files</div>
+  <input type="file" id="fileInput" multiple accept="application/pdf" className="hidden" onChange={handleChooseFile} />
+  <label
+    htmlFor="fileInput"
+    className="inline-block px-8 py-2 rounded bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] text-white font-semibold shadow cursor-pointer transition hover:from-[#6951E6] hover:to-[#2DBFCB]"
+  >
+    Choose Files
+  </label>
+  <div className="text-xs text-gray-400 mt-3">
+    Supports batch upload • PDF files only • Max 50MB per file
+  </div>
+</div>
+
       </div>
 
       {/* Recent Uploads Section */}
@@ -89,10 +104,10 @@ export default function UploadPage({ setActivePage }) {
         {/* Mobile Cards */}
         <div className="space-y-3 sm:hidden">
           {uploads.map(upload => (
-            <div key={upload.id} className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1">
+            <div key={upload.id} className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1 transition hover:shadow-md hover:bg-indigo-50 cursor-pointer">
               <div className="flex justify-between items-center">
                 <span className="font-semibold truncate">{upload.fileName}</span>
-                <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusStyle(upload.status)}`}>
+                <span className={`px-2 py-0.5 text-xs rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}>
                   {upload.status}
                 </span>
               </div>
@@ -103,19 +118,23 @@ export default function UploadPage({ setActivePage }) {
               </div>
               <div className="flex gap-2 mt-1">
                 <button
-                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-indigo-100 text-sm transition flex items-center justify-center gap-1"
                   onClick={() => {
                     if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
                     else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
                     else setActivePage("Dashboard");
                   }}
+                  title="View"
                 >
+                  <FiEye size={16} />
                   View
                 </button>
                 <button
-                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-indigo-100 text-sm transition flex items-center justify-center gap-1"
                   onClick={() => handleDownload(upload)}
+                  title="Download"
                 >
+                  <FiDownload size={16} />
                   Download
                 </button>
               </div>
@@ -135,32 +154,34 @@ export default function UploadPage({ setActivePage }) {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {uploads.map(upload => (
-                <tr key={upload.id} className="hover:bg-gray-50">
+                <tr key={upload.id} className="hover:bg-indigo-50 transition-colors duration-300 cursor-pointer">
                   <td className="px-2 py-2">{upload.fileName}</td>
                   <td className="px-2 py-2">{upload.uploadDate}</td>
                   <td className="px-2 py-2">{upload.vendor}</td>
                   <td className="px-2 py-2">{upload.amount}</td>
                   <td className="px-2 py-2">
-                    <span className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${getStatusStyle(upload.status)}`}>
+                    <span className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}>
                       {upload.status}
                     </span>
                   </td>
-                  <td className="px-2 py-2 flex gap-2">
+                  <td className="px-2 py-2 flex gap-2 justify-center">
                     <button
-                      className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                      className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
                       onClick={() => {
                         if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
                         else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
                         else setActivePage("Dashboard");
                       }}
+                      title="View"
                     >
-                      View
+                      <FiEye size={18} />
                     </button>
                     <button
-                      className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                      className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
                       onClick={() => handleDownload(upload)}
+                      title="Download"
                     >
-                      Download
+                      <FiDownload size={18} />
                     </button>
                   </td>
                 </tr>
@@ -168,8 +189,8 @@ export default function UploadPage({ setActivePage }) {
             </tbody>
           </table>
         </div>
-
       </div>
+
     </div>
   );
 }

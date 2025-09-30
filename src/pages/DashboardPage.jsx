@@ -1,4 +1,5 @@
 import React from "react";
+import { FaEye, FaDownload } from "react-icons/fa";
 
 const DashboardPage = ({ setActivePage }) => {
   const invoices = [
@@ -10,62 +11,68 @@ const DashboardPage = ({ setActivePage }) => {
   ];
 
   const statusClassMap = {
-    Processed: "bg-green-100 text-green-600",
-    Processing: "bg-blue-100 text-blue-600",
-    "Needs Review": "bg-yellow-100 text-yellow-500",
-    Failed: "bg-red-100 text-red-600",
+    Processed: "bg-green-100 text-green-800",
+    Processing: "bg-blue-100 text-blue-800",
+    "Needs Review": "bg-yellow-100 text-yellow-800",
+    Failed: "bg-red-100 text-red-800",
   };
 
   return (
-    <div className="flex-1 p-4 md:p-8  min-h-[calc(100vh-53px)] font-sans">
+    <div className="flex-1 p-6 min-h-[calc(100vh-53px)] font-sans bg-gray-50">
+
       {/* Header Cards */}
-      <div className="flex flex-wrap gap-4 mb-8">
+      <div className="flex flex-wrap gap-6 mb-8">
         {[
-          { title: "Total Invoices", value: 15, trend: "+12.5% this month", trendClass: "text-green-600" },
-          { title: "Total Value", value: "$169,792.24", trend: "+ $25.2K this month", trendClass: "text-green-600" },
-          { title: "Avg Processing Time", value: "2.3 hours", trend: "-0.8min improvement", trendClass: "text-red-500" },
-          { title: "Success Rate", value: "85.2%", trend: "+2.1% this month", trendClass: "text-green-600" },
+          { title: "Total Invoices", value: 15, trend: "+12.5% this month", trendClass: "text-green-700" },
+          { title: "Total Value", value: "$169,792.24", trend: "+ $25.2K this month", trendClass: "text-green-700" },
+          { title: "Avg Processing Time", value: "2.3 hours", trend: "-0.8min improvement", trendClass: "text-red-600" },
+          { title: "Success Rate", value: "85.2%", trend: "+2.1% this month", trendClass: "text-green-700" },
         ].map((card, idx) => (
-          <div key={idx} className="flex-1 min-w-[200px] bg-white shadow-lg rounded-2xl p-5 flex flex-col justify-between">
+          <div key={idx} className="flex-1 min-w-[200px] bg-white shadow rounded-2xl p-5 flex flex-col justify-between
+                                   transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-700">{card.title}</span>
+              <span className="text-gray-800">{card.title}</span>
             </div>
-            <div className="text-2xl font-bold mb-1">{card.value}</div>
+            <div className="text-2xl font-bold mb-1 text-gray-900">{card.value}</div>
             <div className={`font-medium ${card.trendClass}`}>{card.trend}</div>
           </div>
         ))}
       </div>
 
       {/* Bottom Sections */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <div className="flex flex-col md:flex-row gap-6 mb-8">
         {/* Recent Activity */}
-        <div className="bg-white shadow-lg rounded-2xl p-5 flex-1 min-w-[250px] flex flex-col">
-          <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-          <ul className="space-y-3 overflow-y-auto flex-1">
+        <div className="bg-white shadow rounded-2xl p-5 flex-1 min-w-[280px] flex flex-col">
+          <h3 className="text-lg font-semibold mb-4 text-gray-900">Recent Activity</h3>
+          <ul className="space-y-4 overflow-y-auto flex-1">
             {invoices.slice(0, 5).map((inv, idx) => (
-              <li key={idx} className="flex justify-between items-center border-b border-gray-200 pb-2">
+              <li key={idx} className="flex justify-between items-center border-b border-gray-200 pb-3 
+                                     hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2">
                 <div>
-                  <span className="font-semibold">{inv.id}</span>
-                  <div className="text-gray-500 text-sm">{inv.vendor}</div>
+                  <span className="font-semibold text-gray-900">{inv.id}</span>
+                  <div className="text-gray-600 text-sm">{inv.vendor}</div>
                 </div>
-                <span className="text-gray-500 text-sm">{inv.date}</span>
+                <span className="text-gray-600 text-sm">{inv.date}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Top Vendors */}
-        <div className="bg-white shadow-lg rounded-2xl p-5 flex-1 min-w-[250px] flex flex-col">
-          <h3 className="text-lg font-semibold mb-4">Top Vendors</h3>
-          <ul className="space-y-3 overflow-y-auto flex-1">
+        <div className="bg-white shadow rounded-2xl p-5 flex-1 min-w-[280px] flex flex-col">
+          <h3 className="text-lg font-semibold mb-4 text-gray-900">Top Vendors</h3>
+          <ul className="space-y-4 overflow-y-auto flex-1">
             {invoices.slice(0, 5).map((inv, idx) => (
-              <li key={idx} className="flex justify-between items-center border-b border-gray-200 pb-2">
-                <span className="bg-gray-200 text-gray-800 rounded-full w-7 h-7 flex items-center justify-center font-bold mr-2">{idx + 1}</span>
-                <div>
-                  <span className="font-semibold">{inv.vendor}</span>
-                  <div className="text-gray-500 text-sm">1 invoice</div>
+              <li key={idx} className="flex justify-between items-center border-b border-gray-200 pb-3
+                                     hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2">
+                <span className="bg-blue-100 text-blue-800 rounded-full w-7 h-7 flex items-center justify-center font-bold mr-2 flex-shrink-0">
+                  {idx + 1}
+                </span>
+                <div className="flex flex-col flex-grow ml-0">
+                  <span className="font-semibold text-gray-900 leading-tight">{inv.vendor}</span>
+                  <div className="text-gray-600 text-sm leading-tight">1 invoice</div>
                 </div>
-                <span className="font-semibold">{inv.amount}</span>
+                <span className="font-semibold text-gray-900 ml-4 flex-shrink-0">{inv.amount}</span>
               </li>
             ))}
           </ul>
@@ -73,49 +80,67 @@ const DashboardPage = ({ setActivePage }) => {
       </div>
 
       {/* Invoice Table */}
-      <div className="bg-white rounded-xl shadow-lg p-5">
-        <h3 className="text-lg font-bold mb-4">Invoice History</h3>
+      <div className="bg-white rounded-xl shadow p-6">
+        <h3 className="text-xl font-bold mb-5 text-gray-900">Invoice History</h3>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 mb-6">
           <input
             placeholder="Search invoices, vendors, or invoice numbers..."
-            className="flex-1 min-w-[150px] px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 min-w-[180px] px-4 py-3 rounded-md border border-gray-300
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
-          <select className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none">
+          <select className="px-4 py-3 rounded-md border border-gray-300 focus:outline-none transition">
             <option>All Statuses</option>
           </select>
-          <select className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none">
+          <select className="px-4 py-3 rounded-md border border-gray-300 focus:outline-none transition">
             <option>All Vendors</option>
           </select>
-          <button className="px-3 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition">Select dates</button>
-          <button className="px-3 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition">Export</button>
+          <button className="px-4 py-3 rounded-md bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition cursor-pointer">
+            Select dates
+          </button>
+          <button className="px-4 py-3 rounded-md bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition cursor-pointer">
+            Export
+          </button>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-100">
               <tr>
                 {["Invoice #", "Vendor", "Upload Date", "Amount", "Status", "Confidence", "Actions"].map((col) => (
-                  <th key={col} className="p-2 text-gray-600 font-semibold whitespace-nowrap">{col}</th>
+                  <th key={col} className="p-3 text-gray-700 font-semibold whitespace-nowrap">{col}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {invoices.map((inv, idx) => (
-                <tr key={inv.id} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="p-2 flex items-center gap-2 whitespace-nowrap">{inv.id}</td>
-                  <td className="p-2 whitespace-nowrap">{inv.vendor}</td>
-                  <td className="p-2 whitespace-nowrap">{inv.date}</td>
-                  <td className="p-2 whitespace-nowrap">{inv.amount}</td>
-                  <td className="p-2 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-md text-sm font-medium ${statusClassMap[inv.status]}`}>{inv.status}</span>
+              {invoices.map((inv) => (
+                <tr
+                  key={inv.id}
+                  className="border-b border-gray-200 hover:bg-blue-50 transition-colors cursor-pointer"
+                >
+                  <td className="p-3 flex items-center gap-3 whitespace-nowrap text-gray-900 font-semibold">{inv.id}</td>
+                  <td className="p-3 whitespace-nowrap text-gray-900">{inv.vendor}</td>
+                  <td className="p-3 whitespace-nowrap text-gray-700">{inv.date}</td>
+                  <td className="p-3 whitespace-nowrap text-gray-700 font-semibold">{inv.amount}</td>
+                  <td className="p-3 whitespace-nowrap">
+                    <span
+                      className={`px-3 py-1 rounded-md text-sm font-medium ${statusClassMap[inv.status]}`}
+                    >
+                      {inv.status}
+                    </span>
                   </td>
-                  <td className="p-2 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-md text-sm font-medium ${statusClassMap[inv.status]}`}>{inv.confidence}</span>
+                  <td className="p-3 whitespace-nowrap">
+                    <span
+                      className={`px-3 py-1 rounded-md text-sm font-medium ${statusClassMap[inv.status]}`}
+                    >
+                      {inv.confidence}
+                    </span>
                   </td>
-                  <td className="p-2 flex gap-2">
+                  <td className="p-3 flex gap-3">
                     <button
-                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"
+                      className="w-9 h-9 rounded-full bg-gray-100 hover:bg-blue-200 text-gray-600 hover:text-blue-800 flex items-center justify-center transition-all duration-200 cursor-pointer"
                       onClick={() => {
                         if (inv.status === "Needs Review" || inv.status === "Processed") {
                           setActivePage("Review");
@@ -123,11 +148,15 @@ const DashboardPage = ({ setActivePage }) => {
                           setActivePage("Processing");
                         }
                       }}
+                      aria-label={`View invoice ${inv.id}`}
                     >
-                      👁️
+                      <FaEye />
                     </button>
-                    <button className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-                      ⬇️
+                    <button
+                      className="w-9 h-9 rounded-full bg-gray-100 hover:bg-blue-200 text-gray-600 hover:text-blue-800 flex items-center justify-center transition-all duration-200 cursor-pointer"
+                      aria-label={`Download invoice ${inv.id}`}
+                    >
+                      <FaDownload />
                     </button>
                   </td>
                 </tr>
@@ -136,11 +165,15 @@ const DashboardPage = ({ setActivePage }) => {
           </table>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-3 text-gray-600 gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-5 text-gray-700 gap-3">
           <span>Showing {invoices.length} of {invoices.length} invoices</span>
-          <div className="flex gap-2">
-            <button className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 transition">Previous</button>
-            <button className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 transition">Next</button>
+          <div className="flex gap-3">
+            <button className="px-4 py-2 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition cursor-pointer">
+              Previous
+            </button>
+            <button className="px-4 py-2 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition cursor-pointer">
+              Next
+            </button>
           </div>
         </div>
       </div>
