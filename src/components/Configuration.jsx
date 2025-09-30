@@ -199,23 +199,33 @@ const VendorConfiguration = () => (
 const SectionWithTable = ({ title, rows }) => (
   <div className="mb-10">
     <div className="text-gray-700 font-semibold mb-4">{title}</div>
-    <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
-      <thead>
-        <tr className="bg-gray-100 text-gray-700 text-left text-sm font-semibold">
-          <th className="py-3 px-4 border-r border-gray-300">Name</th>
-          <th className="py-3 px-4">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, idx) => (
-          <tr key={idx} className="border-t border-gray-300 odd:bg-white even:bg-gray-50">
-            <td className="py-2 px-4 border-r border-gray-300 align-top text-sm">{row.name}</td>
-            <td className="py-2 px-4 text-sm">{row.description}</td>
+    <div className="overflow-x-auto rounded-lg border border-gray-300">
+      <table className="w-full">
+        <thead>
+          <tr className="bg-gray-100 text-gray-700 text-left text-sm font-semibold">
+            <th className="py-3 px-4 border-r border-gray-300">Name</th>
+            <th className="py-3 px-4">Description</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row, idx) => (
+            <tr
+              key={idx}
+              className="border-t border-gray-300 odd:bg-white even:bg-gray-50"
+            >
+              <td className="py-2 px-4 border-r border-gray-300 align-top text-sm">
+                {row.name}
+              </td>
+              <td className="py-2 px-4 text-sm">
+                {row.description}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </div>
 );
+
 
 export default Configuration;
