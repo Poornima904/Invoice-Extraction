@@ -29,7 +29,7 @@ const totalsSummary = [
   { label: "Total Amount", value: "USD 18,750.5", confidence: "High", percent: 99, color: "bg-green-100 text-green-800" }
 ];
 
-export default function ReviewPage() {
+export default function ReviewPage({setActivePage}) {
   return (
     <div className="flex bg-gray-50 h-[calc(100vh-53px)] w-full overflow-hidden">
       <div className="flex flex-col flex-1">
@@ -37,7 +37,9 @@ export default function ReviewPage() {
         {/* Sticky Review Page Header */}
         <div className="sticky top-0 z-40 bg-white border-b flex items-center justify-between px-8 h-[72px] w-full flex-shrink-0">
           <div className="flex items-center gap-5">
-            <button className="flex items-center gap-0.5 text-gray-700 bg-white border px-2 py-1 rounded-md font-medium text-sm hover:bg-gray-50 hover:border-gray-300 transition">
+            <button 
+            onClick={() => setActivePage("Upload")}
+            className="flex items-center gap-0.5 text-gray-700 bg-white border px-2 py-1 rounded-md font-medium text-sm hover:bg-gray-50 hover:border-gray-300 transition">
               <span className="text-lg">←</span> Back
             </button>
             <div>
