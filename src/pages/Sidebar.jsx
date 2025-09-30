@@ -40,7 +40,7 @@ export default function Sidebar({
         top: HEADER_HEIGHT,
         width: sidebarWidth,
         height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        background: "#f7f9fa",
+        background: "#fff",
         borderRight: "1px solid #e5e7eb",
         zIndex: 40,
         display: "flex",
@@ -53,11 +53,40 @@ export default function Sidebar({
     >
       {/* Branding */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-200">
-        <div className="flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-lg text-2xl font-bold">⚡</div>
+  <div
+  style={{
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    overflow: "hidden",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "linear-gradient(135deg, #2fa88d 20%, #6b7bed 70%, #9f61f0 100%)",
+  }}
+>
+  {/* Insert SVG here */}
+  <svg
+    width="23"
+    height="20"
+    viewBox="0 0 23 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M22.55 5L13.6 18.55H9.46V15.75L17.63 4.87H11.62L9.16 8.41L6.73 12.09L4.96 14.79H0V10.34L6.74 0H22.55Z"
+      fill="white"
+    />
+  </svg>
+</div>
+
+
+
+
         {expanded && (
           <div>
             <h2 className="text-gray-900 font-bold text-lg m-0 leading-none">InvoiceAI</h2>
-            <p className="text-gray-400 text-sm">Extraction Platform</p>
+            <p className="text-gray-400 text-sm">Smart Invoice Processing</p>
           </div>
         )}
       </div>
@@ -74,7 +103,7 @@ export default function Sidebar({
       </div>
 
       {/* Menu */}
-      <nav className="flex flex-col px-2 mt-2 gap-1">
+      <nav className="flex flex-col px-2 mt-2 gap-1 flex-1">
         {MENU.map(({ name, icon: Icon, countKey }) => {
           const count = countKey ? counts[countKey] : 0;
           const isActive = activePage === name;
@@ -84,19 +113,19 @@ export default function Sidebar({
               key={name}
               onClick={() => setActivePage(name)}
               className={`flex items-center justify-between p-3 rounded-lg transition cursor-pointer
-                ${isActive ? "bg-indigo-100 font-semibold text-indigo-700" : "text-gray-700 hover:bg-indigo-50"}`}
+                ${isActive ? "bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold" : "text-gray-700 hover:bg-gray-50"}`}
               title={name}
               aria-current={isActive ? "page" : undefined}
             >
               <div className="flex items-center gap-4">
-                <span className={`flex items-center justify-center min-w-[24px] h-6 ${isActive ? "text-indigo-700" : "text-gray-500 group-hover:text-indigo-700"}`}>
+                <span className={`flex items-center justify-center min-w-[24px] h-6 ${isActive ? "text-white" : "text-gray-500"}`}>
                   <Icon size={22} />
                 </span>
                 {expanded && <span>{name}</span>}
               </div>
 
               {expanded && count > 0 && (
-                <span className="flex-shrink-0 bg-red-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full select-none">
+                <span className="flex-shrink-0 bg-gradient-to-r from-green-400 to-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full select-none">
                   {count}
                 </span>
               )}
@@ -104,6 +133,24 @@ export default function Sidebar({
           );
         })}
       </nav>
+
+      {/* Footer */}
+      {expanded && (
+        <div className="border-t border-gray-200 p-4 mt-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
+              AI
+            </span>
+            <div>
+              <p className="text-gray-700 font-semibold text-sm m-0">Professional</p>
+              <p className="text-gray-400 text-xs m-0">v1.0</p>
+            </div>
+          </div>
+          <button className="px-3 py-1 border rounded text-gray-700 text-sm hover:bg-gray-100 transition">
+            Theme
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
