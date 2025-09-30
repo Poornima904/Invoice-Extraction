@@ -41,7 +41,7 @@ const FieldMaster = () => (
       <option value="edit">Edit Field</option>
     </select>
   </div>
-  <div>
+  <div style={{ marginLeft: '35rem' }}>
     <label>Country</label>
     <select className="custom-dropdown">
       <option value="" disabled selected>Select country</option>
