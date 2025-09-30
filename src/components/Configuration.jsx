@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import {
+
+  FiSettings
+ 
+} from "react-icons/fi";
+
 import './Configuration.css';
 
 const Configuration = () => {
@@ -6,7 +12,8 @@ const Configuration = () => {
   return (
     <div className="config-bg">
       <div className="config-header">
-        <span className="config-title">Configuration</span>
+
+        <span className="config-title flex items-center gap-2"><FiSettings size={20} />Configuration</span>
         <div className="config-actions">
           <button className="reset-btn">Reset to Defaults</button>
           <button className="save-btn">Save Configuration</button>
@@ -137,7 +144,7 @@ const VendorConfiguration = () => (
         <input placeholder="Enter vendor name" />
       </div>
       <div className="prompts-label">Prompts</div>
-      
+
       <div className="vendor-form-col">
         <label>Header Prompt</label>
         <textarea className="prompt-area" placeholder="Enter header extraction prompt..." />
