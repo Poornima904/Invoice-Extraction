@@ -1,228 +1,169 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import {
 
-export default function Configuration() {
-  const [activeTab, setActiveTab] = useState("master");
+  FiSettings
 
+} from "react-icons/fi";
+import './Configuration.css';
+
+
+const Configuration = () => {
+  const [activeTab, setActiveTab] = useState('field');
   return (
-    <div className="min-h-screen bg-[#fafbfc] flex flex-col font-sans">
-      {/* Top header bar */}
-      <div className="bg-white border-b h-[54px] flex items-center px-8 text-lg font-semibold text-gray-900 shadow-sm">
-        Configuration
-      </div>
-      {/* Page padding/content */}
-      <div className="flex-1 px-3 sm:px-12 py-9">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6">
-          <button
-            onClick={() => setActiveTab("master")}
-            className={`px-5 py-2 font-semibold rounded-t-lg ${
-              activeTab === "master"
-                ? "bg-purple-100 text-purple-700 border-b-4 border-purple-500"
-                : "bg-white text-gray-600 border-b border-gray-300"
-            }`}
-          >
-            Field Master
-          </button>
-          <button
-            onClick={() => setActiveTab("vendor")}
-            className={`px-5 py-2 font-semibold rounded-t-lg ${
-              activeTab === "vendor"
-                ? "bg-green-100 text-green-800 border-b-4 border-green-500"
-                : "bg-white text-gray-600 border-b border-gray-300"
-            }`}
-          >
-            Vendor Configuration
-          </button>
-        </div>
-        {/* Cards */}
-        <div className="flex flex-col gap-8">
-          {/* Field Master Card */}
-          {activeTab === "master" && (
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-              {/* Colored header */}
-              <div className="bg-purple-100 text-purple-700 font-semibold text-lg px-8 py-4">
-                Manage Field Master
-              </div>
-              {/* Card body */}
-              <div className="px-8 pb-8 pt-7">
-                <div className="flex gap-7 mb-8">
-                  <div className="flex-1">
-                    <label className="block mb-2 font-semibold text-gray-900">Choose Operation</label>
-                    <select className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white transition hover:border-purple-500">
-                      <option value="">Select operation</option>
-                      <option value="create">Create Field</option>
-                      <option value="edit">Edit Field</option>
-                    </select>
-                  </div>
-                  <div className="flex-1">
-                    <label className="block mb-2 font-semibold text-gray-900">Country</label>
-                    <select className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white transition hover:border-purple-500">
-                      <option value="">Select country</option>
-                      <option value="India">India</option>
-                      <option value="Germany">Germany</option>
-                      <option value="US">US</option>
-                      <option value="France">France</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Tables */}
-                <div className="mb-3 font-semibold text-base text-gray-900">Header Fields</div>
-                <table className="w-full table-fixed border-collapse mb-7">
-                  <thead>
-                    <tr className="bg-gray-50 border-b">
-                      <th className="py-2 px-3 text-xs font-medium text-gray-500">Name</th>
-                      <th className="py-2 px-3 text-xs font-medium text-gray-500">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Invoice_Number</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Unique number for invoice tracking</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Invoice_Date</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Date invoice issued</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Currency</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Invoice currency (USD, INR, EUR)</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <div className="mb-3 font-semibold text-base text-gray-900">Line Item Fields</div>
-                <table className="w-full table-fixed border-collapse mb-5">
-                  <thead>
-                    <tr className="bg-gray-50 border-b">
-                      <th className="py-2 px-3 text-xs font-medium text-gray-500">Name</th>
-                      <th className="py-2 px-3 text-xs font-medium text-gray-500">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">SL_No</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Line item serial number</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Item_Description</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Product/Service details</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Quantity</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Quantity of items</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Unit_Price</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Price per unit</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-3 text-sm">Total_Item_Amount</td>
-                      <td className="py-2 px-3 text-sm text-gray-600">Total amount for line item</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                {/* Add Field Form */}
-                <div className="flex gap-4 items-end mb-1">
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-900 mb-1">Field Name</label>
-                    <input
-                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white"
-                      placeholder="Enter field name"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-900 mb-1">Description</label>
-                    <input
-                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white"
-                      placeholder="Enter field description"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-900 mb-1">Type</label>
-                    <select
-                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white transition hover:border-purple-500"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>
-                        Select type
-                      </option>
-                      <option value="string">String</option>
-                      <option value="number">Number</option>
-                      <option value="percentage">Percentage</option>
-                      <option value="date">Date</option>
-                    </select>
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-900 mb-1">Created By</label>
-                    <input
-                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white"
-                      placeholder="Enter creator name"
-                    />
-                  </div>
-                </div>
-                <button className="mt-3 px-3 py-2 rounded-md bg-purple-500 text-white font-semibold text-xs shadow-sm hover:bg-purple-700 transition">
-                  + Add Field
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Vendor Configuration Card */}
-          {activeTab === "vendor" && (
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-              <div className="bg-green-100 text-green-800 font-semibold text-lg px-8 py-4">
-                Manage Vendor Configuration
-              </div>
-              <div className="px-8 pb-8 pt-7">
-                <div className="flex gap-7 mb-7">
-                  <div className="flex-1">
-                    <label className="block mb-2 font-semibold text-gray-900">Choose Operation</label>
-                    <select className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white transition hover:border-purple-500">
-                      <option value="">Select operation</option>
-                      <option value="create">Create Field</option>
-                      <option value="edit">Edit Field</option>
-                    </select>
-                  </div>
-                  <div className="flex-1">
-                    <label className="block mb-2 font-semibold text-gray-900">Country</label>
-                    <select className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-purple-200 outline-none text-gray-900 bg-white transition hover:border-purple-500">
-                      <option value="">Select country</option>
-                      <option value="India">India</option>
-                      <option value="Germany">Germany</option>
-                      <option value="US">US</option>
-                      <option value="France">France</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex mb-6 gap-6">
-                  <div className="flex-1">
-                    <label className="block font-semibold text-gray-900 mb-2">Vendor Name</label>
-                    <input className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-200 outline-none text-gray-900 bg-white" />
-                  </div>
-                </div>
-                <div className="mb-4 font-semibold text-gray-900 text-base">Prompts</div>
-                <label className="block font-semibold text-gray-900 mb-2">Header Prompt</label>
-                <textarea
-                  className="w-full border rounded-lg bg-[#202124] text-gray-200 px-3 py-3 mb-4"
-                  rows={2}
-                  placeholder="Enter header extraction prompt..."
-                />
-                <label className="block font-semibold text-gray-900 mb-2">Line Items Prompt</label>
-                <textarea
-                  className="w-full border rounded-lg bg-[#202124] text-gray-200 px-3 py-3 mb-4"
-                  rows={3}
-                  placeholder="Enter prompt for line items..."
-                />
-                <button className="px-3 py-2 rounded-md bg-green-500 text-white font-semibold text-xs shadow-sm hover:bg-green-700 transition">
-                  + Add Vendor
-                </button>
-              </div>
-            </div>
-          )}
+    <div className="config-bg">
+      <div className="config-header">
+        
+        <span className="config-title flex gap-2 items-center"><FiSettings size={20} className="config-icon" /> Configuration</span>
+        <div className="config-actions">
+          <button className="reset-btn">Reset to Defaults</button>
+          <button className="save-btn">Save Configuration</button>
         </div>
       </div>
+      <div className="tab-row">
+        <button
+          className={activeTab === 'field' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('field')}
+        >
+          Field Master
+        </button>
+        <button
+          className={activeTab === 'vendor' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('vendor')}
+        >
+          Vendor Configuration
+        </button>
+      </div>
+      {activeTab === 'field' ? <FieldMaster /> : <VendorConfiguration />}
     </div>
   );
-}
+};
+
+const FieldMaster = () => (
+  <div className="card">
+    <div className="card-header">Manage Field Master</div>
+    <div className="form-row">
+      <div>
+        <label>Choose Operation</label>
+        <div className="dropdown">Select operation</div>
+      </div>
+      <div>
+        <label>Country</label>
+        <div className="dropdown">Select country</div>
+      </div>
+    </div>
+    <div className="fields-section">
+      <div className="fields-title">Header Fields</div>
+      <table className="fields-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Invoice_Number</td><td>Unique number for invoice tracking</td></tr>
+          <tr><td>Invoice_Date</td><td>Date invoice issued</td></tr>
+          <tr><td>Currency</td><td>Invoice currency (USD, INR, EUR)</td></tr>
+        </tbody>
+      </table>
+      <div className="fields-title">Line Item Fields</div>
+      <table className="fields-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Sl_No</td><td>Line item serial number</td></tr>
+          <tr><td>Item_Description</td><td>Product/Service details</td></tr>
+          <tr><td>Quantity</td><td>Quantity of items</td></tr>
+          <tr><td>Unit_Price</td><td>Price per unit</td></tr>
+          <tr><td>Total_Item_Amount</td><td>Total amount for line item</td></tr>
+        </tbody>
+      </table>
+    </div>
+    {/* Add Field Section */}
+    <form className="add-fields-form" autoComplete="off">
+      <div className="add-fields-grid">
+        <div className="add-fields-col">
+          <label>Field Name</label>
+          <input type="text" placeholder="Enter field name" />
+        </div>
+        <div className="add-fields-col">
+          <label>Description</label>
+          <input type="text" placeholder="Enter field description" />
+        </div>
+        <div className="add-fields-col">
+          <label>Type</label>
+          <select>
+            <option>Select type</option>
+          </select>
+        </div>
+        <div className="add-fields-col">
+          <label>Created By</label>
+          <input type="text" placeholder="Enter creator name" />
+        </div>
+      </div>
+      <div className="add-btn-row">
+        <button className="add-btn" type="button">
+          <span className="add-btn-icon">+</span>
+          Add Field
+        </button>
+      </div>
+    </form>
+  </div>
+);
+
+// const VendorConfiguration = () => (
+//   <div className="card">
+//     <div className="card-header green">Manage Vendor Configuration</div>
+//     {/* Vendor config content here */}
+//   </div>
+// );
+const VendorConfiguration = () => (
+  <div className="card">
+    <div className="card-header vendor-header">
+      Manage Vendor Configuration
+    </div>
+    <div className="vendor-form-row">
+      <div className="vendor-form-col">
+        <label>Choose Operation</label>
+        <div className="dropdown">Select operation</div>
+      </div>
+      <div className="vendor-form-col">
+        <label>Country</label>
+        <div className="dropdown">Select country</div>
+      </div>
+    </div>
+    <div className="vendor-form-col" style={{marginBottom: "10px", maxWidth: 330}}>
+      <label>Vendor Name</label>
+      <input placeholder="Enter vendor name"/>
+    </div>
+    <div className="prompts-label">Prompts</div>
+    <div className="vendor-form-col">
+      <label>Header Prompt</label>
+      <textarea
+        className="prompt-area"
+        placeholder="Enter header extraction prompt..."
+      />
+    </div>
+    <div className="vendor-form-col">
+      <label>Line Items Prompt</label>
+      <textarea
+        className="prompt-area"
+        defaultValue={`## Fields\nAnalyze the content and extract: {Invoice_Number, Date, Amount, Vendor_Name}\n## Output\nReturn as JSON dictionary format`}
+      />
+    </div>
+    <div className="vendor-form-col" style={{maxWidth: 330}}>
+      <label>Created By</label>
+      <input placeholder="Enter creator name" />
+    </div>
+    <button className="add-vendor-btn" type="button">
+      <span className="add-vendor-btn-icon">+</span> Add Vendor
+    </button>
+  </div>
+);
+
+
+export default Configuration;

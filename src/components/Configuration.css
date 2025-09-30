@@ -1,0 +1,622 @@
+body {
+  background: #f6f8fb;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.config-main-bg {
+  background: #f6f8fb;
+  min-height: 100vh;
+}
+
+/* Header section */
+.config-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 32px 0 32px;
+}
+
+.config-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.config-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.reset-btn, .save-btn {
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+  padding: 7px 22px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reset-btn {
+  background: #f9fafb;
+  border: 1px solid #e7e8f1;
+  color: #64748b;
+}
+
+.save-btn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+}
+
+.config-tab-row {
+  margin: 21px 0 0 32px;
+  display: flex;
+  gap: 9px;
+}
+
+.tab-btn {
+  background: #f9fafb;
+  color: #444;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #1e293b;
+  border-bottom: 2px solid #c5b2ef;
+  font-weight: 600;
+}
+
+/* Card */
+.master-card {
+  background: #fff;
+  border-radius: 11px;
+  box-shadow: 0 1px 4px rgba(137, 130, 255, 0.04);
+  margin: 30px 32px 0 32px;
+  padding-bottom: 30px;
+}
+
+.master-card-header {
+  background: #e9d9fe;
+  color: #464e5f;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 15px 22px;
+  border-radius: 11px 11px 0 0;
+  margin-bottom: 2px;
+}
+
+/* Optional for vendor tab, use .green for distinction */
+.master-card-header.green {
+  background: #ccf5e7;
+}
+
+.master-form-row {
+  display: flex;
+  gap: 110px;
+  margin-top: 26px;
+  margin-bottom: 20px;
+  padding-left: 22px;
+}
+
+.master-form-row label {
+  font-size: 14px;
+  color: #282828;
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 400;
+}
+.master-dropdown {
+  color: #b2bac7;
+  font-size: 15px;
+  padding: 7px 0;
+}
+
+/* Table style */
+.section-content {
+  padding: 0 22px;
+}
+
+.fields-title {
+  color: #444;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  margin-bottom: 5px;
+}
+
+.fields-table th, .fields-table td {
+  border: 1px solid #e7e8f1;
+  padding: 12px 19px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.fields-table th {
+  background: #f3f4ff;
+  color: #414167;
+  font-weight: 600;
+}
+/* Responsive Design */
+@media (max-width: 900px) {
+  .master-card {
+    margin: 12px 5px 0 5px;
+    padding-bottom: 15px;
+  }
+  .config-tab-row {
+    margin-left: 5px;
+  }
+  .config-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+body {
+  background: #f6f8fb;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+}
+
+.config-bg {
+  background: #f6f8fb;
+  min-height: 100vh;
+}
+
+.config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px 0 32px;
+}
+.config-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #64748b;
+}
+.config-actions {
+  display: flex;
+  gap: 10px;
+}
+.reset-btn,
+.save-btn {
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+  padding: 7px 21px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.reset-btn {
+  background: #f9fafb;
+  border: 1px solid #e7e8f1;
+  color: #64748b;
+}
+.save-btn {
+  background: #22c55e;
+  color: #fff;
+}
+.tab-row {
+  margin: 20px 0 0 32px;
+  display: flex;
+  gap: 10px;
+}
+.tab {
+  background: #f9fafb;
+  color: #444;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.tab.active {
+  background: #fff;
+  color: #1e293b;
+  border-bottom: 2px solid #c5b2ef;
+  font-weight: 600;
+}
+.card {
+  background: #fff;
+  border-radius: 11px;
+  box-shadow: 0 1px 4px rgba(137,130,255,.04);
+  margin: 32px 32px 0 32px;
+  padding-bottom: 28px;
+}
+.card-header {
+  background: #e9d9fe;
+  color: #464e5f;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 22px;
+  border-radius: 11px 11px 0 0;
+  margin-bottom: 2px;
+}
+.card-header.green {
+  background: #ccf5e7;
+}
+.form-row {
+  display: flex;
+  gap: 110px;
+  margin-top: 24px;
+  margin-bottom: 18px;
+  padding-left: 22px;
+}
+.form-row label {
+  font-size: 14px;
+  color: #282828;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+.dropdown {
+  color: #b2bac7;
+  font-size: 15px;
+  padding: 7px 0;
+}
+.fields-section {
+  margin-left: 22px;
+  margin-right: 22px;
+  margin-top: 10px;
+}
+.fields-title {
+  color: #444;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-top: 22px;
+}
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  margin-bottom: 10px;
+}
+.fields-table th, .fields-table td {
+  border: 1px solid #e7e8f1;
+  padding: 13px 19px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 14px;
+}
+.fields-table th {
+  background: #f3f4ff;
+  color: #414167;
+  font-weight: 600;
+}
+
+/* ADD FIELDS section */
+.add-fields-form {
+  margin-top: 20px;
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+}
+.add-fields-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 80px;
+  margin-bottom: 18px;
+}
+.add-fields-col label {
+  font-size: 15px;
+  color: #333d49;
+  font-weight: 500;
+  margin-bottom: 7px;
+  margin-left: 2px;
+}
+.add-fields-col input,
+.add-fields-col select {
+  height: 38px;
+  font-size: 15px;
+  border: 1px solid #ebebed;
+  border-radius: 6px;
+  background: #f9fafb;
+  padding: 0 13px;
+  box-sizing: border-box;
+  color: #646a79;
+  margin-bottom: 2px;
+  transition: border 0.2s;
+}
+.add-fields-col input::placeholder {
+  color: #b2bac7;
+}
+.add-fields-col select {
+  color: #b2bac7;
+}
+.add-fields-col input:focus,
+.add-fields-col select:focus {
+  border: 1.5px solid #6366f1;
+  outline: none;
+}
+.add-btn-row {
+  margin-top: 7px;
+  margin-left: 0;
+}
+.add-btn {
+  background: linear-gradient(90deg, #22c55e 0%, #6366f1 100%);
+  color: #fff;
+  border: none;
+  padding: 8px 26px 8px 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 115px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 1px 3px rgba(40,40,80,0.07);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.add-btn-icon {
+  font-size: 17px;
+  font-weight: bold;
+  margin-right: 2px;
+}
+
+.add-btn:hover {
+  background: linear-gradient(90deg, #159239 0%, #4f46e5 100%);
+}
+
+@media (max-width: 900px) {
+  .card { margin: 18px 6px 0 6px; }
+  .add-fields-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+.add-fields-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+/* Label stays above input/select */
+.add-fields-col label {
+  font-size: 15px;
+  color: #454b56;
+  font-weight: 500;
+  margin-bottom: 5px;
+  margin-left: 2px;
+}
+
+/* Default input/select: white, light border */
+.add-fields-col input,
+.add-fields-col select {
+  margin-top: 0;               /* input directly under label */
+  background: #fff;
+  border: 1.5px solid #e6e8ec; /* light gray border */
+  border-radius: 7px;
+  color: #464e5f;
+  font-size: 15px;
+  height: 38px;
+  padding: 0 13px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.17s, box-shadow 0.17s;
+}
+
+/* Placeholders */
+.add-fields-col input::placeholder,
+.add-fields-col select option {
+  color: #b2bac7;
+  opacity: 1;
+}
+
+/* On focus: green border, rounded corners, gentle shadow */
+.add-fields-col input:focus,
+.add-fields-col select:focus {
+  border: 2px solid #47c088;           /* bright green */
+  box-shadow: 0 0 0 2px #aef0d5;       /* subtle soft green glow */
+  outline: none;
+  background: #fff;
+}
+.add-fields-col input,
+.add-fields-col select {
+  height: 38px;
+  border: 1px solid #e9e9ee;    /* extremely light border */
+  border-radius: 7px;
+  background: #fff;
+  color: #464e5f;
+  font-size: 15px;
+  padding: 0 13px;
+  box-sizing: border-box;
+  margin-bottom: 2px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.16s;
+}
+
+.add-fields-col input::placeholder,
+.add-fields-col select option {
+  color: #b2bac7;
+  opacity: 1;
+}
+
+/* Only highlight when focused */
+.add-fields-col input:focus,
+.add-fields-col select:focus {
+  border: 2px solid #47c088;
+  box-shadow: 0 0 0 2px #aef0d5;
+}
+.add-fields-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+/* Label stays above input/select */
+.add-fields-col label {
+  font-size: 15px;
+  color: #454b56;
+  font-weight: 500;
+  margin-bottom: 5px;
+  margin-left: 2px;
+}
+
+/* Default input/select: white, light border */
+.add-fields-col input,
+.add-fields-col select {
+  margin-top: 0;               /* input directly under label */
+  background: #fff;
+  border: 1.5px solid #e6e8ec; /* light gray border */
+  border-radius: 7px;
+  color: #464e5f;
+  font-size: 15px;
+  height: 38px;
+  padding: 0 13px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.17s, box-shadow 0.17s;
+}
+
+/* Placeholders */
+.add-fields-col input::placeholder,
+.add-fields-col select option {
+  color: #b2bac7;
+  opacity: 1;
+}
+
+/* On focus: green border, rounded corners, gentle shadow */
+.add-fields-col input:focus,
+.add-fields-col select:focus {
+  border: 2px solid #47c088;           /* bright green */
+  box-shadow: 0 0 0 2px #aef0d5;       /* subtle soft green glow */
+  outline: none;
+  background: #fff;
+}
+/* Vendor card header: GREEN */
+.card-header.vendor-header {
+  background: #c4f7d2;
+  color: #186449;
+}
+
+/* Row with Selects for Operation/Country */
+.vendor-form-row {
+  display: flex;
+  gap: 90px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  padding-left: 22px;
+}
+.vendor-form-col {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 13px;
+}
+
+/* Titles/Labels */
+.vendor-form-col label {
+  font-size: 15px;
+  color: #454b56;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-left: 2px;
+}
+
+/* Inputs/bar is white, almost borderless, like previous tab */
+.vendor-form-col input {
+  height: 38px;
+  border: 1px solid #f2f3f4;
+  border-radius: 7px;
+  background: #fff;
+  color: #464e5f;
+  font-size: 15px;
+  padding: 0 13px;
+  box-sizing: border-box;
+  margin-bottom: 2px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.16s;
+}
+.vendor-form-col input::placeholder {
+  color: #b2bac7;
+}
+
+/* Focus: green border on field */
+.vendor-form-col input:focus {
+  border: 2px solid #47c088;
+  box-shadow: 0 0 0 2px #aef0d5;
+  background: #fff;
+}
+.dropdown {
+  color: #b2bac7;
+  font-size: 15px;
+  padding: 7px 0;
+  background: #fff;
+}
+
+/* Prompts label */
+.prompts-label {
+  color: #475660;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 16px 0 14px 21px;
+}
+
+/* Text Areas */
+.prompt-area {
+  width: 100%;
+  min-height: 68px;
+  font-family: "Fira Mono", "Consolas", "Menlo", monospace;
+  background: #18181b;
+  color: #e1e1e7;
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 14px 17px;
+  outline: none;
+  border: none;
+  margin-bottom: 10px;
+  resize: vertical;
+}
+/* Add Vendor button: gradient, left-aligned */
+.add-vendor-btn {
+  margin-top: 8px;
+  margin-left: 14px;
+  background: linear-gradient(90deg, #22c55e 0%, #6366f1 100%);
+  color: #fff;
+  border: none;
+  padding: 9px 23px 9px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 1px 3px rgba(40,40,80,0.07);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.16s;
+}
+.add-vendor-btn:hover {
+  background: linear-gradient(90deg, #159239 0%, #4f46e5 100%);
+}
+.add-vendor-btn-icon {
+  font-size: 17px;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .vendor-form-row { gap: 14px; flex-wrap: wrap;}
+  .vendor-form-col, .prompt-area { max-width: 100% !important; }
+}
