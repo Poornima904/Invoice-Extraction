@@ -10,20 +10,24 @@ const stepsData = [
   { title: "Quality Check", description: "Final confidence scoring and quality assessment", time: "", duration: "", status: "pending" },
 ];
 
-export default function ProcessingPage({setActivePage}) {
+export default function ProcessingPage({ setActivePage }) {
   const overallProgress = 60;
   return (
-    <div className="max-w-10xl mx-auto px-2 sm:px-6 lg:px-8 py-6 text-gray-900 font-sans">
+    <div className="w-full max-w-screen-xl mx-auto px-3 sm:px-6 lg:px-8 py-6 text-gray-900 font-sans overflow-x-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3 sm:gap-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3 sm:gap-0 w-full">
         <div className="flex items-center gap-3 flex-wrap">
-          <button  onClick={() => setActivePage("Upload")}
-          className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md
+          <button
+            onClick={() => setActivePage("Upload")}
+            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md
             hover:bg-blue-50 hover:scale-105 transition-transform duration-200 ease-in-out
-            text-sm cursor-pointer">
+            text-sm cursor-pointer"
+          >
             <FaArrowLeft className="transition-colors duration-200 hover:text-blue-600" /> Back
           </button>
-          <div className="text-sm">Processing Status: <strong>office_supplies_quarterly.pdf</strong></div>
+          <div className="text-sm break-words">
+            Processing Status: <strong>office_supplies_quarterly.pdf</strong>
+          </div>
         </div>
         <div className="flex gap-3 flex-wrap">
           <button className="flex items-center gap-2 px-4 py-2 border border-blue-600 bg-blue-50 text-blue-600 rounded-md font-semibold text-sm
@@ -36,13 +40,14 @@ export default function ProcessingPage({setActivePage}) {
           </button>
         </div>
       </div>
+
       {/* Timeline Card */}
-      <div className="border rounded-xl p-0 md:p-6 mb-6 shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white">
-        <div className="flex items-center gap-2 mb-4 text-lg font-semibold text-blue-800 px-4 md:px-0 pt-4 md:pt-0">
+      <div className="border rounded-xl p-4 md:p-6 mb-6 shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white overflow-x-hidden">
+        <div className="flex items-center gap-2 mb-4 text-lg font-semibold text-blue-800">
           <FaClock className="text-blue-600 transition-colors duration-300 ease-in-out" /> Processing Timeline
         </div>
         {/* Overall Progress */}
-        <div className="flex items-center mb-2 text-sm px-4 md:px-0">
+        <div className="flex items-center mb-2 text-sm">
           <span className="font-medium">Overall Progress</span>
           <span className="ml-auto font-semibold">{overallProgress}%</span>
         </div>
@@ -53,8 +58,8 @@ export default function ProcessingPage({setActivePage}) {
           />
         </div>
         {/* Steps */}
-        <div className="relative pl-10 sm:pl-16 pr-4 md:pr-0">
-          <div className="absolute top-5 left-5 sm:left-8 w-0.5 bg-gray-300 h-full z-0"></div>
+        <div className="relative pl-8 sm:pl-16 pr-2 sm:pr-0">
+          <div className="absolute top-5 left-4 sm:left-8 w-0.5 bg-gray-300 h-full z-0"></div>
           {stepsData.map((step, idx) => {
             const isProcessing = step.status === "processing";
             const isCompleted = step.status === "completed";
@@ -62,7 +67,7 @@ export default function ProcessingPage({setActivePage}) {
               <div
                 key={idx}
                 className="flex flex-col sm:flex-row items-start sm:items-center mb-8 relative gap-2 sm:gap-4
-                transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-blue-50 rounded cursor-pointer"
+                transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-blue-50 rounded cursor-pointer w-full"
               >
                 {/* Icon */}
                 <div className="flex-shrink-0 w-14 flex justify-center mt-1">
@@ -78,8 +83,8 @@ export default function ProcessingPage({setActivePage}) {
                   </div>
                 </div>
                 {/* Content */}
-                <div className="flex-1 pl-4">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <div className="flex-1 pl-2 sm:pl-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full">
                     <div
                       className={`text-sm font-semibold transition-colors duration-300 ease-in-out
                       ${isCompleted ? "text-green-600" : isProcessing ? "text-blue-600" : "text-gray-900"}`}
@@ -113,23 +118,25 @@ export default function ProcessingPage({setActivePage}) {
           })}
         </div>
       </div>
+
       {/* File Info & Extraction Results */}
-      <div className="flex flex-col sm:flex-row gap-5 mb-6">
-        <div className="flex-1 border rounded-xl p-5 min-w-[280px] shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white cursor-default">
+      <div className="flex flex-col sm:flex-row gap-5 mb-6 w-full">
+        <div className="flex-1 border rounded-xl p-5 shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white cursor-default w-full">
           <h4 className="font-semibold mb-3 text-blue-700">File Information</h4>
-          <div className="flex justify-between mb-2"><span>File Name:</span> <span className="font-medium">office_supplies_quarterly.pdf</span></div>
-          <div className="flex justify-between mb-2"><span>Upload Date:</span> <span className="font-medium">2024-01-20</span></div>
-          <div className="flex justify-between mb-2"><span>File Size:</span> <span className="font-medium">2.4 MB</span></div>
-          <div className="flex justify-between"><span>Pages:</span> <span className="font-medium">3</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>File Name:</span> <span className="font-medium break-words">office_supplies_quarterly.pdf</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>Upload Date:</span> <span className="font-medium">2024-01-20</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>File Size:</span> <span className="font-medium">2.4 MB</span></div>
+          <div className="flex justify-between text-sm"><span>Pages:</span> <span className="font-medium">3</span></div>
         </div>
-        <div className="flex-1 border rounded-xl p-5 min-w-[280px] shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white cursor-default">
+        <div className="flex-1 border rounded-xl p-5 shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out bg-white cursor-default w-full">
           <h4 className="font-semibold mb-3 text-blue-700">Extraction Results</h4>
-          <div className="flex justify-between mb-2"><span>Confidence Score:</span> <span className="px-2 py-1 bg-blue-50 rounded font-semibold">89%</span></div>
-          <div className="flex justify-between mb-2"><span>Fields Extracted:</span> <span className="font-medium">12/15</span></div>
-          <div className="flex justify-between mb-2"><span>Line Items:</span> <span className="font-medium">3</span></div>
-          <div className="flex justify-between"><span>Processing Time:</span> <span className="font-medium">45 seconds</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>Confidence Score:</span> <span className="px-2 py-1 bg-blue-50 rounded font-semibold">89%</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>Fields Extracted:</span> <span className="font-medium">12/15</span></div>
+          <div className="flex justify-between mb-2 text-sm"><span>Line Items:</span> <span className="font-medium">3</span></div>
+          <div className="flex justify-between text-sm"><span>Processing Time:</span> <span className="font-medium">45 seconds</span></div>
         </div>
       </div>
+
       {/* Download Button */}
       <div className="flex justify-start">
         <button className="px-5 py-2 bg-blue-600 text-white rounded-md font-semibold

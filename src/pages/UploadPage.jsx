@@ -10,36 +10,54 @@ export default function UploadPage({ setActivePage }) {
     { id: 5, fileName: "vendor_payment_212.pdf", uploadDate: "2024-03-15", vendor: "Netflix Inc.", amount: "USD 2,850", status: "Processed", file: null },
   ]);
 
-  const handleFiles = useCallback(
-    (files) => {
-      const pdfFiles = Array.from(files).filter((file) => file.type === "application/pdf");
-      if (!pdfFiles.length) return alert("Please upload PDF files only.");
-      const newUploads = pdfFiles.map((file, idx) => ({
-        id: Date.now() + idx,
-        fileName: file.name,
-        uploadDate: new Date().toISOString().slice(0, 10),
-        vendor: "Unknown Vendor",
-        amount: "USD 0",
-        status: "Processing",
-        file,
-      }));
-      setUploads(prev => [...newUploads, ...prev]);
-    },
-    []
-  );
+  // --- Handle file uploads ---
+  const handleFiles = useCallback((files) => {
+    const pdfFiles = Array.from(files).filter((file) => {
+      if (file.type !== "application/pdf") {
+        alert(`${file.name} is not a PDF.`);
+        return false;
+      }
+      if (file.size > 50 * 1024 * 1024) {
+        alert(`${file.name} exceeds 50MB limit.`);
+        return false;
+      }
+      return true;
+    });
 
-  const handleDrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
+    if (!pdfFiles.length) return;
+
+    const newUploads = pdfFiles.map((file, idx) => ({
+      id: Date.now() + idx,
+      fileName: file.name,
+      uploadDate: new Date().toISOString().slice(0, 10),
+      vendor: "",
+      amount: "",
+      status: "Processing",
+      file,
+    }));
+
+    setUploads((prev) => [...newUploads, ...prev]);
+  }, []);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    handleFiles(e.dataTransfer.files);
+  };
   const handleDragOver = (e) => e.preventDefault();
   const handleChooseFile = (e) => handleFiles(e.target.files);
 
+  // --- File download ---
   const handleDownload = (upload) => {
     if (!upload.file) return alert("No file available to download.");
+    const url = URL.createObjectURL(upload.file);
     const link = document.createElement("a");
-    link.href = URL.createObjectURL(upload.file);
+    link.href = url;
     link.download = upload.fileName;
     link.click();
+    URL.revokeObjectURL(url);
   };
 
+  // --- Status styles ---
   const getStatusStyle = (status) => {
     switch (status) {
       case "Processed": return "bg-green-100 text-green-800";
@@ -50,51 +68,69 @@ export default function UploadPage({ setActivePage }) {
     }
   };
 
-  return (
-    <div className="upload-page max-w-8xl mx-auto p-4 sm:p-6 space-y-6 font-sans">
+  // --- View navigation handler ---
+  const handleView = (upload) => {
+    if (upload.status === "Needs Review" || upload.status === "Processed") {
+      setActivePage("Review");
+    } else if (upload.status === "Processing" || upload.status === "Failed") {
+      setActivePage("Processing");
+    } else {
+      setActivePage("Dashboard");
+    }
+  };
 
+  return (
+    <div className="upload-page max-w-8xl mx-auto p-4 sm:p-6 space-y-6 font-sans overflow-x-hidden">
       {/* Upload Section */}
       <div className="bg-white rounded-xl shadow p-4 sm:p-6">
         <h3 className="text-lg font-semibold mb-4">Upload Invoices</h3>
         <div
-  className="border-2 border-dashed border-[#53DEBA] bg-[#EEFDF6] rounded-xl p-8 md:p-14 text-center flex flex-col items-center justify-center shadow transition hover:bg-[#d5fbe6]"
-  onDrop={handleDrop}
-  onDragOver={handleDragOver}
->
-  {/* Centered circular up-arrow icon */}
-  <div className="mx-auto mb-4">
-    <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] rounded-full shadow-lg">
-      <svg
-        className="w-8 h-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 19V5M5 12l7-7 7 7" />
-      </svg>
-    </div>
-  </div>
-  <div className="text-xl font-semibold text-[#333] mb-1">Drop your PDF invoices here</div>
-  <div className="text-gray-500 text-sm mb-4">or click below to browse and select files</div>
-  <input type="file" id="fileInput" multiple accept="application/pdf" className="hidden" onChange={handleChooseFile} />
-  <label
-    htmlFor="fileInput"
-    className="inline-block px-8 py-2 rounded bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] text-white font-semibold shadow cursor-pointer transition hover:from-[#6951E6] hover:to-[#2DBFCB]"
-  >
-    Choose Files
-  </label>
-  <div className="text-xs text-gray-400 mt-3">
-    Supports batch upload • PDF files only • Max 50MB per file
-  </div>
-</div>
-
+          role="button"
+          tabIndex={0}
+          className="border-2 border-dashed border-[#53DEBA] bg-[#EEFDF6] rounded-xl p-8 md:p-14 text-center flex flex-col items-center justify-center shadow transition hover:bg-[#d5fbe6] focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          {/* Icon */}
+          <div className="mx-auto mb-4">
+            <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] rounded-full shadow-lg">
+              <svg
+                className="w-8 h-8"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </div>
+          </div>
+          <div className="text-xl font-semibold text-[#333] mb-1">Drop your PDF invoices here</div>
+          <div className="text-gray-500 text-sm mb-4">or click below to browse and select files</div>
+          <input
+            type="file"
+            id="fileInput"
+            multiple
+            accept="application/pdf"
+            className="hidden"
+            onChange={handleChooseFile}
+          />
+          <label
+            htmlFor="fileInput"
+            className="inline-block px-8 py-2 rounded bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] text-white font-semibold shadow cursor-pointer transition hover:from-[#6951E6] hover:to-[#2DBFCB]"
+          >
+            Choose Files
+          </label>
+          <div className="text-xs text-gray-400 mt-3">
+            Supports batch upload • PDF files only • Max 50MB per file
+          </div>
+        </div>
       </div>
 
       {/* Recent Uploads Section */}
-      <div className="bg-white rounded-xl shadow p-4 sm:p-6 space-y-4">
+      <div className="bg-white rounded-xl shadow p-4 sm:p-6 space-y-4 overflow-x-hidden">
         <h3 className="text-lg font-semibold mb-2">Recent Uploads</h3>
 
         {uploads.length === 0 && (
@@ -103,27 +139,28 @@ export default function UploadPage({ setActivePage }) {
 
         {/* Mobile Cards */}
         <div className="space-y-3 sm:hidden">
-          {uploads.map(upload => (
-            <div key={upload.id} className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1 transition hover:shadow-md hover:bg-indigo-50 cursor-pointer">
+          {uploads.map((upload) => (
+            <div
+              key={upload.id}
+              className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1 transition hover:shadow-md hover:bg-indigo-50 cursor-pointer"
+            >
               <div className="flex justify-between items-center">
                 <span className="font-semibold truncate">{upload.fileName}</span>
-                <span className={`px-2 py-0.5 text-xs rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}>
+                <span
+                  className={`px-2 py-0.5 text-xs rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}
+                >
                   {upload.status}
                 </span>
               </div>
-              <div className="text-sm text-gray-600 flex justify-between">
+              <div className="text-sm text-gray-600 flex flex-wrap justify-between gap-x-2">
                 <span>{upload.uploadDate}</span>
-                <span>{upload.vendor}</span>
-                <span>{upload.amount}</span>
+                <span>{upload.vendor || "—"}</span>
+                <span>{upload.amount || "—"}</span>
               </div>
               <div className="flex gap-2 mt-1">
                 <button
                   className="flex-1 px-3 py-1 border border-gray-300 rounded hover:bg-indigo-100 text-sm transition flex items-center justify-center gap-1"
-                  onClick={() => {
-                    if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
-                    else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
-                    else setActivePage("Dashboard");
-                  }}
+                  onClick={() => handleView(upload)}
                   title="View"
                 >
                   <FiEye size={16} />
@@ -147,31 +184,35 @@ export default function UploadPage({ setActivePage }) {
           <table className="w-full table-auto divide-y divide-gray-200 text-sm sm:text-base">
             <thead className="bg-gray-50">
               <tr>
-                {["File Name", "Upload Date", "Vendor", "Amount", "Status", "Actions"].map(header => (
-                  <th key={header} className="px-2 py-2 text-left font-semibold text-gray-700">{header}</th>
+                {["File Name", "Upload Date", "Vendor", "Amount", "Status", "Actions"].map((header) => (
+                  <th key={header} className="px-2 py-2 text-left font-semibold text-gray-700 whitespace-nowrap">
+                    {header}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {uploads.map(upload => (
-                <tr key={upload.id} className="hover:bg-indigo-50 transition-colors duration-300 cursor-pointer">
+              {uploads.map((upload) => (
+                <tr
+                  key={upload.id}
+                  className="hover:bg-indigo-50 transition-colors duration-300 cursor-pointer"
+                >
                   <td className="px-2 py-2">{upload.fileName}</td>
                   <td className="px-2 py-2">{upload.uploadDate}</td>
-                  <td className="px-2 py-2">{upload.vendor}</td>
-                  <td className="px-2 py-2">{upload.amount}</td>
+                  <td className="px-2 py-2">{upload.vendor || "—"}</td>
+                  <td className="px-2 py-2">{upload.amount || "—"}</td>
                   <td className="px-2 py-2">
-                    <span className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}
+                    >
                       {upload.status}
                     </span>
                   </td>
                   <td className="px-2 py-2 flex gap-2 justify-center">
                     <button
                       className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
-                      onClick={() => {
-                        if (upload.status === "Needs Review" || upload.status === "Processed") setActivePage("Review");
-                        else if (upload.status === "Processing" || upload.status === "Failed") setActivePage("Processing");
-                        else setActivePage("Dashboard");
-                      }}
+                      onClick={() => handleView(upload)}
+                      aria-label="View"
                       title="View"
                     >
                       <FiEye size={18} />
@@ -179,6 +220,7 @@ export default function UploadPage({ setActivePage }) {
                     <button
                       className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
                       onClick={() => handleDownload(upload)}
+                      aria-label="Download"
                       title="Download"
                     >
                       <FiDownload size={18} />
@@ -190,7 +232,6 @@ export default function UploadPage({ setActivePage }) {
           </table>
         </div>
       </div>
-
     </div>
   );
 }
