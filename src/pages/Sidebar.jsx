@@ -66,7 +66,7 @@ export default function Sidebar({
               <h2 className="text-gray-900 font-bold text-lg m-0 leading-none">
                 InvoiceAI
               </h2>
-              <p className="text-gray-400 text-sm">Smart Invoice Processing</p>
+              <p className="text-gray-400 text-[10px]">Smart Invoice Processing</p>
             </div>
           )}
         </div>
