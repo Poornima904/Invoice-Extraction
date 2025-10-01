@@ -1,14 +1,69 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { FiEye, FiDownload } from "react-icons/fi";
 
 export default function UploadPage({ setActivePage }) {
-  const [uploads, setUploads] = useState([
-    { id: 1, fileName: "invoice_124876.pdf", uploadDate: "2024-01-15", vendor: "Microsoft Corporation", amount: "USD 24,850", status: "Processed", file: null },
-    { id: 2, fileName: "purchase_order_3321.pdf", uploadDate: "2024-02-12", vendor: "Amazon Web Services", amount: "USD 13,200", status: "Needs Review", file: null },
-    { id: 3, fileName: "vendor_invoice_998.pdf", uploadDate: "2024-02-20", vendor: "Apple Inc.", amount: "USD 8,750", status: "Processing", file: null },
-    { id: 4, fileName: "invoice_march_2024.pdf", uploadDate: "2024-03-01", vendor: "Google LLC", amount: "USD 15,400", status: "Failed", file: null },
-    { id: 5, fileName: "vendor_payment_212.pdf", uploadDate: "2024-03-15", vendor: "Netflix Inc.", amount: "USD 2,850", status: "Processed", file: null },
-  ]);
+  const [uploads, setUploads] = useState([]);
+  const [highlightIds, setHighlightIds] = useState([]); // <-- track highlighted rows
+
+  // --- Load from localStorage on mount ---
+  useEffect(() => {
+    {
+      setUploads([
+        {
+          id: 1,
+          fileName: "invoice_124876.pdf",
+          uploadDate: "2024-01-15",
+          vendor: "Microsoft Corporation",
+          amount: "USD 24,850",
+          status: "Processed",
+          file: null,
+        },
+        {
+          id: 2,
+          fileName: "purchase_order_3321.pdf",
+          uploadDate: "2024-02-12",
+          vendor: "Amazon Web Services",
+          amount: "USD 13,200",
+          status: "Needs Review",
+          file: null,
+        },
+        {
+          id: 3,
+          fileName: "vendor_invoice_998.pdf",
+          uploadDate: "2024-02-20",
+          vendor: "Apple Inc.",
+          amount: "USD 8,750",
+          status: "Processing",
+          file: null,
+        },
+        {
+          id: 4,
+          fileName: "invoice_march_2024.pdf",
+          uploadDate: "2024-03-01",
+          vendor: "Google LLC",
+          amount: "USD 15,400",
+          status: "Failed",
+          file: null,
+        },
+        {
+          id: 5,
+          fileName: "vendor_payment_212.pdf",
+          uploadDate: "2024-03-15",
+          vendor: "Netflix Inc.",
+          amount: "USD 2,850",
+          status: "Processed",
+          file: null,
+        },
+      ]);
+    }
+  }, []);
+
+  // --- Save to localStorage whenever uploads change ---
+  useEffect(() => {
+    if (uploads.length > 0) {
+      localStorage.setItem("uploads", JSON.stringify(uploads));
+    }
+  }, [uploads]);
 
   // --- Handle file uploads ---
   const handleFiles = useCallback((files) => {
@@ -36,7 +91,9 @@ export default function UploadPage({ setActivePage }) {
       file,
     }));
 
+    // update uploads + highlight only new ones
     setUploads((prev) => [...newUploads, ...prev]);
+    setHighlightIds(newUploads.map((f) => f.id));
   }, []);
 
   const handleDrop = (e) => {
@@ -60,11 +117,16 @@ export default function UploadPage({ setActivePage }) {
   // --- Status styles ---
   const getStatusStyle = (status) => {
     switch (status) {
-      case "Processed": return "bg-green-100 text-green-800";
-      case "Needs Review": return "bg-yellow-100 text-yellow-800";
-      case "Processing": return "bg-blue-100 text-blue-800";
-      case "Failed": return "bg-red-100 text-red-700";
-      default: return "bg-gray-200 text-gray-700";
+      case "Processed":
+        return "bg-green-100 text-green-800";
+      case "Needs Review":
+        return "bg-yellow-100 text-yellow-800";
+      case "Processing":
+        return "bg-blue-100 text-blue-800";
+      case "Failed":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-200 text-gray-700";
     }
   };
 
@@ -91,7 +153,6 @@ export default function UploadPage({ setActivePage }) {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          {/* Icon */}
           <div className="mx-auto mb-4">
             <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-tr from-[#7C6BFA] to-[#47D8E0] rounded-full shadow-lg">
               <svg
@@ -107,8 +168,12 @@ export default function UploadPage({ setActivePage }) {
               </svg>
             </div>
           </div>
-          <div className="text-xl font-semibold text-[#333] mb-1">Drop your PDF invoices here</div>
-          <div className="text-gray-500 text-sm mb-4">or click below to browse and select files</div>
+          <div className="text-xl font-semibold text-[#333] mb-1">
+            Drop your PDF invoices here
+          </div>
+          <div className="text-gray-500 text-sm mb-4">
+            or click below to browse and select files
+          </div>
           <input
             type="file"
             id="fileInput"
@@ -142,12 +207,20 @@ export default function UploadPage({ setActivePage }) {
           {uploads.map((upload) => (
             <div
               key={upload.id}
-              className="bg-gray-50 p-3 rounded-lg shadow flex flex-col space-y-1 transition hover:shadow-md hover:bg-indigo-50 cursor-pointer"
+              className={`p-3 rounded-lg shadow flex flex-col space-y-1 transition cursor-pointer ${
+                highlightIds.includes(upload.id)
+                  ? "bg-green-100 text-blue-500 font-bold border-green-400 border"
+                  : "bg-gray-50 hover:bg-indigo-50"
+              }`}
             >
               <div className="flex justify-between items-center">
-                <span className="font-semibold truncate">{upload.fileName}</span>
+                <span className="font-semibold truncate">
+                  {upload.fileName}
+                </span>
                 <span
-                  className={`px-2 py-0.5 text-xs rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}
+                  className={`px-2 py-0.5 text-xs rounded-full transition-colors duration-300 ${getStatusStyle(
+                    upload.status
+                  )}`}
                 >
                   {upload.status}
                 </span>
@@ -182,52 +255,71 @@ export default function UploadPage({ setActivePage }) {
         {/* Desktop Table */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full table-auto divide-y divide-gray-200 text-sm sm:text-base">
-            <thead className="bg-gray-50">
+            <thead>
               <tr>
-                {["File Name", "Upload Date", "Vendor", "Amount", "Status", "Actions"].map((header) => (
-                  <th key={header} className="px-2 py-2 text-left font-semibold text-gray-700 whitespace-nowrap">
+                {[
+                  "File Name",
+                  "Upload Date",
+                  "Vendor",
+                  "Amount",
+                  "Status",
+                  "Actions",
+                ].map((header) => (
+                  <th
+                    key={header}
+                     className="px-2 py-2 text-left font-semibold text-black-700 whitespace-nowrap bg-grey-100"
+                  >
                     {header}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {uploads.map((upload) => (
-                <tr
-                  key={upload.id}
-                  className="hover:bg-indigo-50 transition-colors duration-300 cursor-pointer"
-                >
-                  <td className="px-2 py-2">{upload.fileName}</td>
-                  <td className="px-2 py-2">{upload.uploadDate}</td>
-                  <td className="px-2 py-2">{upload.vendor || "—"}</td>
-                  <td className="px-2 py-2">{upload.amount || "—"}</td>
-                  <td className="px-2 py-2">
-                    <span
-                      className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-300 ${getStatusStyle(upload.status)}`}
-                    >
-                      {upload.status}
-                    </span>
-                  </td>
-                  <td className="px-2 py-2 flex gap-2 justify-center">
-                    <button
-                      className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
-                      onClick={() => handleView(upload)}
-                      aria-label="View"
-                      title="View"
-                    >
-                      <FiEye size={18} />
-                    </button>
-                    <button
-                      className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
-                      onClick={() => handleDownload(upload)}
-                      aria-label="Download"
-                      title="Download"
-                    >
-                      <FiDownload size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {uploads.map((upload, idx) => {
+                const rowClass = highlightIds.includes(upload.id)
+                  ? "bg-green-100 text-blue-500 font-bold border-green-400"
+                  : idx % 2 === 0
+                  ? "bg-white"
+                  : "bg-gray-50";
+                return (
+                  <tr
+                    key={upload.id}
+                    className={`transition-colors duration-300 cursor-pointer ${rowClass}`}
+                  >
+                    <td className="px-2 py-2">{upload.fileName}</td>
+                    <td className="px-2 py-2">{upload.uploadDate}</td>
+                    <td className="px-2 py-2">{upload.vendor || "—"}</td>
+                    <td className="px-2 py-2">{upload.amount || "—"}</td>
+                    <td className="px-2 py-2">
+                      <span
+                        className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-300 ${getStatusStyle(
+                          upload.status
+                        )}`}
+                      >
+                        {upload.status}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2 flex gap-2 justify-center">
+                      <button
+                        className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
+                        onClick={() => handleView(upload)}
+                        aria-label="View"
+                        title="View"
+                      >
+                        <FiEye size={18} />
+                      </button>
+                      <button
+                        className="p-1 border border-gray-300 rounded hover:bg-indigo-100 text-gray-700 transition flex items-center justify-center"
+                        onClick={() => handleDownload(upload)}
+                        aria-label="Download"
+                        title="Download"
+                      >
+                        <FiDownload size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
