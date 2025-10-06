@@ -182,7 +182,6 @@ function EditableField({
           <span className={`rounded px-2 py-1 text-xs font-bold ${color}`}>
             {confidence} ({percent}%)
           </span>
-         
         </div>
         <div className="flex items-center gap-2">
           <input
@@ -223,7 +222,7 @@ function EditableField({
         <span className={`rounded px-2 py-1 text-xs font-bold ${color}`}>
           {confidence} ({percent}%)
         </span>
-      
+
         {editable && hovered && (
           <button
             className="ml-auto p-1 rounded hover:bg-blue-100"
@@ -239,7 +238,13 @@ function EditableField({
   );
 }
 
-function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel }) {
+function EditableLineItemRow({
+  line,
+  isEditing,
+  onStartEdit,
+  onSave,
+  onCancel,
+}) {
   const [hovered, setHovered] = useState(false);
   const [draftValues, setDraftValues] = useState({
     desc: line.desc,
@@ -330,11 +335,17 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
       onMouseLeave={() => setHovered(false)}
     >
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.desc}</td>
-      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.qty.toLocaleString()}</td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+        {line.qty.toLocaleString()}
+      </td>
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.unit}</td>
-      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">{line.amount}</td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">
+        {line.amount}
+      </td>
       <td className="px-3 sm:px-4 py-2 relative">
-        <span className={`rounded-full py-1 px-2 text-xs font-bold ${line.color}`}>
+        <span
+          className={`rounded-full py-1 px-2 text-xs font-bold ${line.color}`}
+        >
           {line.confidence}
         </span>
         {hovered && (
@@ -368,13 +379,17 @@ const InfoSection = ({
 
   const saveEdit = (key, newValue) => {
     setFieldsOrLines(
-      fieldsOrLines.map((item) => (item.key === key ? { ...item, value: newValue } : item))
+      fieldsOrLines.map((item) =>
+        item.key === key ? { ...item, value: newValue } : item
+      )
     );
     setEditingKey(null);
   };
 
   const saveLineEdit = (key, newLine) => {
-    setFieldsOrLines(fieldsOrLines.map((item) => (item.key === key ? newLine : item)));
+    setFieldsOrLines(
+      fieldsOrLines.map((item) => (item.key === key ? newLine : item))
+    );
     setEditingKey(null);
   };
 
@@ -391,11 +406,21 @@ const InfoSection = ({
           <table className="min-w-[600px] w-full border divide-y divide-gray-200 text-sm">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Description</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Qty</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Unit Price</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Amount</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Confidence</th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Description
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Qty
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Unit Price
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Amount
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Confidence
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -449,6 +474,7 @@ const InfoSection = ({
 };
 
 export default function ReviewPage({ setActivePage }) {
+   const [zoom, setZoom] = useState(100);
   return (
     <div className="flex bg-gray-50 h-[calc(100vh-53px)] w-full overflow-hidden flex-col lg:flex-row">
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -504,46 +530,57 @@ export default function ReviewPage({ setActivePage }) {
         </div>
 
         <div className="flex flex-col lg:flex-row h-[calc(100vh-53px)] w-full bg-gray-50 overflow-auto">
-          <div className="flex flex-col w-full lg:w-1/2 bg-gray-100 border-r p-0">
-            <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit>
-              {({ zoomIn, zoomOut, resetTransform }) => (
-                <>
-                  <div className="flex gap-1 sm:gap-2 mb-2 mt-3 px-3 sm:px-4 flex-shrink-0 justify-center sm:justify-start">
-                    <button
-                      onClick={() => zoomIn()}
-                      className="rounded bg-gray-100 hover:bg-blue-100 p-2 sm:px-3 sm:py-1 text-lg"
-                    >
-                      <MagnifyingGlassPlusIcon className="sm:w-5 sm:h-5 text-blue-600" />
-                    </button>
-                    <button
-                      onClick={() => zoomOut()}
-                      className="rounded bg-gray-100 hover:bg-blue-100 text-blue-600 p-2 sm:px-3 sm:py-1 text-lg"
-                    >
-                      <MagnifyingGlassMinusIcon className="sm:w-5 sm:h-5" />
-                    </button>
-                    <button
-                      onClick={resetTransform}
-                      className="rounded bg-gray-100 hover:bg-yellow-100 text-yellow-700 p-2 sm:px-3 sm:py-1 text-lg"
-                    >
-                      <ArrowPathIcon className="sm:w-5 sm:h-5" />
-                    </button>
-                    <button className="rounded bg-gray-100 hover:bg-gray-200 p-2 sm:px-3 sm:py-1 text-lg">
-                      <EyeIcon className="sm:w-5 sm:h-5 text-gray-700" />
-                    </button>
-                  </div>
-                  <TransformComponent>
-                    <div className="flex justify-center overflow-auto">
-                      <img
-                        src={invoiceImage}
-                        alt="Invoice"
-                        className="rounded-lg border shadow max-w-full h-auto cursor-grab"
-                        draggable={false}
-                      />
-                    </div>
-                  </TransformComponent>
-                </>
-              )}
-            </TransformWrapper>
+          <div className="flex flex-col w-full lg:w-7/12 bg-gray-100 border-r p-0">
+            <TransformWrapper
+          initialScale={1}
+          minScale={0.5}
+          maxScale={4}
+          onTransformed={(e) => setZoom((e.state.scale * 100).toFixed(0))}
+        >
+          {({ zoomIn, zoomOut, resetTransform }) => (
+            <>
+              <div className="flex items-center gap-3 py-2 px-3 bg-white rounded shadow sticky top-1 z-20">
+                <button
+                  onClick={() => zoomIn()}
+                  className="rounded border p-2 hover:bg-blue-50"
+                   title="Zoom In"
+                >
+                  <MagnifyingGlassPlusIcon className="w-6 h-6" />
+                 
+                </button>
+
+                <button
+                  onClick={() => zoomOut()}
+                  className="rounded border p-2 hover:bg-blue-50"
+                   title="Zoom Out"
+                >
+                  <MagnifyingGlassMinusIcon className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => resetTransform()}
+                  className="rounded border p-2 hover:bg-yellow-50"
+                    title="Reset View"
+                >
+                  <ArrowPathIcon className="w-6 h-6" />
+                </button>
+                <span className="ml-4 text-gray-600 font-medium select-none">
+                  Zoom: {zoom}%
+                </span>
+              </div>
+
+              <TransformComponent>
+                <div className="flex justify-center overflow-auto p-10">
+                  <img
+                    src={invoiceImage}
+                    alt="Invoice"
+                    className="rounded-lg border shadow max-w-full h-auto cursor-grab"
+                    draggable={false}
+                  />
+                </div>
+              </TransformComponent>
+            </>
+          )}
+        </TransformWrapper>
             <div className="bg-gray-100 py-2 sm:py-3 px-3 sm:px-4 border-t border-gray-200 flex flex-col sm:flex-row gap-1 sm:gap-4 text-xs justify-center flex-shrink-0">
               <span className="flex items-center gap-1 text-green-700 justify-center sm:justify-start">
                 <span className="w-2 h-2 sm:w-3 sm:h-3 rounded bg-green-100 inline-block"></span>
@@ -559,9 +596,11 @@ export default function ReviewPage({ setActivePage }) {
               </span>
             </div>
           </div>
-          <div className="w-full lg:w-1/2 flex flex-col h-auto bg-gray-50 border-l px-1 py-2 space-y-6 sm:space-y-8 lg:space-y-10 overflow-visible">
+          <div className="w-full lg:w-5/12 flex flex-col h-auto bg-gray-50 border-l px-1 py-2 space-y-6 sm:space-y-8 lg:space-y-10 overflow-visible">
             <div className="sticky top-0 z-30 bg-white px-4 sm:px-6 lg:px-10 py-3 sm:py-4 lg:py-5 flex items-center justify-between">
-              <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">Extracted Data</h2>
+              <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">
+                Extracted Data
+              </h2>
               <span className="flex items-center gap-1 px-2 sm:px-3 lg:px-4 py-1 rounded-lg bg-purple-100 text-purple-700 font-medium text-xs sm:text-sm">
                 <ClockIcon className="w-4 h-4" /> Pending
               </span>
@@ -602,9 +641,15 @@ export default function ReviewPage({ setActivePage }) {
               />
             </div>
             <div className="sticky bottom-0 left-0 right-0 w-full bg-white px-3 sm:px-6 lg:px-10 py-3 sm:py-4 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 z-30">
-              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-200 font-semibold hover:bg-gray-300 text-sm sm:text-base order-2 sm:order-1">Reject Invoice</button>
-              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-100 font-semibold hover:bg-gray-200 text-sm sm:text-base order-3 sm:order-2">Save Draft</button>
-              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold text-sm sm:text-base order-1 sm:order-3 mb-2 sm:mb-0">Approve & Process</button>
+              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-200 font-semibold hover:bg-gray-300 text-sm sm:text-base order-2 sm:order-1">
+                Reject Invoice
+              </button>
+              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-100 font-semibold hover:bg-gray-200 text-sm sm:text-base order-3 sm:order-2">
+                Save Draft
+              </button>
+              <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold text-sm sm:text-base order-1 sm:order-3 mb-2 sm:mb-0">
+                Approve & Process
+              </button>
             </div>
           </div>
         </div>
