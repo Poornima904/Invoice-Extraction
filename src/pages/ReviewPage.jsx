@@ -542,7 +542,7 @@ export default function ReviewPage({ setActivePage }) {
               <div className="flex items-center gap-3 py-2 px-3 bg-white rounded shadow sticky top-1 z-20">
                 <button
                   onClick={() => zoomIn()}
-                  className="rounded border p-2 hover:bg-blue-50"
+                 className="rounded-[8px] border border-gray-300 p-2 hover:bg-blue-50 transition"
                    title="Zoom In"
                 >
                   <MagnifyingGlassPlusIcon className="w-4 h-4" />
@@ -551,14 +551,14 @@ export default function ReviewPage({ setActivePage }) {
 
                 <button
                   onClick={() => zoomOut()}
-                  className="rounded border p-2 hover:bg-blue-50"
+                  className="rounded-[8px] border border-gray-300 p-2 hover:bg-blue-50"
                    title="Zoom Out"
                 >
                   <MagnifyingGlassMinusIcon className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => resetTransform()}
-                  className="rounded border p-2 hover:bg-yellow-50"
+                  className="rounded-[8px] border border-gray-300 p-2 hover:bg-yellow-50"
                     title="Reset View"
                 >
                   <ArrowPathIcon className="w-4 h-4" />
