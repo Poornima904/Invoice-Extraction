@@ -545,7 +545,7 @@ export default function ReviewPage({ setActivePage }) {
                   className="rounded border p-2 hover:bg-blue-50"
                    title="Zoom In"
                 >
-                  <MagnifyingGlassPlusIcon className="w-6 h-6" />
+                  <MagnifyingGlassPlusIcon className="w-4 h-4" />
                  
                 </button>
 
@@ -554,14 +554,14 @@ export default function ReviewPage({ setActivePage }) {
                   className="rounded border p-2 hover:bg-blue-50"
                    title="Zoom Out"
                 >
-                  <MagnifyingGlassMinusIcon className="w-6 h-6" />
+                  <MagnifyingGlassMinusIcon className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => resetTransform()}
                   className="rounded border p-2 hover:bg-yellow-50"
                     title="Reset View"
                 >
-                  <ArrowPathIcon className="w-6 h-6" />
+                  <ArrowPathIcon className="w-4 h-4" />
                 </button>
                 <span className="ml-4 text-gray-600 font-medium select-none">
                   Zoom: {zoom}%
