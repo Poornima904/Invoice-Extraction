@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react"; // 👈 Import useState and useEffect
 import { FaEye, FaDownload } from "react-icons/fa";
 
 const DashboardPage = ({ setActivePage }) => {
-  const invoices = [
+  // 1. Use state for fetched invoices and the current set of invoices to display
+  const [apiInvoices, setApiInvoices] = useState([]); // To store data from API
+  const [uploads, setUploads] = useState([]); // This state seems to be used for the mapped API data
+  const [highlightIds, setHighlightIds] = useState([]); // Assuming this is used elsewhere
+
+  // 2. Mock data (kept temporarily for other sections, but will prioritize API data)
+  const mockInvoices = [
     {
       id: "MS-2024-001",
       vendor: "Microsoft Corporation",
@@ -45,6 +51,65 @@ const DashboardPage = ({ setActivePage }) => {
     },
   ];
 
+  // Combine data: use API data if available, otherwise use mock data
+  const invoicesToDisplay = apiInvoices.length > 0 ? apiInvoices : mockInvoices;
+
+
+  const fetchInvoices = async () => {
+    debugger 
+    try {
+      const response = await fetch("http://192.168.0.102:5050/api/invoices1", {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8",
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
+      
+      const data = await response.json();
+      
+   
+      const mappedData = (data.invoices || []).map((item) => ({
+       
+        id: item.headers.Invoice_Number || "--",
+        vendor: item.headers?.Vendor_Name || "—",
+        date: item.createdAt ? item.createdAt.slice(0, 10) : "—", // Using createdAt as the date
+        amount:
+          item.headers?.Total_Amount !== undefined
+            ? `₹${item.headers.Total_Amount.toLocaleString()}`
+            : "—", // Using Indian Rupee as per mapping logic
+        status: item.status,
+        confidence: item.headers?.Confidence || "—", // Assuming a confidence field
+        // Additional fields from original mapping (if needed elsewhere)
+        fileName: item.pdf_file_name,
+        fileUrl: item.pdf_blob_url,
+      }));
+      
+      // 4. Update the state with the fetched and mapped data
+      setApiInvoices(mappedData); // 👈 Set the state for rendering
+      setUploads(mappedData); // Keep this for backward compatibility if other components rely on it
+      
+      const today = new Date().toISOString().slice(0, 10);
+      const highlightToday = mappedData
+        .filter((f) => f.date === today)
+        .map((f) => f.id);
+      setHighlightIds(highlightToday);
+
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+      // Optional: Handle error state for UI display
+    }
+  };
+
+  useEffect(() => {
+    fetchInvoices();
+    const interval = setInterval(fetchInvoices, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const statusClassMap = {
     Processed: "bg-green-100 text-green-800",
     Processing: "bg-blue-100 text-blue-800",
@@ -85,7 +150,7 @@ const DashboardPage = ({ setActivePage }) => {
           <div
             key={idx}
             className="flex-1 min-w-[160px] sm:min-w-[200px] bg-white shadow rounded-2xl p-4 sm:p-5 flex flex-col justify-between
-                       transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                                 transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
           >
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-800 text-sm sm:text-base">{card.title}</span>
@@ -108,11 +173,12 @@ const DashboardPage = ({ setActivePage }) => {
             Recent Activity
           </h3>
           <ul className="space-y-4 overflow-y-auto flex-1">
-            {invoices.slice(0, 5).map((inv, idx) => (
+            {/* 5. Use the invoicesToDisplay state for rendering */}
+            {invoicesToDisplay.slice(0, 5).map((inv, idx) => ( 
               <li
-                key={idx}
+                key={inv.id} // Use inv.id for a stable key
                 className="flex justify-between items-center border-b border-gray-200 pb-3 
-                           hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2"
+                                 hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2"
               >
                 <div>
                   <span className="font-semibold text-gray-900">{inv.id}</span>
@@ -121,6 +187,12 @@ const DashboardPage = ({ setActivePage }) => {
                 <span className="text-gray-600 text-sm">{inv.date}</span>
               </li>
             ))}
+            {/* Display a message if no invoices are loaded */}
+            {invoicesToDisplay.length === 0 && (
+              <li className="text-gray-500 text-center py-4">
+                No recent invoices found.
+              </li>
+            )}
           </ul>
         </div>
 
@@ -130,11 +202,12 @@ const DashboardPage = ({ setActivePage }) => {
             Top Vendors
           </h3>
           <ul className="space-y-4 overflow-y-auto flex-1">
-            {invoices.slice(0, 5).map((inv, idx) => (
+            {/* Using invoicesToDisplay here as well */}
+            {invoicesToDisplay.slice(0, 5).map((inv, idx) => (
               <li
-                key={idx}
+                key={inv.id}
                 className="flex justify-between items-center border-b border-gray-200 pb-3
-                           hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2"
+                                 hover:bg-blue-50 hover:shadow-md transition-all duration-300 cursor-pointer rounded-lg p-2"
               >
                 <span className="bg-blue-100 text-blue-800 rounded-full w-7 h-7 flex items-center justify-center font-bold mr-2 flex-shrink-0">
                   {idx + 1}
@@ -162,12 +235,12 @@ const DashboardPage = ({ setActivePage }) => {
           Invoice History
         </h3>
 
-        {/* Filters */}
+        {/* Filters and other elements... */}
         <div className="flex flex-wrap gap-2 mb-4">
           <input
             placeholder="Search invoices, vendors, or invoice numbers..."
             className="flex-1 min-w-[180px] sm:min-w-[250px] px-3 py-2 sm:px-4 sm:py-3 rounded-md border border-gray-300
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm sm:text-base"
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm sm:text-base"
           />
           <select className="px-3 py-2 sm:px-4 sm:py-3 rounded-md border border-gray-300 focus:outline-none transition text-sm sm:text-base">
             <option>All Statuses</option>
@@ -207,7 +280,8 @@ const DashboardPage = ({ setActivePage }) => {
               </tr>
             </thead>
             <tbody>
-              {invoices.map((inv) => (
+              {/* 7. Use the invoicesToDisplay state for the main table */}
+              {invoicesToDisplay.map((inv) => (
                 <tr
                   key={inv.id}
                   className="border-b border-gray-200 hover:bg-blue-50 transition-colors cursor-pointer"
@@ -236,7 +310,8 @@ const DashboardPage = ({ setActivePage }) => {
                   <td className="p-3 whitespace-nowrap">
                     <span
                       className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium ${
-                        statusClassMap[inv.status]
+                        // Use a class based on status for confidence, or define a new map
+                        inv.confidence === "—" ? "bg-gray-100 text-gray-800" : statusClassMap[inv.status]
                       }`}
                     >
                       {inv.confidence}
@@ -275,7 +350,7 @@ const DashboardPage = ({ setActivePage }) => {
         {/* Pagination */}
         <div className="flex flex-col sm:flex-row justify-between items-center mt-5 text-gray-700 gap-3 text-sm sm:text-base">
           <span>
-            Showing {invoices.length} of {invoices.length} invoices
+            Showing {invoicesToDisplay.length} of {invoicesToDisplay.length} invoices
           </span>
           <div className="flex gap-2 sm:gap-3">
             <button className="px-3 sm:px-4 py-2 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition cursor-pointer text-sm sm:text-base">

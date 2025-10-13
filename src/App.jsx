@@ -21,6 +21,8 @@ function App() {
   const [activePage, setActivePage] = useState("Upload");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+const [uploads, setUploads] = useState([]);
 
   // counts
   const reviewCount = invoices.filter(inv => inv.status === "Needs Review").length;
@@ -41,8 +43,9 @@ function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case "Upload": return <UploadPage setActivePage={setActivePage} />;
-      case "Review": return <ReviewPage setActivePage={setActivePage} />;
+      case "Upload": return <UploadPage setActivePage={setActivePage}  uploads={uploads}
+          setUploads={setUploads} setSelectedInvoice={setSelectedInvoice}/>;
+      case "Review": return <ReviewPage setActivePage={setActivePage}  uploads={uploads} invoiceNumber={selectedInvoice}/>;
       case "Processing": return <ProcessingPage setActivePage={setActivePage} />;
       case "Dashboard": return <DashboardPage setActivePage={setActivePage} />;
       case "Configuration": return <ConfigurationPage />;
