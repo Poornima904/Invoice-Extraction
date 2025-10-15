@@ -58,11 +58,11 @@ const DashboardPage = ({ setActivePage }) => {
   const fetchInvoices = async () => {
     debugger 
     try {
-      const response = await fetch("http://192.168.0.102:5050/api/invoices1", {
+      const response = await fetch("https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1", {
         method: "GET",
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDQ2MDMyNywiZXhwIjoxNzYwNTQ2NzI3fQ.HeZBqkRpKflFHlea97gwC98bYR3cpkZnrZGJUbB0PLs",
           "Content-Type": "application/json",
         },
       });

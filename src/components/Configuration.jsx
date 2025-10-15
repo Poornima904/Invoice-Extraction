@@ -79,7 +79,7 @@ const FieldMaster = () => {
       const myHeaders = new Headers();
       myHeaders.append(
         "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
       );
       myHeaders.append("Content-Type", "application/json");
 
@@ -91,7 +91,7 @@ const FieldMaster = () => {
       };
 
       const response = await fetch(
-        "http://192.168.0.102:5050/fieldmaster",
+        "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
         requestOptions
       );
 
@@ -127,7 +127,7 @@ const FieldMaster = () => {
     const myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8"
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
     );
     myHeaders.append("Content-Type", "application/json");
 
@@ -150,7 +150,7 @@ const FieldMaster = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          "http://192.168.0.102:5050/fieldmaster",
+          "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
           requestOptions
         );
         if (!response.ok) throw new Error("Failed to create field");
@@ -179,7 +179,7 @@ const FieldMaster = () => {
         };
 
         const response = await fetch(
-          "http://192.168.0.102:5050/fieldmaster",
+          "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
           requestOptions
         );
         if (!response.ok) throw new Error("Failed to delete field");
@@ -407,22 +407,23 @@ const VendorConfiguration = () => {
 
   // Fetch vendor names from API
   const fetchVendors = async () => {
+    debugger
     setLoading(true);
     try {
       const myHeaders = new Headers();
       myHeaders.append(
         "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
       );
       const requestOptions = { method: "GET", headers: myHeaders };
-      const url = `http://192.168.0.102:5050/api/vendors?country=${encodeURIComponent(
+      const url = `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
         selectedCountry
       )}&active=true`;
 
       const response = await fetch(url, requestOptions);
       if (!response.ok) throw new Error("Failed to fetch vendors");
       const data = await response.json();
-      const vendorNames = (data.result || []).map((v) => v.vendor_name);
+      const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
       setVendors(vendorNames);
     } catch (error) {
       console.error(error);

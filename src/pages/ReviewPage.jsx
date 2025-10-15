@@ -311,10 +311,10 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
       try {
         // NOTE: The Authorization header contains a token that is likely expired or invalid outside of a real session.
         // It's kept here to match the provided code structure but won't work in isolation.
-        const res = await fetch(`http://192.168.0.102:5050/api/invoices1/${invoiceNumber}`, {
+        const res = await fetch(`https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1/${invoiceNumber}`, {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8",
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8",
             "Content-Type": "application/json",
           },
         });

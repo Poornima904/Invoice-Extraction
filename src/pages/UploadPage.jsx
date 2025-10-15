@@ -22,10 +22,10 @@ export default function UploadPage({
       const myHeaders = new Headers();
       myHeaders.append(
         "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
       );
       const response = await fetch(
-        `http://192.168.0.102:5050/api/vendors?country=${encodeURIComponent(
+        `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
           selectedCountry
         )}&active=true`,
         { method: "GET", headers: myHeaders }
@@ -52,11 +52,11 @@ export default function UploadPage({
   const fetchInvoices = async () => {
     debugger
    try {
-      const response = await fetch("http://192.168.0.102:5050/api/invoices1", {
+      const response = await fetch("https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1", {
         method: "GET",
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8",
           "Content-Type": "application/json",
         },
       });
@@ -118,7 +118,7 @@ export default function UploadPage({
   const handleDownload = (upload) => {
     try {
       if (upload.fileUrl) {
-        const apiUrl = `http://192.168.0.102:5050/download/remote?url=${encodeURIComponent(
+        const apiUrl = `https://hczbk50t-5050.inc1.devtunnels.ms/download/remote?url=${encodeURIComponent(
           upload.fileUrl
         )}&filename=${encodeURIComponent(upload.fileName || "downloaded_file")}`;
         const link = document.createElement("a");
@@ -165,7 +165,7 @@ export default function UploadPage({
         const myHeaders = new Headers();
         myHeaders.append(
           "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDI5NTk3MSwiZXhwIjoxNzYwMzgyMzcxfQ.hFKT12Eh6D8x-u-2ncAB4MFDBRcZZK1UcfY7zmFGoK8"
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
         );
         const formdata = new FormData();
         formdata.append("pdf", file, file.name);
@@ -173,7 +173,7 @@ export default function UploadPage({
         formdata.append("vendor", vendor);
         formdata.append("save_metadata", "true");
         const response = await fetch(
-          "http://192.168.0.102:5050/api/invoices1",
+          "https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1",
           { method: "POST", headers: myHeaders, body: formdata }
         );
         if (!response.ok) throw new Error(await response.text());
