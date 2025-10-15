@@ -30,14 +30,6 @@ export default function Header({ toggleMobileSidebar }) {
         </span>
       </div>
 
-      {/* Right: Desktop Actions */}
-      {/* <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-        <div className="hidden sm:flex items-center gap-3">
-          <button className="p-2 rounded-full text-black hover:text-gray-700 transition-colors">
-            <HelpCircle size={20} />
-          </button>
-        </div>
-      </div> */}
     </header>
   );
 }

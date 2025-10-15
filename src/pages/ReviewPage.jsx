@@ -9,11 +9,12 @@ import {
   MagnifyingGlassPlusIcon,
   MagnifyingGlassMinusIcon,
   ArrowPathIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-// Utility to extract filename from URL (kept for completeness)
+// Utility to extract filename from URL
 function extractFilename(url) {
   if (!url) return "";
   const parts = url.split("/");
@@ -21,11 +22,7 @@ function extractFilename(url) {
   return filename;
 }
 
-// EditableField, EditableLineItemRow, and InfoSection components are unchanged
-// as their core logic is fine, but they are included below for a complete, runnable example.
-
-// --- Start of Unchanged Components (for context) ---
-
+// EditableField Component
 function EditableField({ label, value, confidence, percent, color, editable, externalLink, isEditing, onStartEdit, onSave, onCancel }) {
   const [hovered, setHovered] = useState(false);
   const [draftValue, setDraftValue] = useState(value);
@@ -85,6 +82,7 @@ function EditableField({ label, value, confidence, percent, color, editable, ext
   );
 }
 
+// EditableLineItemRow Component
 function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel }) {
   const [hovered, setHovered] = useState(false);
   const [draftValues, setDraftValues] = useState({
@@ -177,6 +175,7 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
   );
 }
 
+// InfoSection Component - Make sure this is properly defined
 const InfoSection = ({
   title,
   data,
@@ -270,8 +269,8 @@ const InfoSection = ({
     </section>
   );
 };
-// --- End of Unchanged Components ---
 
+// Main ReviewPage Component
 export default function ReviewPage({ setActivePage, uploads, invoiceNumber, recentPdfUrl }) {
   const [zoom, setZoom] = useState(100);
   const [recentPdf, setRecentPdf] = useState(null);
@@ -284,7 +283,7 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
   const [totalsSummary, setTotalsSummary] = useState([]);
   const [pdfFileName, setPdfFileName] = useState("");
 
-  // Zoom functionality (unchanged)
+  // Zoom functionality
   const handleZoomIn = () => {
     setZoom(prev => {
       const newZoom = Math.min(prev + 25, 200);
@@ -303,18 +302,15 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
     setZoom(100);
   };
 
-  // Data fetching logic (unchanged)
+  // Data fetching logic
   useEffect(() => {
     if (!invoiceNumber) return;
 
     const fetchInvoiceDetails = async () => {
       try {
-        // NOTE: The Authorization header contains a token that is likely expired or invalid outside of a real session.
-        // It's kept here to match the provided code structure but won't work in isolation.
         const res = await fetch(`https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1/${invoiceNumber}`, {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8",
             "Content-Type": "application/json",
           },
         });
@@ -389,42 +385,37 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full">
       
-      {/* LEFT: PDF Viewer - Takes full width on mobile, and 7/12 on large screens */}
-      <div className="flex-1 lg:w-7/12 bg-gray-100 border-r border-gray-200 min-h-[40vh] max-h-screen lg:min-h-0 flex flex-col">
+      {/* LEFT: PDF Viewer */}
+      <div className="flex-1 lg:w-7/12 bg-gray-100 border-r border-gray-200 min-h-[50vh] lg:min-h-0 flex flex-col">
         
-        {/* Toolbar - Sticky on top of the PDF pane */}
-        <div className="sticky top-0 z-50 bg-white border-b flex items-center justify-between px-3 sm:px-6 lg:px-8 h-16 sm:h-[72px] w-full flex-shrink-0">
-          <div className="flex items-center gap-2 sm:gap-4 lg:gap-5">
+        {/* Toolbar - Improved mobile header */}
+        <div className="sticky top-0 z-50 bg-white border-b flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 lg:py-4 w-full flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
             <button
               onClick={() => setActivePage("Upload")}
-              className="flex items-center gap-1 text-gray-700 bg-white border px-2 sm:px-3 py-1.5 sm:py-1 rounded-md font-medium text-sm hover:bg-gray-50 hover:border-gray-300 transition"
+              className="flex-shrink-0 flex items-center gap-1 text-gray-700 bg-white border px-2 sm:px-3 py-1.5 rounded-md font-medium text-sm hover:bg-gray-50 hover:border-gray-300 transition"
             >
-              <span className="text-lg">←</span>
-              <span className="hidden sm:inline">Back</span>
+              <ArrowLeftIcon className="w-4 h-4" />
+              <span className="hidden xs:inline">Back</span>
             </button>
-            <div className="max-w-[180px] sm:max-w-none">
-              <div className="font-semibold text-sm sm:text-base lg:text-lg leading-tight">
+            <div className="min-w-0 flex-1 ml-2">
+              <div className="font-semibold text-sm sm:text-base truncate">
                 <span className="text-green-500">Review:&nbsp;</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 hover:underline font-semibold text-xs sm:text-sm lg:text-base">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-blue-500 to-purple-500">
                   {pdfFileName || "No PDF"}
                 </span>
               </div>
-              <div className="text-xs text-gray-400 mt-0.5 hidden sm:block">
+              <div className="text-xs text-gray-500 truncate hidden sm:block">
                 Compare source document with extracted data
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg bg-purple-100 text-purple-700 font-semibold text-xs sm:text-sm">
-              <ClockIcon className="w-4 h-4" />
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="hidden xs:flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg bg-purple-100 text-purple-700 font-semibold text-xs">
+              <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4" />
               Pending
             </span>
-            <button className="hidden sm:flex px-3 py-1 rounded bg-gray-100 text-gray-700 font-semibold items-center gap-1 hover:bg-gray-200 text-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-5" viewBox="0 0 20 20">
-                <path d="M10 15V7" />
-                <path d="M10 7L6.5 10" />
-                <path d="M10 7l3.5 3" />
-              </svg>
+            <button className="hidden sm:flex px-3 py-1 rounded bg-gray-100 text-gray-700 font-semibold items-center gap-1 hover:bg-gray-200 text-xs">
               Split View
             </button>
           </div>
@@ -433,108 +424,102 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
         {/* PDF Display & Zoom Controls */}
         <div className="flex flex-col flex-1 min-h-0">
           
-          {/* Zoom Controls Bar */}
-          <div className="flex items-center gap-3 py-2 px-3 bg-white rounded shadow sticky top-1 z-20 mx-4 sm:mx-6 lg:mx-8 mt-2">
-            <button
-              onClick={handleZoomIn}
-              className="rounded-[8px] border border-gray-300 p-2 hover:bg-blue-50 transition"
-              title="Zoom In"
-            >
-              <MagnifyingGlassPlusIcon className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleZoomOut}
-              className="rounded-[8px] border border-gray-300 p-2 hover:bg-blue-50"
-              title="Zoom Out"
-            >
-              <MagnifyingGlassMinusIcon className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleResetZoom}
-              className="rounded-[8px] border border-gray-300 p-2 hover:bg-yellow-50"
-              title="Reset View"
-            >
-              <ArrowPathIcon className="w-4 h-4" />
-            </button>
-            <span className="ml-4 text-gray-600 font-medium select-none text-sm">
-              Zoom: {zoom}%
+          {/* Zoom Controls Bar - Improved for mobile */}
+          <div className="flex items-center justify-between sm:justify-start gap-2 py-2 px-3 bg-white border-b border-gray-200 sticky top-[60px] lg:top-[68px] z-20">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                onClick={handleZoomIn}
+                className="rounded border border-gray-300 p-1.5 sm:p-2 hover:bg-blue-50 transition"
+                title="Zoom In"
+              >
+                <MagnifyingGlassPlusIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+              <button
+                onClick={handleZoomOut}
+                className="rounded border border-gray-300 p-1.5 sm:p-2 hover:bg-blue-50"
+                title="Zoom Out"
+              >
+                <MagnifyingGlassMinusIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+              <button
+                onClick={handleResetZoom}
+                className="rounded border border-gray-300 p-1.5 sm:p-2 hover:bg-yellow-50"
+                title="Reset View"
+              >
+                <ArrowPathIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+            </div>
+            <span className="text-gray-600 font-medium text-xs sm:text-sm flex-shrink-0">
+              {zoom}%
             </span>
           </div>
           
-          {/* PDF Container with zoom */}
+          {/* PDF Container with improved mobile scaling */}
           <div 
             ref={pdfContainerRef}
-            // Mobile: min-h-full, so it takes the remaining height of the 40vh section
-            // Tablet/Desktop: max-h-full (no change from min-h-0 in parent flex-1)
-            className="overflow-auto flex-1 w-full bg-white flex items-center justify-center p-4 sm:p-6 lg:p-8"
+            className="overflow-auto flex-1 w-full bg-white flex items-start justify-center p-2 sm:p-4 lg:p-6"
           >
             {invoicePdf ? (
               <div 
-                className="bg-white shadow-lg"
+                className="bg-white shadow-lg max-w-full"
                 style={{ 
                   transform: `scale(${zoom / 100})`,
-                  transformOrigin: 'top center', // Adjusting origin to top center for better mobile scrolling
+                  transformOrigin: 'top center',
                   transition: 'transform 0.2s ease-in-out',
                   width: '100%',
-                  // Min height is important for the scrollable area on mobile
-                  minHeight: '350px', 
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  maxWidth: '800px',
+                  minHeight: '400px'
                 }}
               >
-                {/* iframe is the content, so it should take a reasonable size */}
                 <iframe
                   src={invoicePdf}
                   title="Invoice PDF Preview"
-                  // Ensure iframe is contained within the parent scaled div
-                  className="w-full h-full min-h-[500px] lg:min-h-[80vh]" 
+                  className="w-full h-full min-h-[400px] lg:min-h-[600px]"
                   style={{ border: "none" }}
                 />
               </div>
             ) : (
-              <div className="flex items-center justify-center w-full h-full bg-white p-10">
-                <p className="p-4 text-center text-gray-500 text-lg">
+              <div className="flex items-center justify-center w-full h-full bg-white p-4 sm:p-6">
+                <p className="text-center text-gray-500 text-sm sm:text-base">
                   No PDF available for this invoice.
                 </p>
               </div>
             )}
           </div>
           
-          {/* Confidence Legend Footer */}
-          <div className="bg-gray-100 py-2 sm:py-3 px-3 sm:px-4 border-t border-gray-200 flex flex-col sm:flex-row gap-1 sm:gap-4 text-xs justify-center flex-shrink-0">
-            <span className="flex items-center gap-1 text-green-700 justify-center sm:justify-start">
-              <span className="w-2 h-2 sm:w-3 sm:h-3 rounded bg-green-100 inline-block"></span>
+          {/* Confidence Legend Footer - Improved for mobile */}
+          <div className="bg-gray-100 py-2 px-3 border-t border-gray-200 flex flex-wrap gap-2 sm:gap-4 text-xs justify-center">
+            <span className="flex items-center gap-1 text-green-700">
+              <span className="w-2 h-2 rounded bg-green-500 inline-block"></span>
               High (90%+)
             </span>
-            <span className="flex items-center gap-1 text-orange-500 justify-center sm:justify-start">
-              <span className="w-2 h-2 sm:w-3 sm:h-3 rounded bg-orange-100 inline-block"></span>
+            <span className="flex items-center gap-1 text-orange-500">
+              <span className="w-2 h-2 rounded bg-orange-500 inline-block"></span>
               Medium (70-89%)
             </span>
-            <span className="flex items-center gap-1 text-red-600 justify-center sm:justify-start">
-              <span className="w-2 h-2 sm:w-3 sm:h-3 rounded bg-red-100 inline-block"></span>
+            <span className="flex items-center gap-1 text-red-600">
+              <span className="w-2 h-2 rounded bg-red-500 inline-block"></span>
               Low (&lt;70%)
             </span>
           </div>
         </div>
       </div>
 
-      {/* RIGHT: Extracted Data - Full width on mobile, and 5/12 on large screens */}
-      {/* We add padding-bottom to account for the fixed footer on mobile */}
-      <div className="w-full lg:w-5/12 flex flex-col h-full lg:h-screen bg-gray-50 border-l pb-[72px] lg:pb-0 overflow-hidden">
+      {/* RIGHT: Extracted Data */}
+      <div className="w-full lg:w-5/12 flex flex-col h-auto lg:h-screen bg-gray-50 border-l pb-16 lg:pb-0">
         
-        {/* Extracted Data Header - Sticky on top of the data pane */}
-        <div className="sticky top-0 z-30 bg-white px-4 sm:px-6 lg:px-10 py-3 sm:py-4 lg:py-5 flex items-center justify-between border-b border-gray-200">
-          <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">
+        {/* Extracted Data Header */}
+        <div className="sticky top-0 z-30 bg-white px-3 sm:px-4 lg:px-6 py-3 lg:py-4 flex items-center justify-between border-b border-gray-200">
+          <h2 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">
             Extracted Data
           </h2>
-          <span className="flex items-center gap-1 px-2 sm:px-3 lg:px-4 py-1 rounded-lg bg-purple-100 text-purple-700 font-medium text-xs sm:text-sm">
-            <ClockIcon className="w-4 h-4" /> Pending
+          <span className="flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg bg-purple-100 text-purple-700 font-medium text-xs flex-shrink-0">
+            <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4" /> Pending
           </span>
         </div>
         
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto px-3 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-8 space-y-6 sm:space-y-8 lg:space-y-10">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6 space-y-4 sm:space-y-6 lg:space-y-8">
           <InfoSection
             title="Header Information"
             data={headerInfo}
@@ -573,16 +558,16 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
           />
         </div>
         
-        {/* FIXED FOOTER BUTTONS */}
-        <div className="fixed bottom-0 left-0 right-0 w-full lg:sticky lg:bottom-0 bg-white px-3 sm:px-6 lg:px-10 py-3 sm:py-4 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 z-40 border-t border-gray-200 shadow-xl lg:shadow-none">
-          <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-200 font-semibold hover:bg-gray-300 text-sm sm:text-base order-2 sm:order-1">
-            Reject Invoice
+        {/* FIXED FOOTER BUTTONS - Improved mobile layout */}
+        <div className="fixed bottom-0 left-0 right-0 lg:sticky lg:bottom-0 bg-white px-3 sm:px-4 py-3 flex gap-2 z-40 border-t border-gray-200 shadow-lg lg:shadow-none">
+          <button className="flex-1 px-3 py-2.5 rounded bg-gray-200 font-semibold hover:bg-gray-300 text-xs sm:text-sm">
+            Reject
           </button>
-          <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gray-100 font-semibold hover:bg-gray-200 text-sm sm:text-base order-3 sm:order-2">
+          <button className="flex-1 px-3 py-2.5 rounded bg-gray-100 font-semibold hover:bg-gray-200 text-xs sm:text-sm">
             Save Draft
           </button>
-          <button className="px-3 sm:px-4 lg:px-5 py-2 rounded bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold text-sm sm:text-base order-1 sm:order-3 mb-2 sm:mb-0">
-            Approve & Process
+          <button className="flex-1 px-3 py-2.5 rounded bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold text-xs sm:text-sm">
+            Approve
           </button>
         </div>
       </div>

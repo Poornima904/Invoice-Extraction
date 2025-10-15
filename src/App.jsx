@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./pages/Header";
 import Sidebar from "./pages/Sidebar";
-
 import UploadPage from "./pages/UploadPage";
 import ReviewPage from "./pages/ReviewPage";
 import ProcessingPage from "./pages/ProcessingPage";
@@ -22,7 +21,7 @@ function App() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-const [uploads, setUploads] = useState([]);
+  const [uploads, setUploads] = useState([]);
 
   // counts
   const reviewCount = invoices.filter(inv => inv.status === "Needs Review").length;
@@ -43,9 +42,8 @@ const [uploads, setUploads] = useState([]);
 
   const renderPage = () => {
     switch (activePage) {
-      case "Upload": return <UploadPage setActivePage={setActivePage}  uploads={uploads}
-          setUploads={setUploads} setSelectedInvoice={setSelectedInvoice}/>;
-      case "Review": return <ReviewPage setActivePage={setActivePage}  uploads={uploads} invoiceNumber={selectedInvoice}/>;
+      case "Upload": return <UploadPage setActivePage={setActivePage} uploads={uploads} setUploads={setUploads} setSelectedInvoice={setSelectedInvoice} />;
+      case "Review": return <ReviewPage setActivePage={setActivePage} uploads={uploads} invoiceNumber={selectedInvoice} />;
       case "Processing": return <ProcessingPage setActivePage={setActivePage} />;
       case "Dashboard": return <DashboardPage setActivePage={setActivePage} />;
       case "Configuration": return <ConfigurationPage />;
@@ -68,13 +66,18 @@ const [uploads, setUploads] = useState([]);
         setMobileOpen={setMobileSidebarOpen}
       />
 
+      {/* Main content area - Fixed positioning to avoid header in scroll */}
       <main
-        className="transition-all duration-300 min-h-screen bg-white pt-[53px] px-3 sm:px-6 md:px-8 lg:px-16"
+        className="fixed top-[53px] bottom-0 left-0 right-0 bg-white overflow-auto transition-all duration-300"
         style={{
-          marginLeft: windowWidth >= 1024 ? (expanded ? 224 : 64) : 0,
+          left: windowWidth >= 1024 ? (expanded ? "224px" : "64px") : "0",
         }}
       >
-        <div className="max-w-full lg:max-w-[1500px] mx-auto">{renderPage()}</div>
+        <div className="h-full px-3 sm:px-6 md:px-8 lg:px-16">
+          <div className="max-w-full lg:max-w-[1500px] mx-auto py-4 sm:py-6">
+            {renderPage()}
+          </div>
+        </div>
       </main>
     </div>
   );
