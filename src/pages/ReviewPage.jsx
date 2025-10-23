@@ -310,7 +310,7 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
       try {
         const res = await fetch(`https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1/${invoiceNumber}`, {
           headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY",
             "Content-Type": "application/json",
           },
         });

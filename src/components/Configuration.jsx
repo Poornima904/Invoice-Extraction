@@ -405,33 +405,72 @@ const VendorConfiguration = () => {
   const [headerPrompt, setHeaderPrompt] = useState("");
   const [lineItemPrompt, setLineItemPrompt] = useState("");
 
-  // Fetch vendor names from API
   const fetchVendors = async () => {
-    debugger
-    setLoading(true);
-    try {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
-      );
-      const requestOptions = { method: "GET", headers: myHeaders };
-      const url = `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
-        selectedCountry
-      )}&active=true`;
+  debugger;
+  setLoading(true);
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      const response = await fetch(url, requestOptions);
-      if (!response.ok) throw new Error("Failed to fetch vendors");
-      const data = await response.json();
-      const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
-      setVendors(vendorNames);
-    } catch (error) {
-      console.error(error);
-      setVendors([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const raw = JSON.stringify({
+      country: selectedCountry || "USA",
+      active: true,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    const response = await fetch(
+      "https://invoice-service.peolgenai.com/getallvendors",
+      requestOptions
+    );
+
+    if (!response.ok) throw new Error("Failed to fetch vendors");
+
+    const data = await response.json();
+    // Adjust this based on your backend response shape
+    const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
+    setVendors(vendorNames);
+  } catch (error) {
+    console.error(error);
+    setVendors([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  // Fetch vendor names from API
+  // const fetchVendors = async () => {
+  //   debugger
+  //   setLoading(true);
+  //   try {
+  //     const myHeaders = new Headers();
+  //     myHeaders.append(
+  //       "Authorization",
+  //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
+  //     );
+  //     const requestOptions = { method: "GET", headers: myHeaders };
+  //     const url = `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
+  //       selectedCountry
+  //     )}&active=true`;
+
+  //     const response = await fetch(url, requestOptions);
+  //     if (!response.ok) throw new Error("Failed to fetch vendors");
+  //     const data = await response.json();
+  //     const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
+  //     setVendors(vendorNames);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setVendors([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (selectedCountry && selectedOperation === "Edit Vendor") fetchVendors();
