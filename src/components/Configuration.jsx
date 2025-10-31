@@ -56,7 +56,6 @@ const Configuration = () => {
 };
 
 // -------------------- FIELD MASTER --------------------
-
 const FieldMaster = () => {
   const [headerFields, setHeaderFields] = useState([]);
   const [lineItemFields, setLineItemFields] = useState([]);
@@ -75,40 +74,60 @@ const FieldMaster = () => {
   const fetchFields = async () => {
     debugger;
     setLoading(true);
-    try {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
-      );
-      myHeaders.append("Content-Type", "application/json");
+    // try {
+    //   const myHeaders = new Headers();
+    //   myHeaders.append(
+    //     "Authorization",
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
+    //   );
+    //   myHeaders.append("Content-Type", "application/json");
 
-      // Note: GET requests don't usually have a body, so we omit 'body' here.
-      const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
-      };
+    //   // Note: GET requests don't usually have a body, so we omit 'body' here.
+    //   const requestOptions = {
+    //     method: "GET",
+    //     headers: myHeaders,
+    //     redirect: "follow",
+    //   };
 
-      const response = await fetch(
-        "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
-        requestOptions
-      );
+    //   const response = await fetch(
+    //     "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
+    //     requestOptions
+    //   );
 
-      if (!response.ok) throw new Error("Failed to fetch fields");
+    //   if (!response.ok) throw new Error("Failed to fetch fields");
 
-      const result = await response.json();
-      const fields = result.fields || [];
+    //   const result = await response.json();
+    //   const fields = result.fields || [];
 
-      setHeaderFields(fields.filter((f) => f.Type === "Header"));
-      setLineItemFields(fields.filter((f) => f.Type === "Line Item"));
-    } catch (error) {
-      console.error("Error fetching fields:", error);
-      setHeaderFields([]);
-      setLineItemFields([]);
-    } finally {
-      setLoading(false);
-    }
+    //   setHeaderFields(fields.filter((f) => f.Type === "Header"));
+    //   setLineItemFields(fields.filter((f) => f.Type === "Line Item"));
+    // } catch (error) {
+    //   console.error("Error fetching fields:", error);
+    //   setHeaderFields([]);
+    //   setLineItemFields([]);
+    // } finally {
+    //   setLoading(false);
+    // }
+
+     try {
+    // Hardcoded header and line item fields
+    const hardcodedFields = [
+      { fieldname: "IN v1", Description: "Name of Vendor", Type: "Header", country: "India", createdby: "Admin" },
+      { fieldname: "INV C", Description: "Vendor Code", Type: "Header", country: "India", createdby: "Admin" },
+      { fieldname: "INV11", Description: "Invoice Number", Type: "Line Item", country: "India", createdby: "Admin" },
+      { fieldname: "5600", Description: "Invoice Amount", Type: "Line Item", country: "India", createdby: "Admin" },
+    ];
+
+    // Separate them into Header and Line Item
+    setHeaderFields(hardcodedFields.filter((f) => f.Type === "Header"));
+    setLineItemFields(hardcodedFields.filter((f) => f.Type === "Line Item"));
+  } catch (error) {
+    console.error("Error setting hardcoded fields:", error);
+    setHeaderFields([]);
+    setLineItemFields([]);
+  } finally {
+    setLoading(false);
+  }
   };
 
   const handleFieldAction = async () => {
@@ -279,9 +298,6 @@ const FieldMaster = () => {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-     
-       
-
             {/* Field Name dropdown populated with API fields */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -406,43 +422,46 @@ const VendorConfiguration = () => {
   const [lineItemPrompt, setLineItemPrompt] = useState("");
 
   const fetchVendors = async () => {
-  debugger;
-  setLoading(true);
-  try {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      country: selectedCountry || "USA",
-      active: true,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    const response = await fetch(
-      "https://invoice-service.peolgenai.com/getallvendors",
-      requestOptions
-    );
-
-    if (!response.ok) throw new Error("Failed to fetch vendors");
-
-    const data = await response.json();
-    // Adjust this based on your backend response shape
-    const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
+    debugger;
+    setLoading(true);
+    const vendorNames = ["IN v1", "IN v2", "IN v3"];
     setVendors(vendorNames);
-  } catch (error) {
-    console.error(error);
-    setVendors([]);
-  } finally {
     setLoading(false);
-  }
-};
+    // try {
+    //   // const myHeaders = new Headers();
+    //   // myHeaders.append("Content-Type", "application/json");
 
+    //   // const raw = JSON.stringify({
+    //   //   country: selectedCountry || "USA",
+    //   //   active: true,
+    //   // });
+
+    //   // const requestOptions = {
+    //   //   method: "POST",
+    //   //   headers: myHeaders,
+    //   //   body: raw,
+    //   //   redirect: "follow",
+    //   // };
+
+    //   // const response = await fetch(
+    //   //   "https://invoice-service.peolgenai.com/getallvendors",
+    //   //   requestOptions
+    //   // );
+
+    //   // if (!response.ok) throw new Error("Failed to fetch vendors");
+
+    //   // const data = await response.json();
+    //   // Adjust this based on your backend response shape
+    //   // const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
+    //   // const vendorNames = ("IN v1");
+    //   // setVendors(vendorNames);
+    // } catch (error) {
+    //   console.error(error);
+    //   setVendors([]);
+    // } finally {
+    //   setLoading(false);
+    // }
+  };
 
   // Fetch vendor names from API
   // const fetchVendors = async () => {

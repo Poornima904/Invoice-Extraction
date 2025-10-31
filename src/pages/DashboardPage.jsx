@@ -2,109 +2,87 @@ import React, { useState, useEffect } from "react"; // 👈 Import useState and 
 import { FaEye, FaDownload } from "react-icons/fa";
 
 const DashboardPage = ({ setActivePage }) => {
-  // 1. Use state for fetched invoices and the current set of invoices to display
-  const [apiInvoices, setApiInvoices] = useState([]); // To store data from API
-  const [uploads, setUploads] = useState([]); // This state seems to be used for the mapped API data
-  const [highlightIds, setHighlightIds] = useState([]); // Assuming this is used elsewhere
+  const [apiInvoices, setApiInvoices] = useState([]);
+  const [uploads, setUploads] = useState([]);
+  const [highlightIds, setHighlightIds] = useState([]);
+  const [invoiceCount, setInvoiceCount] = useState(0);
+  const [totalInvoiceValue, setTotalInvoiceValue] = useState(0);
 
-  // 2. Mock data (kept temporarily for other sections, but will prioritize API data)
-  const mockInvoices = [
-    {
-      id: "MS-2024-001",
-      vendor: "Microsoft Corporation",
-      date: "2024-01-15",
-      amount: "USD 24,850",
-      status: "Processed",
-      confidence: "96%",
-    },
-    {
-      id: "AWS-2024-156",
-      vendor: "Amazon Web Services Inc.",
-      date: "2024-03-05",
-      amount: "USD 18,750.5",
-      status: "Needs Review",
-      confidence: "78%",
-    },
-    {
-      id: "STP-2024-0078",
-      vendor: "Staples Business Solutions",
-      date: "2024-01-20",
-      amount: "USD 2,845.99",
-      status: "Processing",
-      confidence: "89%",
-    },
-    {
-      id: "G-2024-4892",
-      vendor: "Google LLC",
-      date: "2024-02-10",
-      amount: "USD 1,800",
-      status: "Failed",
-      confidence: "45%",
-    },
-    {
-      id: "SLACK-2024-001",
-      vendor: "Slack Technologies Inc.",
-      date: "2024-01-08",
-      amount: "USD 15,600",
-      status: "Processed",
-      confidence: "94%",
-    },
-  ];
-
-  // Combine data: use API data if available, otherwise use mock data
-  const invoicesToDisplay = apiInvoices.length > 0 ? apiInvoices : mockInvoices;
-
+  const invoicesToDisplay = apiInvoices.length > 0 ? apiInvoices : uploads;
 
   const fetchInvoices = async () => {
-    debugger 
+    debugger;
     try {
-      const response = await fetch("https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1", {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY",
-          "Content-Type": "application/json",
-        },
-      });
-      
-      if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
-      
+      const response = await fetch(
+        "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok)
+        throw new Error(
+          `Network response was not ok, status: ${response.status}`
+        );
+
       const data = await response.json();
-      
-   
-      const mappedData = (data.invoices || []).map((item) => ({
-       
-        id: item.headers.Invoice_Number || "--",
-        vendor: item.headers?.Vendor_Name || "—",
-        date: item.createdAt ? item.createdAt.slice(0, 10) : "—", // Using createdAt as the date
-        amount:
-          item.headers?.Total_Amount !== undefined
-            ? `₹${item.headers.Total_Amount.toLocaleString()}`
-            : "—", // Using Indian Rupee as per mapping logic
-        status: item.status,
-        confidence: item.headers?.Confidence || "—", // Assuming a confidence field
-        // Additional fields from original mapping (if needed elsewhere)
-        fileName: item.pdf_file_name,
-        fileUrl: item.pdf_blob_url,
-      }));
-      
-      // 4. Update the state with the fetched and mapped data
-      setApiInvoices(mappedData); // 👈 Set the state for rendering
-      setUploads(mappedData); // Keep this for backward compatibility if other components rely on it
-      
+
+      // ✅ data.data holds the array
+      const mappedData = data.map((item) => {
+        // Safely parse headers JSON string
+        const headers =
+          typeof item.Headers === "string"
+            ? JSON.parse(item.Headers)
+            : item.Headers || {};
+
+        return {
+          id: item.Id || headers.Invoice_Number || "--",
+          vendor: item.Vendor || headers.Vendor_Name || "—",
+          country: item.Country || "—",
+          date: item.CreatedAt ? item.CreatedAt.slice(0, 10) : "—",
+          amount: headers.Total_Amount
+            ? `₹${Number(headers.Total_Amount).toLocaleString()}`
+            : "—",
+          status: item.Status || "—",
+          fileName: item.PdfFileName || "—",
+          fileUrl: item.PdfBlobUrl || "",
+          invoiceNumber: headers.Invoice_Number || "—",
+          poNumber: headers.Purchase_Order_Number || "—",
+          currency: headers.Currency || "INR",
+          documentType: headers.Document_Type || "—",
+          totalIGSTAmount: headers.Total_IGST_Amount
+            ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}`
+            : "—",
+        };
+      });
+
+      // ✅ Update state
+      setApiInvoices(mappedData);
+      setUploads(mappedData);
+      setInvoiceCount(mappedData.length);
+
+      // ✅ Calculate total invoice value
+      const totalValue = mappedData.reduce((sum, inv) => {
+        const num = Number(inv.amount.replace(/[₹,]/g, "").trim());
+        return sum + (isNaN(num) ? 0 : num);
+      }, 0);
+      setTotalInvoiceValue(totalValue);
+
+      // ✅ Highlight today’s uploads
       const today = new Date().toISOString().slice(0, 10);
       const highlightToday = mappedData
         .filter((f) => f.date === today)
         .map((f) => f.id);
       setHighlightIds(highlightToday);
 
+      console.log("✅ mappedData:", mappedData);
     } catch (error) {
-      console.error("Error fetching invoices:", error);
-      // Optional: Handle error state for UI display
+      console.error("❌ Error fetching invoices:", error);
     }
   };
 
   useEffect(() => {
+    debugger;
     fetchInvoices();
     const interval = setInterval(fetchInvoices, 5000);
     return () => clearInterval(interval);
@@ -124,13 +102,13 @@ const DashboardPage = ({ setActivePage }) => {
         {[
           {
             title: "Total Invoices",
-            value: 15,
+            value: invoiceCount,
             trend: "+12.5% this month",
             trendClass: "text-green-700",
           },
           {
             title: "Total Value",
-            value: "$169,792.24",
+            value: `₹${totalInvoiceValue.toLocaleString()}`,
             trend: "+ $25.2K this month",
             trendClass: "text-green-700",
           },
@@ -153,12 +131,16 @@ const DashboardPage = ({ setActivePage }) => {
                                  transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
           >
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-800 text-sm sm:text-base">{card.title}</span>
+              <span className="text-gray-800 text-sm sm:text-base">
+                {card.title}
+              </span>
             </div>
             <div className="text-xl sm:text-2xl font-bold mb-1 text-gray-900">
               {card.value}
             </div>
-            <div className={`text-sm sm:text-base font-medium ${card.trendClass}`}>
+            <div
+              className={`text-sm sm:text-base font-medium ${card.trendClass}`}
+            >
               {card.trend}
             </div>
           </div>
@@ -174,7 +156,7 @@ const DashboardPage = ({ setActivePage }) => {
           </h3>
           <ul className="space-y-4 overflow-y-auto flex-1">
             {/* 5. Use the invoicesToDisplay state for rendering */}
-            {invoicesToDisplay.slice(0, 5).map((inv, idx) => ( 
+            {invoicesToDisplay.slice(0, 5).map((inv, idx) => (
               <li
                 key={inv.id} // Use inv.id for a stable key
                 className="flex justify-between items-center border-b border-gray-200 pb-3 
@@ -311,7 +293,9 @@ const DashboardPage = ({ setActivePage }) => {
                     <span
                       className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium ${
                         // Use a class based on status for confidence, or define a new map
-                        inv.confidence === "—" ? "bg-gray-100 text-gray-800" : statusClassMap[inv.status]
+                        inv.confidence === "—"
+                          ? "bg-gray-100 text-gray-800"
+                          : statusClassMap[inv.status]
                       }`}
                     >
                       {inv.confidence}
@@ -350,7 +334,8 @@ const DashboardPage = ({ setActivePage }) => {
         {/* Pagination */}
         <div className="flex flex-col sm:flex-row justify-between items-center mt-5 text-gray-700 gap-3 text-sm sm:text-base">
           <span>
-            Showing {invoicesToDisplay.length} of {invoicesToDisplay.length} invoices
+            Showing {invoicesToDisplay.length} of {invoicesToDisplay.length}{" "}
+            invoices
           </span>
           <div className="flex gap-2 sm:gap-3">
             <button className="px-3 sm:px-4 py-2 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition cursor-pointer text-sm sm:text-base">

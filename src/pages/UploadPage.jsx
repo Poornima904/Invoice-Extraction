@@ -19,20 +19,21 @@ export default function UploadPage({
   const fetchVendors = async (selectedCountry) => {
     setLoadingVendors(true);
     try {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
-      );
-      const response = await fetch(
-        `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
-          selectedCountry
-        )}&active=true`,
-        { method: "GET", headers: myHeaders }
-      );
-      if (!response.ok) throw new Error("Failed to fetch vendors");
-      const data = await response.json();
-      const vendorNames = (data || []).map((v) => v.vendor_name);
+      // const myHeaders = new Headers();
+      // myHeaders.append(
+      //   "Authorization",
+      //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
+      // );
+      // const response = await fetch(
+      //   `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
+      //     selectedCountry
+      //   )}&active=true`,
+      //   { method: "GET", headers: myHeaders }
+      // );
+      // if (!response.ok) throw new Error("Failed to fetch vendors");
+      // const data = await response.json();
+      // const vendorNames = (data || []).map((v) => v.vendor_name);
+      const vendorNames = ("IN v1");
       setVendors(vendorNames);
     } catch (error) {
       console.error("Error fetching vendors:", error);
@@ -50,40 +51,57 @@ export default function UploadPage({
   }, [country]);
 
   const fetchInvoices = async () => {
-    debugger
-   try {
-      const response = await fetch("https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1", {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY",
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      const mappedData = (data.invoices || []).map((item) => ({
-        id: item._id || "--",
-        fileName: item.pdf_file_name,
-        uploadDate: item.createdAt ? item.createdAt.slice(0, 10) : "—",
-        vendor: item.headers?.Vendor_Name || "—",
-        amount:
-          item.headers?.Total_Amount !== undefined
-            ? `₹${item.headers.Total_Amount.toLocaleString()}`
-            : "—",
-        status: item.status,
-        fileUrl: item.pdf_blob_url,
-      }));
-      setUploads(mappedData);
-      const today = new Date().toISOString().slice(0, 10);
-      const highlightToday = mappedData
-        .filter((f) => f.uploadDate === today)
-        .map((f) => f.id);
-      setHighlightIds(highlightToday);
-    }catch (error) {
-      console.error("Error fetching invoices:", error);
+ 
+  try {
+    const response = await fetch("https://hczbk50t-5000.inc1.devtunnels.ms/invoice", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text(); // safer to read text only once
+      throw new Error(`Network response was not ok: ${text}`);
     }
-  };
+
+    const data = await response.json(); // ✅ read body once
+
+    const mappedData = (data || []).map((item) => {
+      let headers = {};
+      try {
+        headers = item.Headers ? JSON.parse(item.Headers) : {};
+      } catch {
+        headers = {};
+      }
+
+      return {
+        id: item.Id || "--",
+        fileName: item.PdfFileName || "—",
+        uploadDate: item.CreatedAt ? item.CreatedAt.slice(0, 10) : "—",
+        vendor: item.Vendor || "IN v1",
+        amount:
+          headers.Total_Amount !== undefined
+            ? `₹${Number(headers.Total_Amount).toLocaleString()}`
+            : "—",
+        status: item.Status || "—",
+        fileUrl: item.PdfBlobUrl || "#",
+         invoiceNumber:  item.Id|| "—",
+      };
+    });
+
+    setUploads(mappedData);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const highlightToday = mappedData
+      .filter((f) => f.uploadDate === today)
+      .map((f) => f.id);
+
+    setHighlightIds(highlightToday);
+  } catch (error) {
+    console.error("Error fetching invoices:", error);
+  }
+};
 
   useEffect(() => {
     fetchInvoices();
@@ -136,7 +154,7 @@ export default function UploadPage({
   };
 
   const handleView = (upload) => {
-    setSelectedInvoice(upload.id);
+    setSelectedInvoice(upload.invoiceNumber);
     if (["Needs Review", "Processed"].includes(upload.status))
       setActivePage("Review");
     else if (["Processing", "Failed"].includes(upload.status))
@@ -158,23 +176,24 @@ export default function UploadPage({
     setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
 
   const handleUploadFile = async () => {
+    debugger
     if (!selectedFiles.length) return;
     setIsUploading(true);
     try {
       for (const file of selectedFiles) {
-        const myHeaders = new Headers();
-        myHeaders.append(
-          "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
-        );
+        // const myHeaders = new Headers();
+        // myHeaders.append(
+        //   "Authorization",
+        //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
+        // );
         const formdata = new FormData();
         formdata.append("pdf", file, file.name);
         formdata.append("country", country);
         formdata.append("vendor", vendor);
         formdata.append("save_metadata", "true");
         const response = await fetch(
-          "https://hczbk50t-5050.inc1.devtunnels.ms/api/invoices1",
-          { method: "POST", headers: myHeaders, body: formdata }
+          "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
+          { method: "POST", body: formdata }
         );
         if (!response.ok) throw new Error(await response.text());
       }
@@ -308,11 +327,14 @@ export default function UploadPage({
                 <option value="" disabled>
                   {loadingVendors ? "Loading..." : "Select Vendor"}
                 </option>
-                {vendors.map((v) => (
+                {/* {vendors.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>
-                ))}
+               ))} */}
+                <option key={vendors} value={vendors}>
+                    {vendors}
+                  </option>
               </select>
             </div>
           </div>
