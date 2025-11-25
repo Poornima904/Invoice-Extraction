@@ -23,7 +23,19 @@ function extractFilename(url) {
 }
 
 // EditableField Component
-function EditableField({ label, value, confidence, percent, color, editable, externalLink, isEditing, onStartEdit, onSave, onCancel }) {
+function EditableField({
+  label,
+  value,
+  confidence,
+  percent,
+  color,
+  editable,
+  externalLink,
+  isEditing,
+  onStartEdit,
+  onSave,
+  onCancel,
+}) {
   const [hovered, setHovered] = useState(false);
   const [draftValue, setDraftValue] = useState(value);
 
@@ -47,10 +59,18 @@ function EditableField({ label, value, confidence, percent, color, editable, ext
             onChange={(e) => setDraftValue(e.target.value)}
             autoFocus
           />
-          <button className="p-1 rounded border border-green-300 hover:bg-green-100" aria-label="Confirm" onClick={() => onSave(draftValue)}>
+          <button
+            className="p-1 rounded border border-green-300 hover:bg-green-100"
+            aria-label="Confirm"
+            onClick={() => onSave(draftValue)}
+          >
             <CheckIcon className="w-6 h-6 text-green-600" />
           </button>
-          <button className="p-1 rounded border border-gray-300 hover:bg-gray-100" aria-label="Cancel" onClick={onCancel}>
+          <button
+            className="p-1 rounded border border-gray-300 hover:bg-gray-100"
+            aria-label="Cancel"
+            onClick={onCancel}
+          >
             <XMarkIcon className="w-6 h-6 text-gray-500" />
           </button>
         </div>
@@ -72,7 +92,11 @@ function EditableField({ label, value, confidence, percent, color, editable, ext
           {confidence} ({percent}%)
         </span>
         {editable && hovered && (
-          <button className="ml-auto p-1 rounded hover:bg-blue-100" aria-label={`Edit ${label}`} onClick={onStartEdit}>
+          <button
+            className="ml-auto p-1 rounded hover:bg-blue-100"
+            aria-label={`Edit ${label}`}
+            onClick={onStartEdit}
+          >
             <PencilIcon className="w-5 h-5 text-gray-500" />
           </button>
         )}
@@ -83,11 +107,18 @@ function EditableField({ label, value, confidence, percent, color, editable, ext
 }
 
 // EditableLineItemRow Component
-function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel }) {
+function EditableLineItemRow({
+  line,
+  isEditing,
+  onStartEdit,
+  onSave,
+  onCancel,
+}) {
   const [hovered, setHovered] = useState(false);
   const [draftValues, setDraftValues] = useState({
     desc: line.desc,
     qty: line.qty,
+    UOM: line.Unit_Of_Measure,
     unit: line.unit,
     amount: line.amount,
   });
@@ -97,12 +128,14 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
       setDraftValues({
         desc: line.desc,
         qty: line.qty,
+        UOM: line.Unit_Of_Measure,
         unit: line.unit,
         amount: line.amount,
       });
   }, [isEditing, line]);
 
-  const setDraftField = (field, val) => setDraftValues((prev) => ({ ...prev, [field]: val }));
+  const setDraftField = (field, val) =>
+    setDraftValues((prev) => ({ ...prev, [field]: val }));
 
   if (isEditing) {
     return (
@@ -118,6 +151,15 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
           <input
             value={draftValues.qty}
             onChange={(e) => setDraftField("qty", e.target.value)}
+            className="w-full border rounded p-1 text-sm"
+            type="number"
+            min="0"
+          />
+        </td>
+        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+          <input
+            value={draftValues.UOM}
+            onChange={(e) => setDraftField("UOM", e.target.value)}
             className="w-full border rounded p-1 text-sm"
             type="number"
             min="0"
@@ -145,7 +187,11 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
           >
             <CheckIcon className="w-5 h-5 text-green-700" />
           </button>
-          <button aria-label="Cancel" className="p-1 rounded bg-gray-100 hover:bg-gray-200" onClick={onCancel}>
+          <button
+            aria-label="Cancel"
+            className="p-1 rounded bg-gray-100 hover:bg-gray-200"
+            onClick={onCancel}
+          >
             <XMarkIcon className="w-5 h-5 text-gray-500" />
           </button>
         </td>
@@ -160,13 +206,28 @@ function EditableLineItemRow({ line, isEditing, onStartEdit, onSave, onCancel })
       onMouseLeave={() => setHovered(false)}
     >
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.desc}</td>
-      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.qty?.toLocaleString?.() || line.qty}</td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+        {line.qty?.toLocaleString?.() || line.qty}
+      </td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+        {line.UOM?.toLocaleString?.() || line.UOM}
+      </td>
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.unit}</td>
-      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">{line.amount}</td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">
+        {line.amount}
+      </td>
       <td className="px-3 sm:px-4 py-2 relative">
-        <span className={`rounded-full py-1 px-2 text-xs font-bold ${line.color}`}>{line.confidence}</span>
+        <span
+          className={`rounded-full py-1 px-2 text-xs font-bold ${line.color}`}
+        >
+          {line.confidence}
+        </span>
         {hovered && (
-          <button className="absolute top-1 right-1 p-1 rounded hover:bg-blue-100" aria-label={`Edit line ${line.desc}`} onClick={onStartEdit}>
+          <button
+            className="absolute top-1 right-1 p-1 rounded hover:bg-blue-100"
+            aria-label={`Edit line ${line.desc}`}
+            onClick={onStartEdit}
+          >
             <PencilIcon className="w-4 h-4 text-gray-500" />
           </button>
         )}
@@ -192,12 +253,18 @@ const InfoSection = ({
   const cancelEdit = () => setEditingKey(null);
 
   const saveEdit = (key, newValue) => {
-    setFieldsOrLines(fieldsOrLines.map((item) => (item.key === key ? { ...item, value: newValue } : item)));
+    setFieldsOrLines(
+      fieldsOrLines.map((item) =>
+        item.key === key ? { ...item, value: newValue } : item
+      )
+    );
     setEditingKey(null);
   };
 
   const saveLineEdit = (key, newLine) => {
-    setFieldsOrLines(fieldsOrLines.map((item) => (item.key === key ? newLine : item)));
+    setFieldsOrLines(
+      fieldsOrLines.map((item) => (item.key === key ? newLine : item))
+    );
     setEditingKey(null);
   };
 
@@ -208,7 +275,9 @@ const InfoSection = ({
   if (isLineItems) {
     return (
       <section>
-        <div className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}>
+        <div
+          className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}
+        >
           <BoltIcon className={`w-5 h-5 ${iconColor}`} />
           {title}
         </div>
@@ -216,11 +285,24 @@ const InfoSection = ({
           <table className="min-w-[600px] w-full border divide-y divide-gray-200 text-sm">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Description</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Qty</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Unit Price</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Amount</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">Confidence</th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Description
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Qty
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  UOM
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Unit Price
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Amount
+                </th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Confidence
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -244,7 +326,9 @@ const InfoSection = ({
 
   return (
     <section>
-      <div className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}>
+      <div
+        className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}
+      >
         <BoltIcon className={`w-5 h-5 ${iconColor}`} />
         {title}
       </div>
@@ -271,7 +355,12 @@ const InfoSection = ({
 };
 
 // Main ReviewPage Component
-export default function ReviewPage({ setActivePage, uploads, invoiceNumber, recentPdfUrl }) {
+export default function ReviewPage({
+  setActivePage,
+  uploads,
+  invoiceNumber,
+  recentPdfUrl,
+}) {
   const [zoom, setZoom] = useState(100);
   const [recentPdf, setRecentPdf] = useState(null);
   const [invoicePdf, setInvoicePdf] = useState(null);
@@ -285,14 +374,14 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
 
   // Zoom functionality
   const handleZoomIn = () => {
-    setZoom(prev => {
+    setZoom((prev) => {
       const newZoom = Math.min(prev + 25, 200);
       return newZoom;
     });
   };
 
   const handleZoomOut = () => {
-    setZoom(prev => {
+    setZoom((prev) => {
       const newZoom = Math.max(prev - 25, 50);
       return newZoom;
     });
@@ -303,88 +392,261 @@ export default function ReviewPage({ setActivePage, uploads, invoiceNumber, rece
   };
 
   // Data fetching logic
-useEffect(() => {
-  debugger
-  if (!invoiceNumber) return;
+  useEffect(() => {
+    debugger;
+    if (!invoiceNumber) return;
 
-  const fetchInvoiceDetails = async () => {
-    debugger
-    try {
-      const res = await fetch(`https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`);
-      const data = await res.json();
-      const invoiceData = data.newInvoice || data.invoice || data; // fallback if wrapped
-
-      if (!invoiceData) return;
-
-      // ✅ Parse headers safely
-      let headers = {};
+    const fetchInvoiceDetails = async () => {
+      debugger;
       try {
-        headers = invoiceData.Headers ? JSON.parse(invoiceData.Headers) : {};
-      } catch {
-        headers = {};
+        const res = await fetch(
+          `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
+        );
+        const data = await res.json();
+        const invoiceData = data.newInvoice || data.invoice || data; // fallback if wrapped
+
+        if (!invoiceData) return;
+
+        // ✅ Parse headers safely
+        let headers = {};
+        try {
+          headers = invoiceData.Headers ? JSON.parse(invoiceData.Headers) : {};
+        } catch {
+          headers = {};
+        }
+
+        // ✅ Parse line items safely
+        let lineItems = [];
+        try {
+          lineItems = invoiceData.LineItems
+            ? JSON.parse(invoiceData.LineItems)
+            : [];
+        } catch {
+          lineItems = [];
+        }
+
+        // ✅ PDF file info
+        if (invoiceData.PdfBlobUrl) {
+          setInvoicePdf(invoiceData.PdfBlobUrl);
+          setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
+        }
+
+        // ✅ Header info
+        setHeaderInfo([
+          {
+            key: "invoice_number",
+            label: "Invoice Number",
+            value: headers.Invoice_Number || "",
+            confidence: "High",
+            percent: 90,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+          {
+            key: "invoice_date",
+            label: "Invoice Date",
+            value: headers.Invoice_Date || "",
+            confidence: "High",
+            percent: 90,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+          {
+            key: "po_number",
+            label: "PO Number",
+            value: headers.Purchase_Order_Number || "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-700",
+            editable: true,
+          },
+          {
+            key: "Payment_Terms",
+            label: "Payment Terms",
+            value: headers.Payment_Terms || "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-700",
+            editable: true,
+          },
+          {
+            key: "currency",
+            label: "Currency",
+            value: headers.Currency || "",
+            confidence: "High",
+            percent: 95,
+            color: "bg-green-100 text-green-800",
+            editable: false,
+          },
+          {
+            key: "document_type",
+            label: "Document Type",
+            value: headers.Document_Type || "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-700",
+            editable: false,
+          },
+          {
+            key: "status",
+            label: "Status",
+            value: invoiceData.Status || "",
+            confidence: "High",
+            percent: 90,
+            color: "bg-green-100 text-green-800",
+            editable: false,
+          },
+        ]);
+
+        // ✅ Supplier info
+        setSupplierInfo([
+          {
+            key: "supplier_name",
+            label: "Supplier Name",
+            value: headers.Vendor_Name || "",
+            confidence: "High",
+            percent: 95,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+          {
+            key: "supplier_gstin",
+            label: "Supplier GSTIN",
+            value: headers.Vendor_GSTIN || "",
+            confidence: "Medium",
+            percent: 75,
+            color: "bg-purple-100 text-purple-700",
+            editable: true,
+          },
+          {
+            key: "customer_name",
+            label: "Customer Name",
+            value: headers.Customer_Name || "",
+            confidence: "High",
+            percent: 90,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+          {
+            key: "customer_gstin",
+            label: "Customer GSTIN",
+            value: headers.Customer_GSTIN || "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-700",
+            editable: true,
+          },
+          {
+            key: "country",
+            label: "Country",
+            value: invoiceData.Country || "",
+            confidence: "High",
+            percent: 95,
+            color: "bg-green-100 text-green-800",
+            editable: false,
+          },
+        ]);
+
+        // ✅ Line items
+        const mappedLineItems = lineItems.map((item, idx) => ({
+          key: `line_${idx + 1}`,
+          desc: item.Item_Description || "",
+          qty: item.Quantity || 0,
+          UOM: item.Unit_Of_Measure || "",
+          unit: item.Unit_Price
+            ? headers.Currency === "USD"
+              ? `$${Number(item.Unit_Price).toLocaleString()}`
+              : headers.Currency === "INR"
+              ? `₹${Number(item.Unit_Price).toLocaleString()}`
+              : `${Number(item.Unit_Price).toLocaleString()} ${
+                  item.Currency || ""
+                }`
+            : "",
+          amount: item.Total_Item_Amount
+            ? headers.Currency === "USD"
+              ? `$${Number(item.Total_Item_Amount).toLocaleString()}`
+              : headers.Currency === "INR"
+              ? `₹${Number(item.Total_Item_Amount).toLocaleString()}`
+              : `${Number(item.Total_Item_Amount).toLocaleString()} ${
+                  item.Currency || ""
+                }`
+            : "",
+          confidence: "Medium",
+          color: "bg-orange-100 text-orange-700",
+        }));
+        setLineItems(mappedLineItems);
+
+        // ✅ Totals summary
+        setTotalsSummary([
+          {
+            key: "total_igst_percent",
+            label: "Total IGST %",
+            value: headers.Total_IGST_Percent
+              ? `${headers.Total_IGST_Percent}%`
+              : "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-800",
+            editable: true,
+          },
+          {
+            key: "total_igst_amount",
+            label: "Total IGST Amount",
+            value: headers.Total_IGST_Amount
+              ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}`
+              : "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-800",
+            editable: true,
+          },
+          {
+            key: "discount_percent",
+            label: "Discount Percent",
+            value: headers.Discount_Percent
+              ? `${headers.Discount_Percent}%`
+              : "",
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-800",
+            editable: true,
+          },
+          {
+            key: "discount_amount",
+            label: "Discount Amount",
+            value: headers.Discount_Amount
+              ? `₹${Number(headers.Discount_Amount).toLocaleString()}`
+              : "₹0",
+            confidence: "High",
+            percent: 95,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+          {
+            key: "total_amount",
+            label: "Total Amount",
+            value: headers.Total_Amount
+              ? headers.Currency === "USD"
+                ? `$${Number(headers.Total_Amount).toLocaleString()}`
+                : headers.Currency === "INR"
+                ? `₹${Number(headers.Total_Amount).toLocaleString()}`
+                : `${Number(headers.Total_Amount).toLocaleString()} ${
+                    headers.Currency || ""
+                  }`
+              : "",
+            confidence: "High",
+            percent: 95,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          },
+        ]);
+      } catch (error) {
+        console.error("Failed to fetch invoice details", error);
       }
+    };
 
-      // ✅ Parse line items safely
-      let lineItems = [];
-      try {
-        lineItems = invoiceData.LineItems ? JSON.parse(invoiceData.LineItems) : [];
-      } catch {
-        lineItems = [];
-      }
-
-      // ✅ PDF file info
-      if (invoiceData.PdfBlobUrl) {
-        setInvoicePdf(invoiceData.PdfBlobUrl);
-        setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
-      }
-
-      // ✅ Header info
-      setHeaderInfo([
-        { key: "invoice_number", label: "Invoice Number", value: headers.Invoice_Number || "", confidence: "High", percent: 90, color: "bg-green-100 text-green-800", editable: true },
-        { key: "invoice_date", label: "Invoice Date", value: headers.Invoice_Date || "", confidence: "High", percent: 90, color: "bg-green-100 text-green-800", editable: true },
-        { key: "po_number", label: "PO Number", value: headers.Purchase_Order_Number || "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-700", editable: true },
-        { key: "currency", label: "Currency", value: headers.Currency || "", confidence: "High", percent: 95, color: "bg-green-100 text-green-800", editable: false },
-        { key: "document_type", label: "Document Type", value: headers.Document_Type || "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-700", editable: false },
-        { key: "status", label: "Status", value: invoiceData.Status || "", confidence: "High", percent: 90, color: "bg-green-100 text-green-800", editable: false },
-      ]);
-
-      // ✅ Supplier info
-      setSupplierInfo([
-        { key: "supplier_name", label: "Supplier Name", value: headers.Vendor_Name || "", confidence: "High", percent: 95, color: "bg-green-100 text-green-800", editable: true },
-        { key: "supplier_gstin", label: "Supplier GSTIN", value: headers.Vendor_GSTIN || "", confidence: "Medium", percent: 75, color: "bg-purple-100 text-purple-700", editable: true },
-        { key: "customer_name", label: "Customer Name", value: headers.Customer_Name || "", confidence: "High", percent: 90, color: "bg-green-100 text-green-800", editable: true },
-        { key: "customer_gstin", label: "Customer GSTIN", value: headers.Customer_GSTIN || "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-700", editable: true },
-        { key: "country", label: "Country", value: invoiceData.Country || "", confidence: "High", percent: 95, color: "bg-green-100 text-green-800", editable: false },
-      ]);
-
-      // ✅ Line items
-      const mappedLineItems = lineItems.map((item, idx) => ({
-        key: `line_${idx + 1}`,
-        desc: item.Item_Description || "",
-        qty: item.Quantity || 0,
-        unit: item.Unit_Price ? `₹${Number(item.Unit_Price).toLocaleString()}` : "",
-        amount: item.Total_Item_Amount ? `₹${Number(item.Total_Item_Amount).toLocaleString()}` : "",
-        confidence: "Medium",
-        color: "bg-orange-100 text-orange-700",
-      }));
-      setLineItems(mappedLineItems);
-
-      // ✅ Totals summary
-      setTotalsSummary([
-        { key: "total_igst_percent", label: "Total IGST %", value: headers.Total_IGST_Percent ? `${headers.Total_IGST_Percent}%` : "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-800", editable: true },
-        { key: "total_igst_amount", label: "Total IGST Amount", value: headers.Total_IGST_Amount ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}` : "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-800", editable: true },
-        { key: "discount_percent", label: "Discount Percent", value: headers.Discount_Percent ? `${headers.Discount_Percent}%` : "", confidence: "Medium", percent: 80, color: "bg-purple-100 text-purple-800", editable: true },
-        { key: "discount_amount", label: "Discount Amount", value: headers.Discount_Amount ? `₹${Number(headers.Discount_Amount).toLocaleString()}` : "₹0", confidence: "High", percent: 95, color: "bg-green-100 text-green-800", editable: true },
-        { key: "total_amount", label: "Total Amount", value: headers.Total_Amount ? `₹${Number(headers.Total_Amount).toLocaleString()}` : "", confidence: "High", percent: 95, color: "bg-green-100 text-green-800", editable: true },
-      ]);
-    } catch (error) {
-      console.error("Failed to fetch invoice details", error);
-    }
-  };
-
-  fetchInvoiceDetails();
-}, [invoiceNumber]);
-
+    fetchInvoiceDetails();
+  }, [invoiceNumber]);
 
   useEffect(() => {
     if (!uploads) return;
@@ -400,10 +662,8 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full">
-      
       {/* LEFT: PDF Viewer */}
       <div className="flex-1 lg:w-7/12 bg-gray-100 border-r border-gray-200 min-h-[50vh] lg:min-h-0 flex flex-col">
-        
         {/* Toolbar - Improved mobile header */}
         <div className="sticky top-0 z-50 bg-white border-b flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 lg:py-4 w-full flex-shrink-0">
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
@@ -436,10 +696,9 @@ useEffect(() => {
             </button>
           </div>
         </div>
-        
+
         {/* PDF Display & Zoom Controls */}
         <div className="flex flex-col flex-1 min-h-0">
-          
           {/* Zoom Controls Bar - Improved for mobile */}
           <div className="flex items-center justify-between sm:justify-start gap-2 py-2 px-3 bg-white border-b border-gray-200 sticky top-[60px] lg:top-[68px] z-20">
             <div className="flex items-center gap-1 sm:gap-2">
@@ -469,22 +728,22 @@ useEffect(() => {
               {zoom}%
             </span>
           </div>
-          
+
           {/* PDF Container with improved mobile scaling */}
-          <div 
+          <div
             ref={pdfContainerRef}
             className="overflow-auto flex-1 w-full bg-white flex items-start justify-center p-2 sm:p-4 lg:p-6"
           >
             {invoicePdf ? (
-              <div 
+              <div
                 className="bg-white shadow-lg max-w-full"
-                style={{ 
+                style={{
                   transform: `scale(${zoom / 100})`,
-                  transformOrigin: 'top center',
-                  transition: 'transform 0.2s ease-in-out',
-                  width: '100%',
-                  maxWidth: '800px',
-                  minHeight: '400px'
+                  transformOrigin: "top center",
+                  transition: "transform 0.2s ease-in-out",
+                  width: "100%",
+                  maxWidth: "800px",
+                  minHeight: "400px",
                 }}
               >
                 <iframe
@@ -502,7 +761,7 @@ useEffect(() => {
               </div>
             )}
           </div>
-          
+
           {/* Confidence Legend Footer - Improved for mobile */}
           <div className="bg-gray-100 py-2 px-3 border-t border-gray-200 flex flex-wrap gap-2 sm:gap-4 text-xs justify-center">
             <span className="flex items-center gap-1 text-green-700">
@@ -523,7 +782,6 @@ useEffect(() => {
 
       {/* RIGHT: Extracted Data */}
       <div className="w-full lg:w-5/12 flex flex-col h-auto lg:h-screen bg-gray-50 border-l pb-16 lg:pb-0">
-        
         {/* Extracted Data Header */}
         <div className="sticky top-0 z-30 bg-white px-3 sm:px-4 lg:px-6 py-3 lg:py-4 flex items-center justify-between border-b border-gray-200">
           <h2 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">
@@ -533,7 +791,7 @@ useEffect(() => {
             <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4" /> Pending
           </span>
         </div>
-        
+
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6 space-y-4 sm:space-y-6 lg:space-y-8">
           <InfoSection
@@ -573,7 +831,7 @@ useEffect(() => {
             editable={true}
           />
         </div>
-        
+
         {/* FIXED FOOTER BUTTONS - Improved mobile layout */}
         <div className="fixed bottom-0 left-0 right-0 lg:sticky lg:bottom-0 bg-white px-3 sm:px-4 py-3 flex gap-2 z-40 border-t border-gray-200 shadow-lg lg:shadow-none">
           <button className="flex-1 px-3 py-2.5 rounded bg-gray-200 font-semibold hover:bg-gray-300 text-xs sm:text-sm">

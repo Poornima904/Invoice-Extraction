@@ -33,7 +33,12 @@ export default function UploadPage({
       // if (!response.ok) throw new Error("Failed to fetch vendors");
       // const data = await response.json();
       // const vendorNames = (data || []).map((v) => v.vendor_name);
-      const vendorNames = ("IN v1");
+      if(selectedCountry === "USA") {
+        const vendorNames = "USA v1";
+        setVendors(vendorNames);
+        return;
+      }
+      const vendorNames = "IN v1";
       setVendors(vendorNames);
     } catch (error) {
       console.error("Error fetching vendors:", error);
@@ -51,57 +56,60 @@ export default function UploadPage({
   }, [country]);
 
   const fetchInvoices = async () => {
- 
-  try {
-    const response = await fetch("https://hczbk50t-5000.inc1.devtunnels.ms/invoice", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    debugger;
+    try {
+      const response = await fetch(
+        "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (!response.ok) {
-      const text = await response.text(); // safer to read text only once
-      throw new Error(`Network response was not ok: ${text}`);
-    }
-
-    const data = await response.json(); // ✅ read body once
-
-    const mappedData = (data || []).map((item) => {
-      let headers = {};
-      try {
-        headers = item.Headers ? JSON.parse(item.Headers) : {};
-      } catch {
-        headers = {};
+      if (!response.ok) {
+        const text = await response.text(); // safer to read text only once
+        throw new Error(`Network response was not ok: ${text}`);
       }
 
-      return {
-        id: item.Id || "--",
-        fileName: item.PdfFileName || "—",
-        uploadDate: item.CreatedAt ? item.CreatedAt.slice(0, 10) : "—",
-        vendor: item.Vendor || "IN v1",
-        amount:
-          headers.Total_Amount !== undefined
-            ? `₹${Number(headers.Total_Amount).toLocaleString()}`
-            : "—",
-        status: item.Status || "—",
-        fileUrl: item.PdfBlobUrl || "#",
-         invoiceNumber:  item.Id|| "—",
-      };
-    });
+      const data = await response.json(); // ✅ read body once
 
-    setUploads(mappedData);
+      const mappedData = (data || []).map((item) => {
+        let headers = {};
+        try {
+          headers = item.Headers ? JSON.parse(item.Headers) : {};
+        } catch {
+          headers = {};
+        }
 
-    const today = new Date().toISOString().slice(0, 10);
-    const highlightToday = mappedData
-      .filter((f) => f.uploadDate === today)
-      .map((f) => f.id);
+        return {
+          id: item.Id || "--",
+          fileName: item.PdfFileName || "—",
+          uploadDate: item.CreatedAt ? item.CreatedAt.slice(0, 10) : "—",
+          vendor: item.Vendor || "IN v1",
+          amount:
+            headers.Total_Amount !== undefined
+              ? `₹${Number(headers.Total_Amount).toLocaleString()}`
+              : "—",
+          status: item.Status || "—",
+          fileUrl: item.PdfBlobUrl || "#",
+          invoiceNumber: item.Id || "—",
+        };
+      });
 
-    setHighlightIds(highlightToday);
-  } catch (error) {
-    console.error("Error fetching invoices:", error);
-  }
-};
+      setUploads(mappedData);
+
+      const today = new Date().toISOString().slice(0, 10);
+      const highlightToday = mappedData
+        .filter((f) => f.uploadDate === today)
+        .map((f) => f.id);
+
+      setHighlightIds(highlightToday);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+    }
+  };
 
   useEffect(() => {
     fetchInvoices();
@@ -138,7 +146,9 @@ export default function UploadPage({
       if (upload.fileUrl) {
         const apiUrl = `https://hczbk50t-5050.inc1.devtunnels.ms/download/remote?url=${encodeURIComponent(
           upload.fileUrl
-        )}&filename=${encodeURIComponent(upload.fileName || "downloaded_file")}`;
+        )}&filename=${encodeURIComponent(
+          upload.fileName || "downloaded_file"
+        )}`;
         const link = document.createElement("a");
         link.href = apiUrl;
         link.download = upload.fileName || "downloaded_file";
@@ -176,7 +186,7 @@ export default function UploadPage({
     setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
 
   const handleUploadFile = async () => {
-    debugger
+    debugger;
     if (!selectedFiles.length) return;
     setIsUploading(true);
     try {
@@ -333,8 +343,8 @@ export default function UploadPage({
                   </option>
                ))} */}
                 <option key={vendors} value={vendors}>
-                    {vendors}
-                  </option>
+                  {vendors}
+                </option>
               </select>
             </div>
           </div>
@@ -369,7 +379,14 @@ export default function UploadPage({
           <table className="w-full min-w-[600px] text-sm sm:text-base">
             <thead>
               <tr className="bg-gray-100">
-                {["File Name", "Upload Date", "Vendor", "Amount", "Status", "Actions"].map((header) => (
+                {[
+                  "File Name",
+                  "Upload Date",
+                  "Vendor",
+                  "Amount",
+                  "Status",
+                  "Actions",
+                ].map((header) => (
                   <th
                     key={header}
                     className="px-2 py-2 text-left font-semibold text-gray-700 whitespace-nowrap"
@@ -396,7 +413,26 @@ export default function UploadPage({
                     <td className="px-2 py-2 truncate">{upload.fileName}</td>
                     <td className="px-2 py-2">{upload.uploadDate}</td>
                     <td className="px-2 py-2">{upload.vendor}</td>
-                    <td className="px-2 py-2">{upload.amount}</td>
+                   
+<td className="px-2 py-2">
+  {upload.amount
+    ? (() => {
+        // Remove any non-numeric characters except dot and minus
+        const numericValue = Number(String(upload.amount).replace(/[^0-9.-]+/g, ""));
+        return !isNaN(numericValue)
+          ? country === "USA"
+            ? `$${numericValue.toLocaleString()}`
+            : country === "India"
+            ? `₹${numericValue.toLocaleString()}`
+            : `${numericValue.toLocaleString()} ${country || ""}`
+          : "";
+      })()
+    : ""}
+</td>
+
+
+
+
                     <td className="px-2 py-2">
                       <span
                         className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
