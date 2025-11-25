@@ -119,6 +119,7 @@ function EditableLineItemRow({
     desc: line.desc,
     qty: line.qty,
     UOM: line.Unit_Of_Measure,
+    Tax: line.Tax,
     unit: line.unit,
     amount: line.amount,
   });
@@ -129,6 +130,7 @@ function EditableLineItemRow({
         desc: line.desc,
         qty: line.qty,
         UOM: line.Unit_Of_Measure,
+        Tax: line.Tax,
         unit: line.unit,
         amount: line.amount,
       });
@@ -160,6 +162,15 @@ function EditableLineItemRow({
           <input
             value={draftValues.UOM}
             onChange={(e) => setDraftField("UOM", e.target.value)}
+            className="w-full border rounded p-1 text-sm"
+            type="number"
+            min="0"
+          />
+        </td>
+         <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+          <input
+            value={draftValues.Tax}
+            onChange={(e) => setDraftField("Tax", e.target.value)}
             className="w-full border rounded p-1 text-sm"
             type="number"
             min="0"
@@ -211,6 +222,9 @@ function EditableLineItemRow({
       </td>
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
         {line.UOM?.toLocaleString?.() || line.UOM}
+      </td>
+      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+        {line.Tax?.toLocaleString?.() || line.Tax}
       </td>
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{line.unit}</td>
       <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">
@@ -293,6 +307,9 @@ const InfoSection = ({
                 </th>
                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
                   UOM
+                </th>
+                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                  Tax
                 </th>
                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
                   Unit Price
@@ -553,6 +570,7 @@ export default function ReviewPage({
           desc: item.Item_Description || "",
           qty: item.Quantity || 0,
           UOM: item.Unit_Of_Measure || "",
+          Tax: item.Tax || "",
           unit: item.Unit_Price
             ? headers.Currency === "USD"
               ? `$${Number(item.Unit_Price).toLocaleString()}`
