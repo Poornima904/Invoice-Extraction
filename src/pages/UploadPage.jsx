@@ -17,28 +17,32 @@ export default function UploadPage({
   const [loadingVendors, setLoadingVendors] = useState(false);
 
   const fetchVendors = async (selectedCountry) => {
+    debugger
     setLoadingVendors(true);
     try {
-      // const myHeaders = new Headers();
-      // myHeaders.append(
-      //   "Authorization",
-      //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
-      // );
-      // const response = await fetch(
-      //   `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
-      //     selectedCountry
-      //   )}&active=true`,
-      //   { method: "GET", headers: myHeaders }
-      // );
-      // if (!response.ok) throw new Error("Failed to fetch vendors");
-      // const data = await response.json();
-      // const vendorNames = (data || []).map((v) => v.vendor_name);
-      if(selectedCountry === "USA") {
-        const vendorNames = "USA v1";
-        setVendors(vendorNames);
-        return;
-      }
-      const vendorNames = "IN v1";
+      const response = await fetch(
+        "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/all",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            country: selectedCountry,
+            active: true,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to fetch vendors");
+
+      const data = await response.json();
+      const vendorNames = (data.vendors || []).map((v) => v);
+      // if (selectedCountry === "USA") {
+      //   const vendorNames = "USA v1";
+      //   setVendors(vendorNames);
+      //   return;
+      // }
+      // const vendorNames = "IN v1";
       setVendors(vendorNames);
     } catch (error) {
       console.error("Error fetching vendors:", error);
@@ -87,14 +91,27 @@ export default function UploadPage({
           id: item.Id || "--",
           fileName: item.PdfFileName || "—",
           uploadDate: item.CreatedAt ? item.CreatedAt.slice(0, 10) : "—",
-          vendor: item.Vendor || "IN v1",
-          amount:
-            headers.Total_Amount !== undefined
-              ? `₹${Number(headers.Total_Amount).toLocaleString()}`
-              : "—",
+          vendor: item.Vendor,
+          amount: (() => {
+            if (item.Country === "India") {
+              return headers.Total_Amount
+                ? `₹${Number(headers.Total_Amount).toLocaleString("en-IN")}`
+                : "—";
+            } else if (item.Country === "USA") {
+              return headers.Total_Invoice_Amount
+                ? `$${Number(headers.Total_Invoice_Amount).toLocaleString(
+                    "en-US"
+                  )}`
+                : "—";
+            } else {
+              return "—";
+            }
+          })(),
+
           status: item.Status || "—",
           fileUrl: item.PdfBlobUrl || "#",
           invoiceNumber: item.Id || "—",
+          country: item.Country || "—",
         };
       });
 
@@ -337,14 +354,14 @@ export default function UploadPage({
                 <option value="" disabled>
                   {loadingVendors ? "Loading..." : "Select Vendor"}
                 </option>
-                {/* {vendors.map((v) => (
+                {vendors.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>
-               ))} */}
-                <option key={vendors} value={vendors}>
+               ))}
+                {/* <option key={vendors} value={vendors}>
                   {vendors}
-                </option>
+                </option> */}
               </select>
             </div>
           </div>
@@ -413,25 +430,58 @@ export default function UploadPage({
                     <td className="px-2 py-2 truncate">{upload.fileName}</td>
                     <td className="px-2 py-2">{upload.uploadDate}</td>
                     <td className="px-2 py-2">{upload.vendor}</td>
-                   
-<td className="px-2 py-2">
+
+                    <td className="px-2 py-2">
+                      {upload.amount
+                        ? (() => {
+                            const numericValue = parseFloat(
+                              String(upload.amount).replace(/[^0-9.-]+/g, "")
+                            );
+
+                            if (isNaN(numericValue)) return "—"; // invalid or empty number
+
+                            // Format based on country
+                            if (upload.country === "USA") {
+                              return `$${numericValue.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}`;
+                            } else if (upload.country === "India") {
+                              return `₹${numericValue.toLocaleString("en-IN", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}`;
+                            } else {
+                              // Default formatting if no country matches
+                              return `${numericValue.toLocaleString()} ${
+                                country || ""
+                              }`;
+                            }
+                          })()
+                        : "NA"}
+                    </td>
+
+                    {/* <td className="px-2 py-2">
   {upload.amount
     ? (() => {
-        // Remove any non-numeric characters except dot and minus
-        const numericValue = Number(String(upload.amount).replace(/[^0-9.-]+/g, ""));
-        return !isNaN(numericValue)
-          ? country === "USA"
-            ? `$${numericValue.toLocaleString()}`
-            : country === "India"
-            ? `₹${numericValue.toLocaleString()}`
-            : `${numericValue.toLocaleString()} ${country || ""}`
-          : "";
+        // Clean and extract the numeric part
+        const numericValue = parseFloat(
+          String(upload.amount).replace(/[^0-9.-]+/g, "")
+        );
+
+        if (isNaN(numericValue)) return "—"; // invalid number
+        `$${numericValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+
+        // return country === "USA" ?
+          // ? `$${numericValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          // : country === "India"
+          // ?
+          //  `₹${numericValue.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          // :
+          //  `${numericValue.toLocaleString()} ${country || ""}`;
       })()
-    : ""}
-</td>
-
-
-
+    : "—"}
+</td> */}
 
                     <td className="px-2 py-2">
                       <span

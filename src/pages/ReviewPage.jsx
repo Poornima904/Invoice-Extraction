@@ -167,7 +167,7 @@ function EditableLineItemRow({
             min="0"
           />
         </td>
-         <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
           <input
             value={draftValues.Tax}
             onChange={(e) => setDraftField("Tax", e.target.value)}
@@ -308,7 +308,7 @@ const InfoSection = ({
                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
                   UOM
                 </th>
-                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
                   Tax
                 </th>
                 <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
@@ -408,256 +408,550 @@ export default function ReviewPage({
     setZoom(100);
   };
 
-  // Data fetching logic
+  // useEffect(() => {
+  //   debugger;
+  //   if (!invoiceNumber) return;
+
+  //   const fetchInvoiceDetails = async () => {
+  //     debugger;
+  //     try {
+  //       const res = await fetch(
+  //         `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
+  //       );
+  //       const data = await res.json();
+  //       const invoiceData = data.newInvoice || data.invoice || data;
+
+  //       if (!invoiceData) return;
+
+  //       let headers = {};
+  //       try {
+  //         headers = invoiceData.Headers ? JSON.parse(invoiceData.Headers) : {};
+  //       } catch {
+  //         headers = {};
+  //       }
+
+  //       let lineItems = [];
+  //       try {
+  //         lineItems = invoiceData.LineItems
+  //           ? JSON.parse(invoiceData.LineItems)
+  //           : [];
+  //       } catch {
+  //         lineItems = [];
+  //       }
+
+  //       if (invoiceData.PdfBlobUrl) {
+  //         setInvoicePdf(invoiceData.PdfBlobUrl);
+  //         setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
+  //       }
+
+  //       setHeaderInfo([
+  //         {
+  //           key: "invoice_number",
+  //           label: "Invoice Number",
+  //           value: headers.Invoice_Number || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "invoice_date",
+  //           label: "Invoice Date",
+  //           value: headers.Invoice_Date || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "po_number",
+  //           label: "PO Number",
+  //           value: headers.Purchase_Order_Number || "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-700",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "Payment_Terms",
+  //           label: "Payment Terms",
+  //           value: headers.Payment_Terms || "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-700",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "currency",
+  //           label: "Currency",
+  //           value: headers.Currency || "",
+  //           confidence: "High",
+  //           percent: 95,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "document_type",
+  //           label: "Document Type",
+  //           value: headers.Document_Type || "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-700",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "status",
+  //           label: "Status",
+  //           value: invoiceData.Status || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Property_Tax",
+  //           label: "Property_Tax",
+  //           value: invoiceData.Property_Tax || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Ship_To_Address",
+  //           label: "Ship_To_Address",
+  //           value: invoiceData.Ship_To_Address || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Ship_To_Name",
+  //           label: "Ship_To_Name",
+  //           value: invoiceData.Ship_To_Name || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Banking_Remittance_Instructions",
+  //           label: "Banking_Remittance_Instructions",
+  //           value: invoiceData.Banking_Remittance_Instructions || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Remit_To_Address",
+  //           label: "Remit_To_Address",
+  //           value: invoiceData.Remit_To_Address || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Remit_To_Name",
+  //           label: "Remit_To_Name",
+  //           value: invoiceData.Remit_To_Name || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Total_Invoice_Amount",
+  //           label: "Total_Invoice_Amount",
+  //           value: invoiceData.Total_Invoice_Amount || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Total_Discount_Amount",
+  //           label: "Total_Discount_Amount",
+  //           value: invoiceData.Total_Discount_Amount || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Total_Shipping_Charges",
+  //           label: "Total_Shipping_Charges",
+  //           value: invoiceData.Total_Shipping_Charges || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Total_Sales_Tax_Amount",
+  //           label: "Total_Sales_Tax_Amount",
+  //           value: invoiceData.Total_Sales_Tax_Amount || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Reference_Invoice_Number",
+  //           label: "Reference_Invoice_Number",
+  //           value: invoiceData.Reference_Invoice_Number || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Customer_Tax_ID",
+  //           label: "Customer_Tax_ID",
+  //           value: invoiceData.Customer_Tax_ID || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Customer_Address",
+  //           label: "Customer_Address",
+  //           value: invoiceData.Customer_Address || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Customer_Name",
+  //           label: "Customer_Name",
+  //           value: invoiceData.Customer_Name || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Vendor_Tax_ID",
+  //           label: "Vendor_Tax_ID",
+  //           value: invoiceData.Vendor_Tax_ID || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+
+  //         {
+  //           key: "Vendor_Address",
+  //           label: "Vendor_Address",
+  //           value: invoiceData.Vendor_Address || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Vendor_Name",
+  //           label: "Vendor_Name",
+  //           value: invoiceData.Vendor_Name || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //         {
+  //           key: "Property_Tax",
+  //           label: "Property_Tax",
+  //           value: invoiceData.Property_Tax || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //       ]);
+
+  //       setSupplierInfo([
+  //         {
+  //           key: "supplier_name",
+  //           label: "Supplier Name",
+  //           value: headers.Vendor_Name || "",
+  //           confidence: "High",
+  //           percent: 95,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "supplier_gstin",
+  //           label: "Supplier GSTIN",
+  //           value: headers.Vendor_GSTIN || "",
+  //           confidence: "Medium",
+  //           percent: 75,
+  //           color: "bg-purple-100 text-purple-700",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "customer_name",
+  //           label: "Customer Name",
+  //           value: headers.Customer_Name || "",
+  //           confidence: "High",
+  //           percent: 90,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "customer_gstin",
+  //           label: "Customer GSTIN",
+  //           value: headers.Customer_GSTIN || "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-700",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "country",
+  //           label: "Country",
+  //           value: invoiceData.Country || "",
+  //           confidence: "High",
+  //           percent: 95,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: false,
+  //         },
+  //       ]);
+
+  //       // ✅ Line items
+  //       const mappedLineItems = lineItems.map((item, idx) => ({
+  //         key: `line_${idx + 1}`,
+  //         desc: item.Item_Description || "",
+  //         qty: item.Quantity || 0,
+  //         UOM: item.Unit_Of_Measure || "",
+  //         Tax: item.Tax || "",
+  //         unit: item.Unit_Price
+  //           ? headers.Currency === "USD"
+  //             ? `$${Number(item.Unit_Price).toLocaleString()}`
+  //             : headers.Currency === "INR"
+  //             ? `₹${Number(item.Unit_Price).toLocaleString()}`
+  //             : `${Number(item.Unit_Price).toLocaleString()} ${
+  //                 item.Currency || ""
+  //               }`
+  //           : "",
+  //         amount: item.Total_Item_Amount
+  //           ? headers.Currency === "USD"
+  //             ? `$${Number(item.Total_Item_Amount).toLocaleString()}`
+  //             : headers.Currency === "INR"
+  //             ? `₹${Number(item.Total_Item_Amount).toLocaleString()}`
+  //             : `${Number(item.Total_Item_Amount).toLocaleString()} ${
+  //                 item.Currency || ""
+  //               }`
+  //           : "",
+  //         confidence: "Medium",
+  //         color: "bg-orange-100 text-orange-700",
+  //       }));
+  //       setLineItems(mappedLineItems);
+
+  //       // ✅ Totals summary
+  //       setTotalsSummary([
+  //         {
+  //           key: "total_igst_percent",
+  //           label: "Total IGST %",
+  //           value: headers.Total_IGST_Percent
+  //             ? `${headers.Total_IGST_Percent}%`
+  //             : "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "total_igst_amount",
+  //           label: "Total IGST Amount",
+  //           value: headers.Total_IGST_Amount
+  //             ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}`
+  //             : "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "discount_percent",
+  //           label: "Discount Percent",
+  //           value: headers.Discount_Percent
+  //             ? `${headers.Discount_Percent}%`
+  //             : "",
+  //           confidence: "Medium",
+  //           percent: 80,
+  //           color: "bg-purple-100 text-purple-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "discount_amount",
+  //           label: "Discount Amount",
+  //           value: headers.Discount_Amount
+  //             ? `₹${Number(headers.Discount_Amount).toLocaleString()}`
+  //             : "₹0",
+  //           confidence: "High",
+  //           percent: 95,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //         {
+  //           key: "total_amount",
+  //           label: "Total Amount",
+  //           value: headers.Total_Amount
+  //             ? headers.Currency === "USD"
+  //               ? `$${Number(headers.Total_Amount).toLocaleString()}`
+  //               : headers.Currency === "INR"
+  //               ? `₹${Number(headers.Total_Amount).toLocaleString()}`
+  //               : `${Number(headers.Total_Amount).toLocaleString()} ${
+  //                   headers.Currency || ""
+  //                 }`
+  //             : "",
+  //           confidence: "High",
+  //           percent: 95,
+  //           color: "bg-green-100 text-green-800",
+  //           editable: true,
+  //         },
+  //       ]);
+  //     } catch (error) {
+  //       console.error("Failed to fetch invoice details", error);
+  //     }
+  //   };
+
+  //   fetchInvoiceDetails();
+  // }, [invoiceNumber]);
+
   useEffect(() => {
     debugger;
     if (!invoiceNumber) return;
 
     const fetchInvoiceDetails = async () => {
-      debugger;
       try {
         const res = await fetch(
           `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
         );
         const data = await res.json();
-        const invoiceData = data.newInvoice || data.invoice || data; // fallback if wrapped
+        const invoiceData = data.newInvoice || data.invoice || data;
 
         if (!invoiceData) return;
 
-        // ✅ Parse headers safely
-        let headers = {};
+        // 1️⃣ Parse Headers JSON safely
+        let headersObj = {};
         try {
-          headers = invoiceData.Headers ? JSON.parse(invoiceData.Headers) : {};
-        } catch {
-          headers = {};
+          headersObj = invoiceData.Headers
+            ? JSON.parse(invoiceData.Headers)
+            : {};
+        } catch (e) {
+          console.error("Error parsing Headers JSON", e);
+          headersObj = {};
         }
 
-        // ✅ Parse line items safely
-        let lineItems = [];
+        // 2️⃣ Parse LineItems JSON safely
+        let lineItemsArr = [];
         try {
-          lineItems = invoiceData.LineItems
+          lineItemsArr = invoiceData.LineItems
             ? JSON.parse(invoiceData.LineItems)
             : [];
-        } catch {
-          lineItems = [];
+        } catch (e) {
+          console.error("Error parsing LineItems JSON", e);
+          lineItemsArr = [];
         }
 
-        // ✅ PDF file info
+        // 3️⃣ Identify "totals-like" header fields (Total, Tax, Discount, etc.)
+        const totalHeaderEntries = Object.entries(headersObj).filter(
+          ([key]) => {
+            const k = key.toLowerCase();
+            return (
+              k.includes("total_") ||
+              k.includes("discount") ||
+              k.includes("tax") ||
+              k.includes("tcs") ||
+              k.includes("tds")
+            );
+          }
+        );
+
+        const totalsFields = totalHeaderEntries.map(([key, val]) => ({
+          key,
+          label: key.replace(/_/g, " "),
+          value: val ?? "",
+          confidence: "High",
+          percent: 90,
+          color: "bg-green-100 text-green-800",
+          editable: true,
+        }));
+
+        // 4️⃣ Remaining header fields (non-total ones)
+        const totalKeys = new Set(totalsFields.map((f) => f.key));
+
+        const headerFields = Object.entries(headersObj)
+          .filter(([key]) => !totalKeys.has(key))
+          .map(([key, val]) => ({
+            key,
+            label: key.replace(/_/g, " "),
+            value: val ?? "",
+            confidence: "High",
+            percent: 90,
+            color: "bg-green-100 text-green-800",
+            editable: true,
+          }));
+
+        // 5️⃣ Top-level invoice fields (Country, Status, Vendor, etc.)
+        const metaFields = Object.entries(invoiceData)
+          .filter(([key, val]) => {
+            // ignore technical / already-handled keys
+            return ![
+              "Headers",
+              "LineItems",
+              "PdfBlobUrl",
+              "PdfFileName",
+              "CreatedAt",
+              "UpdatedAt",
+            ].includes(key);
+          })
+          .map(([key, val]) => ({
+            key,
+            label: key.replace(/_/g, " "),
+            value:
+              typeof val === "string" || typeof val === "number"
+                ? String(val)
+                : JSON.stringify(val),
+            confidence: "Medium",
+            percent: 80,
+            color: "bg-purple-100 text-purple-700",
+            editable: false,
+          }));
+
+        // 6️⃣ Map LineItems dynamically (using your existing columns)
+        const mappedLineItems = Array.isArray(lineItemsArr)
+          ? lineItemsArr.map((item, idx) => ({
+              key: `line_${idx + 1}`,
+              desc: item.Item_Description || "",
+              qty: item.Quantity || "",
+              UOM: item.Unit_Of_Measure || "",
+              Tax: item.Tax || "",
+              unit: item.Unit_Price || "",
+              amount: item.Total_Item_Amount || "",
+              confidence: "Medium",
+              color: "bg-orange-100 text-orange-700",
+              // keep original too, in case you need extra fields like testfield3:
+              original: item,
+            }))
+          : [];
+
+        // 7️⃣ PDF setup
         if (invoiceData.PdfBlobUrl) {
           setInvoicePdf(invoiceData.PdfBlobUrl);
           setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
         }
 
-        // ✅ Header info
-        setHeaderInfo([
-          {
-            key: "invoice_number",
-            label: "Invoice Number",
-            value: headers.Invoice_Number || "",
-            confidence: "High",
-            percent: 90,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-          {
-            key: "invoice_date",
-            label: "Invoice Date",
-            value: headers.Invoice_Date || "",
-            confidence: "High",
-            percent: 90,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-          {
-            key: "po_number",
-            label: "PO Number",
-            value: headers.Purchase_Order_Number || "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-700",
-            editable: true,
-          },
-          {
-            key: "Payment_Terms",
-            label: "Payment Terms",
-            value: headers.Payment_Terms || "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-700",
-            editable: true,
-          },
-          {
-            key: "currency",
-            label: "Currency",
-            value: headers.Currency || "",
-            confidence: "High",
-            percent: 95,
-            color: "bg-green-100 text-green-800",
-            editable: false,
-          },
-          {
-            key: "document_type",
-            label: "Document Type",
-            value: headers.Document_Type || "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-700",
-            editable: false,
-          },
-          {
-            key: "status",
-            label: "Status",
-            value: invoiceData.Status || "",
-            confidence: "High",
-            percent: 90,
-            color: "bg-green-100 text-green-800",
-            editable: false,
-          },
-        ]);
-
-        // ✅ Supplier info
-        setSupplierInfo([
-          {
-            key: "supplier_name",
-            label: "Supplier Name",
-            value: headers.Vendor_Name || "",
-            confidence: "High",
-            percent: 95,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-          {
-            key: "supplier_gstin",
-            label: "Supplier GSTIN",
-            value: headers.Vendor_GSTIN || "",
-            confidence: "Medium",
-            percent: 75,
-            color: "bg-purple-100 text-purple-700",
-            editable: true,
-          },
-          {
-            key: "customer_name",
-            label: "Customer Name",
-            value: headers.Customer_Name || "",
-            confidence: "High",
-            percent: 90,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-          {
-            key: "customer_gstin",
-            label: "Customer GSTIN",
-            value: headers.Customer_GSTIN || "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-700",
-            editable: true,
-          },
-          {
-            key: "country",
-            label: "Country",
-            value: invoiceData.Country || "",
-            confidence: "High",
-            percent: 95,
-            color: "bg-green-100 text-green-800",
-            editable: false,
-          },
-        ]);
-
-        // ✅ Line items
-        const mappedLineItems = lineItems.map((item, idx) => ({
-          key: `line_${idx + 1}`,
-          desc: item.Item_Description || "",
-          qty: item.Quantity || 0,
-          UOM: item.Unit_Of_Measure || "",
-          Tax: item.Tax || "",
-          unit: item.Unit_Price
-            ? headers.Currency === "USD"
-              ? `$${Number(item.Unit_Price).toLocaleString()}`
-              : headers.Currency === "INR"
-              ? `₹${Number(item.Unit_Price).toLocaleString()}`
-              : `${Number(item.Unit_Price).toLocaleString()} ${
-                  item.Currency || ""
-                }`
-            : "",
-          amount: item.Total_Item_Amount
-            ? headers.Currency === "USD"
-              ? `$${Number(item.Total_Item_Amount).toLocaleString()}`
-              : headers.Currency === "INR"
-              ? `₹${Number(item.Total_Item_Amount).toLocaleString()}`
-              : `${Number(item.Total_Item_Amount).toLocaleString()} ${
-                  item.Currency || ""
-                }`
-            : "",
-          confidence: "Medium",
-          color: "bg-orange-100 text-orange-700",
-        }));
+        // 8️⃣ Push into state
+        setHeaderInfo(headerFields);
+        setTotalsSummary(totalsFields);
+        setSupplierInfo(metaFields); // this is now "Invoice Metadata / Other fields"
         setLineItems(mappedLineItems);
-
-        // ✅ Totals summary
-        setTotalsSummary([
-          {
-            key: "total_igst_percent",
-            label: "Total IGST %",
-            value: headers.Total_IGST_Percent
-              ? `${headers.Total_IGST_Percent}%`
-              : "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-800",
-            editable: true,
-          },
-          {
-            key: "total_igst_amount",
-            label: "Total IGST Amount",
-            value: headers.Total_IGST_Amount
-              ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}`
-              : "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-800",
-            editable: true,
-          },
-          {
-            key: "discount_percent",
-            label: "Discount Percent",
-            value: headers.Discount_Percent
-              ? `${headers.Discount_Percent}%`
-              : "",
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-800",
-            editable: true,
-          },
-          {
-            key: "discount_amount",
-            label: "Discount Amount",
-            value: headers.Discount_Amount
-              ? `₹${Number(headers.Discount_Amount).toLocaleString()}`
-              : "₹0",
-            confidence: "High",
-            percent: 95,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-          {
-            key: "total_amount",
-            label: "Total Amount",
-            value: headers.Total_Amount
-              ? headers.Currency === "USD"
-                ? `$${Number(headers.Total_Amount).toLocaleString()}`
-                : headers.Currency === "INR"
-                ? `₹${Number(headers.Total_Amount).toLocaleString()}`
-                : `${Number(headers.Total_Amount).toLocaleString()} ${
-                    headers.Currency || ""
-                  }`
-              : "",
-            confidence: "High",
-            percent: 95,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          },
-        ]);
       } catch (error) {
         console.error("Failed to fetch invoice details", error);
       }
@@ -812,23 +1106,36 @@ export default function ReviewPage({
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6 space-y-4 sm:space-y-6 lg:space-y-8">
-          <InfoSection
-            title="Header Information"
-            data={headerInfo}
-            bgColor="bg-blue-100 text-blue-800"
-            borderColor="border-l-blue-500"
-            iconColor="text-blue-800"
-            editable={true}
-          />
-
-          <InfoSection
-            title="Supplier Information"
-            data={supplierInfo}
-            bgColor="bg-green-100 text-green-800"
-            borderColor="border-l-green-500"
-            iconColor="text-green-800"
-            editable={true}
-          />
+          <div
+            className="max-h-[500px] overflow-y-auto border rounded-lg"
+            style={{
+              scrollbarWidth: "thin",
+            }}
+          >
+            <InfoSection
+              title="Header Information"
+              data={headerInfo}
+              bgColor="bg-blue-100 text-blue-800"
+              borderColor="border-l-blue-500"
+              iconColor="text-blue-800"
+              editable={true}
+            />
+          </div>
+          <div
+            className="max-h-[500px] overflow-y-auto border rounded-lg"
+            style={{
+              scrollbarWidth: "thin",
+            }}
+          >
+            <InfoSection
+              title="Supplier Information"
+              data={supplierInfo}
+              bgColor="bg-green-100 text-green-800"
+              borderColor="border-l-green-500"
+              iconColor="text-green-800"
+              editable={true}
+            />
+          </div>
 
           <InfoSection
             title="Line Items"
@@ -839,15 +1146,21 @@ export default function ReviewPage({
             editable={true}
             isLineItems={true}
           />
-
-          <InfoSection
-            title="Totals & Summary"
-            data={totalsSummary}
-            bgColor="bg-purple-100 text-purple-800"
-            borderColor="border-l-purple-500"
-            iconColor="text-purple-800"
-            editable={true}
-          />
+          <div
+            className="max-h-[500px] overflow-y-auto border rounded-lg"
+            style={{
+              scrollbarWidth: "thin",
+            }}
+          >
+            <InfoSection
+              title="Totals & Summary"
+              data={totalsSummary}
+              bgColor="bg-purple-100 text-purple-800"
+              borderColor="border-l-purple-500"
+              iconColor="text-purple-800"
+              editable={true}
+            />
+          </div>
         </div>
 
         {/* FIXED FOOTER BUTTONS - Improved mobile layout */}

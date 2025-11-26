@@ -68,150 +68,164 @@ const FieldMaster = () => {
   const [fieldType, setFieldType] = useState("");
   const [country, setCountry] = useState("");
   const [createdBy, setCreatedBy] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
+ 
 
   // Fetch fields from API
-  const fetchFields = async () => {
+  const fetchFields = async (country) => {
     debugger;
     setLoading(true);
-    // try {
-    //   const myHeaders = new Headers();
-    //   myHeaders.append(
-    //     "Authorization",
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
-    //   );
-    //   myHeaders.append("Content-Type", "application/json");
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    //   // Note: GET requests don't usually have a body, so we omit 'body' here.
-    //   const requestOptions = {
-    //     method: "GET",
-    //     headers: myHeaders,
-    //     redirect: "follow",
-    //   };
-
-    //   const response = await fetch(
-    //     "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
-    //     requestOptions
-    //   );
-
-    //   if (!response.ok) throw new Error("Failed to fetch fields");
-
-    //   const result = await response.json();
-    //   const fields = result.fields || [];
-
-    //   setHeaderFields(fields.filter((f) => f.Type === "Header"));
-    //   setLineItemFields(fields.filter((f) => f.Type === "Line Item"));
-    // } catch (error) {
-    //   console.error("Error fetching fields:", error);
-    //   setHeaderFields([]);
-    //   setLineItemFields([]);
-    // } finally {
-    //   setLoading(false);
-    // }
-
-     try {
-    // Hardcoded header and line item fields
-    const hardcodedFields = [
-      { fieldname: "IN v1", Description: "Name of Vendor", Type: "Header", country: "India", createdby: "Admin" },
-      { fieldname: "INV C", Description: "Vendor Code", Type: "Header", country: "India", createdby: "Admin" },
-      { fieldname: "INV11", Description: "Invoice Number", Type: "Line Item", country: "India", createdby: "Admin" },
-      { fieldname: "5600", Description: "Invoice Amount", Type: "Line Item", country: "India", createdby: "Admin" },
-    ];
-
-    // Separate them into Header and Line Item
-    setHeaderFields(hardcodedFields.filter((f) => f.Type === "Header"));
-    setLineItemFields(hardcodedFields.filter((f) => f.Type === "Line Item"));
-  } catch (error) {
-    console.error("Error setting hardcoded fields:", error);
-    setHeaderFields([]);
-    setLineItemFields([]);
-  } finally {
-    setLoading(false);
-  }
-  };
-
-  const handleFieldAction = async () => {
-    debugger;
-    if (
-      !operation ||
-      !fieldName ||
-      (operation === "create" &&
-        (!description || !fieldType || !country || !createdBy)) ||
-      (operation === "delete" && !country)
-    ) {
-      alert("Please fill all required fields.");
-      return;
-    }
-
-    const myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
-    );
-    myHeaders.append("Content-Type", "application/json");
-
-    if (operation === "create") {
       const raw = JSON.stringify({
-        fieldname: fieldName,
-        Description: description,
-        Type: fieldType,
-        country,
-        createdby: createdBy,
+        country: country,
       });
 
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
-        body: raw,
+        body: raw, // ✅ fixed typo
         redirect: "follow",
       };
 
-      try {
-        setLoading(true);
-        const response = await fetch(
-          "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
-          requestOptions
+      const response = await fetch(
+        "https://hczbk50t-5000.inc1.devtunnels.ms/fields/all",
+        requestOptions
+      );
+
+      if (!response.ok)
+        throw new Error(`Failed to fetch fields (${response.status})`);
+
+      const result = await response.json();
+      console.log("✅ Fetched fields:", result);
+
+      const fields = result.fields || result.result || [];
+
+      setHeaderFields(fields.filter((f) => f.Type === "Header"));
+      setLineItemFields(fields.filter((f) => f.Type === "Line Item"));
+    } catch (error) {
+      console.error("❌ Error fetching fields:", error);
+      setHeaderFields([]);
+      setLineItemFields([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFieldAction = async () => {
+    debugger;
+
+    // 🔹 Validation for required fields
+    if (!operation) {
+      alert("Please choose an operation.");
+      return;
+    }
+
+    if (operation === "create") {
+      debugger;
+      if (!fieldName || !description || !fieldType || !country || !createdBy) {
+        alert(
+          "Please fill all required fields: Field Name, Description, Type, Country, Created By."
         );
-        if (!response.ok) throw new Error("Failed to create field");
-        const result = await response.text();
-        console.log(result);
-        alert("Field created successfully!");
-        fetchFields();
-      } catch (error) {
-        alert("Error creating field: " + error.message);
-      } finally {
-        setLoading(false);
+        return;
       }
-    } else if (operation === "delete") {
+
       try {
         setLoading(true);
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
         const raw = JSON.stringify({
           name: fieldName,
+          description: description,
+          type: fieldType,
           country: country,
+          created_by: createdBy,
         });
 
         const requestOptions = {
-          method: "DELETE",
+          method: "POST",
           headers: myHeaders,
           body: raw,
           redirect: "follow",
         };
 
         const response = await fetch(
-          "https://hczbk50t-5050.inc1.devtunnels.ms/fieldmaster",
+          "https://hczbk50t-5000.inc1.devtunnels.ms/fields/create_field",
           requestOptions
         );
-        if (!response.ok) throw new Error("Failed to delete field");
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to create field (${response.status} ${response.statusText})`
+          );
+        }
+
         const result = await response.text();
-        console.log(result);
-        alert("Field deleted successfully!");
-        fetchFields();
+        console.log("✅ Field created successfully:", result);
+        alert("✅ Field created successfully!");
+        fetchFields(country);
+
+        // Reset form
+        setFieldName("");
+        setDescription("");
+        setFieldType("");
+        setCountry("");
+        setCreatedBy("");
+        setOperation("");
+      } catch (error) {
+        console.error("❌ Error creating field:", error);
+        alert("Failed to create field. Check console for details.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // 🔴 Delete logic remains same
+    else if (operation === "delete") {
+      debugger;
+      if (!fieldName || !country) {
+        alert("Please select a Field Name and Country to delete.");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          name: fieldName,
+          country: country,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://hczbk50t-5000.inc1.devtunnels.ms/fields/delete",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to delete field (${response.status})`);
+        }
+
+        const result = await response.text();
+        console.log("✅ Field deleted successfully:", result);
+        alert("✅ Field deleted successfully!");
+
+        fetchFields(country);
         setFieldName("");
         setCountry("");
       } catch (error) {
-        alert("Error deleting field: " + error.message);
-        setFieldName("");
-        setCountry("");
+        console.error("❌ Error deleting field:", error);
+        alert("Failed to delete field. Check console for details.");
       } finally {
         setLoading(false);
       }
@@ -219,7 +233,7 @@ const FieldMaster = () => {
   };
 
   useEffect(() => {
-    fetchFields();
+    fetchFields(country);
   }, []);
 
   return (
@@ -260,7 +274,9 @@ const FieldMaster = () => {
           </label>
           <select
             value={country}
-            onChange={(e) => setCountry(e.target.value)}
+            onChange={(e) => {setCountry(e.target.value)
+              fetchFields(e.target.value)
+            }}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="" disabled>
@@ -289,48 +305,74 @@ const FieldMaster = () => {
 
       {/* Form inputs depending on operation */}
 
-      {operation === "delete" && (
-        <form
-          className="mt-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleFieldAction();
+   {operation === "delete" && (
+  <form
+    className="mt-6"
+    onSubmit={(e) => {
+      e.preventDefault();
+      handleFieldAction();
+    }}
+  >
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      {/* 🔹 Type Dropdown (Header / Line Item) */}
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">
+          Field Type
+        </label>
+        <select
+          value={fieldType}
+          onChange={(e) => {
+            setFieldType(e.target.value);
+            setFieldName(""); // reset selected field when type changes
           }}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {/* Field Name dropdown populated with API fields */}
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Field Name
-              </label>
-              <select
-                value={fieldName}
-                onChange={(e) => setFieldName(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                <option value="" disabled>
-                  Select field to delete
-                </option>
-                {[...headerFields, ...lineItemFields].map((field) => (
-                  <option key={field.fieldname} value={field.fieldname}>
-                    {field.fieldname}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <option value="" disabled>
+            Select field type
+          </option>
+          <option value="Header">Header</option>
+          <option value="Line Item">Line Item</option>
+        </select>
+      </div>
 
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="bg-red-600 text-white text-lg px-6 py-3 rounded-lg font-semibold hover:brightness-90 transition"
-              disabled={loading}
-            >
-              Delete Field
-            </button>
-          </div>
-        </form>
-      )}
+      {/* 🔹 Field Name Dropdown (Filtered Based on Type) */}
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">
+          Field Name
+        </label>
+        <select
+          value={fieldName}
+          onChange={(e) => setFieldName(e.target.value)}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          disabled={!fieldType} // disable if no type selected
+        >
+          <option value="" disabled>
+            {fieldType ? "Select field to delete" : "Select field type first"}
+          </option>
+
+          {(fieldType === "Header" ? headerFields : lineItemFields).map(
+            (field) => (
+              <option key={field.Name || field.fieldname} value={field.Name || field.fieldname}>
+                {field.Name || field.fieldname}
+              </option>
+            )
+          )}
+        </select>
+      </div>
+    </div>
+
+    <div className="mt-6">
+      <button
+        type="submit"
+        className="bg-red-600 text-white text-lg px-6 py-3 rounded-lg font-semibold hover:brightness-90 transition"
+        disabled={loading || !fieldType || !fieldName}
+      >
+        Delete Field
+      </button>
+    </div>
+  </form>
+)}
+
 
       {operation === "create" && (
         <form
@@ -420,100 +462,305 @@ const VendorConfiguration = () => {
   const [createdBy, setCreatedBy] = useState("");
   const [headerPrompt, setHeaderPrompt] = useState("");
   const [lineItemPrompt, setLineItemPrompt] = useState("");
+  const defaultHeaderPrompt = `## Fields
+Analyze the content given to you and extract the following fields from the data:
+{fields}
+## Output
+It has to be strictly a dict.`;
+
+  const defaultLineItemPrompt = `## Fields
+Analyze the content given to you and extract the following fields at each line item level from the data:
+{fields}
+
+## Input
+It will be a string having list of different table contents found in an invoice. All strings in that list are different tables found in the invoice.
+
+## Output
+It has to be strictly a dict: {"data": [{"line_item_1 fields"}, {"line_item_2 fields"}, ......]}.
+
+## Other Instructions
+1. If you don't find any of these fields return it as an empty string.
+2. All the amount fields should be only number (ex. '36.00' or '45.78'), no other string should be present.
+3. Percentages should be only number (ex. '36%'' -> '36.00' or '36.91%'' -> '36.91'), no other string should be present.
+4. Quantity field should be strictly a number (ex. '30 pieces' -> '30').
+5. The tax fields should strictly be extracted only if mentioned in the Line Items and not at the end of the document.
+6. Please note all the values should be of string type.
+7. MAKE SURE ALL THE LINE ITEMS ARE EXTRACTED. This is a very important step.
+8. Another important thing is that multiple pages can be involved and the line items of the next page may be separated by some other table in between. It's your responsibility to understand that and accordingly extract the fields.
+
+## Important Note
+STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
+
+## Content`;
 
   const fetchVendors = async () => {
     debugger;
     setLoading(true);
-    const vendorNames = ["IN v1", "IN v2", "IN v3"];
-    setVendors(vendorNames);
-    setLoading(false);
-    // try {
-    //   // const myHeaders = new Headers();
-    //   // myHeaders.append("Content-Type", "application/json");
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    //   // const raw = JSON.stringify({
-    //   //   country: selectedCountry || "USA",
-    //   //   active: true,
-    //   // });
+      const raw = JSON.stringify({
+        country: selectedCountry || "USA",
+        active: true,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-    //   // const requestOptions = {
-    //   //   method: "POST",
-    //   //   headers: myHeaders,
-    //   //   body: raw,
-    //   //   redirect: "follow",
-    //   // };
+      const response = await fetch(
+        "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/all",
+        requestOptions
+      );
 
-    //   // const response = await fetch(
-    //   //   "https://invoice-service.peolgenai.com/getallvendors",
-    //   //   requestOptions
-    //   // );
+      if (!response.ok) throw new Error("Failed to fetch vendors");
 
-    //   // if (!response.ok) throw new Error("Failed to fetch vendors");
+      const data = await response.json();
 
-    //   // const data = await response.json();
-    //   // Adjust this based on your backend response shape
-    //   // const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
-    //   // const vendorNames = ("IN v1");
-    //   // setVendors(vendorNames);
-    // } catch (error) {
-    //   console.error(error);
-    //   setVendors([]);
-    // } finally {
-    //   setLoading(false);
-    // }
+      const vendorNames = (data.vendors || data?.result || []).map((v) => v);
+      setVendors(vendorNames);
+    } catch (error) {
+      console.error(error);
+      setVendors([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Fetch vendor names from API
-  // const fetchVendors = async () => {
-  //   debugger
-  //   setLoading(true);
-  //   try {
-  //     const myHeaders = new Headers();
-  //     myHeaders.append(
-  //       "Authorization",
-  //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MDUwNjE3NywiZXhwIjoxNzYwNTkyNTc3fQ.YqdCfJz5jHtonqZ33-HkzcKDAA-wZnCB929wlSlr1K8"
-  //     );
-  //     const requestOptions = { method: "GET", headers: myHeaders };
-  //     const url = `https://hczbk50t-5050.inc1.devtunnels.ms/api/vendors?country=${encodeURIComponent(
-  //       selectedCountry
-  //     )}&active=true`;
-
-  //     const response = await fetch(url, requestOptions);
-  //     if (!response.ok) throw new Error("Failed to fetch vendors");
-  //     const data = await response.json();
-  //     const vendorNames = (data || data?.result || []).map((v) => v.vendor_name);
-  //     setVendors(vendorNames);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setVendors([]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
-    if (selectedCountry && selectedOperation === "Edit Vendor") fetchVendors();
-    else setVendors([]);
+    if (
+      selectedCountry &&
+      (selectedOperation === "Update Vendor" ||
+        selectedOperation === "Delete Vendor")
+    ) {
+      fetchVendors();
+    } else {
+      setVendors([]);
+    }
   }, [selectedCountry, selectedOperation]);
 
-  const handleVendorAction = async () => {
+  useEffect(() => {
     if (
-      !selectedOperation ||
-      !selectedCountry ||
-      !createdBy ||
-      !selectedVendor
+      selectedOperation === "Onboard Vendor" ||
+      selectedOperation === "Update Vendor"
     ) {
+      setHeaderPrompt(defaultHeaderPrompt);
+      setLineItemPrompt(defaultLineItemPrompt);
+    } else if (selectedOperation === "Delete Vendor") {
+      setHeaderPrompt("");
+      setLineItemPrompt("");
+    }
+  }, [selectedOperation]);
+
+  const handleVendorAction = async () => {
+    debugger;
+    if (!selectedOperation || !selectedCountry || !createdBy) {
       alert("Please fill all required fields.");
       return;
     }
-    // Implement your POST/PUT logic here
-    alert(`✅ ${selectedOperation} successful!`);
-    fetchVendors();
-    setSelectedVendor("");
-    setHeaderPrompt("");
-    setLineItemPrompt("");
-    setCreatedBy("");
-    if (selectedOperation === "Onboard Vendor") setSelectedOperation("");
+
+    // 🔹 Helper function to fetch vendor ID by name
+    const getVendorIdByName = async (vendorName) => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({ vendor_name: vendorName });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/config",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch vendor ID.");
+        }
+
+        const data = await response.json();
+        console.log("Fetched vendor config:", data);
+
+        // ✅ Try multiple keys to ensure we get the ID correctly
+        const vendorId =
+          data?.id || data?.vendor_id || data?.result?.id || data?.vendor?.id;
+
+        return vendorId || null;
+      } catch (error) {
+        console.error("❌ Error fetching vendor ID:", error);
+        return null;
+      }
+    };
+
+    if (selectedOperation === "Onboard Vendor") {
+      if (!selectedVendor) {
+        alert("Please enter Vendor Name.");
+        return;
+      }
+
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          vendor_name: selectedVendor,
+          header_prompt: headerPrompt || "NA",
+          line_item_prompt: lineItemPrompt || "NA",
+          country: selectedCountry,
+          created_by: createdBy,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/create",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.text();
+        console.log("✅ Vendor created successfully:", result);
+        alert("✅ Vendor onboarded successfully!");
+
+        // Reset fields
+        setSelectedVendor("");
+        setHeaderPrompt("");
+        setLineItemPrompt("");
+        setCreatedBy("");
+        setSelectedOperation("");
+        setSelectedCountry("");
+      } catch (error) {
+        console.error("❌ Error creating vendor:", error);
+        alert("Failed to onboard vendor. Check console for details.");
+      }
+    } else if (selectedOperation === "Update Vendor") {
+      debugger;
+      if (!selectedVendor) {
+        alert("Please select a vendor to update.");
+        return;
+      }
+
+      try {
+        // 1️⃣ Get vendor ID (shared function)
+        const vendorId = await getVendorIdByName(selectedVendor);
+        if (!vendorId) {
+          alert("Vendor ID not found. Cannot update vendor.");
+          return;
+        }
+
+        // 2️⃣ Update vendor using ID
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          id: vendorId,
+          header_prompt: headerPrompt || "NA",
+          table_prompt: lineItemPrompt || "NA",
+          country: selectedCountry,
+          updated_by: createdBy,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/update",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error updating vendor: ${response.statusText}`);
+        }
+
+        const result = await response.text();
+        console.log("✅ Vendor updated successfully:", result);
+        alert(`✅ Vendor "${selectedVendor}" updated successfully!`);
+
+        fetchVendors();
+        setSelectedVendor("");
+        setHeaderPrompt("");
+        setLineItemPrompt("");
+        setCreatedBy("");
+      } catch (error) {
+        console.error("❌ Error updating vendor:", error);
+        alert("Failed to update vendor. Check console for details.");
+      }
+    } else if (selectedOperation === "Delete Vendor") {
+      debugger;
+      if (!selectedVendor) {
+        alert("Please select a vendor to delete.");
+        return;
+      }
+
+      const confirmDelete = window.confirm(
+        `Are you sure you want to delete vendor: ${selectedVendor}?`
+      );
+      if (!confirmDelete) return;
+
+      try {
+        // 1️⃣ Get vendor ID (shared function)
+        const vendorId = await getVendorIdByName(selectedVendor);
+        if (!vendorId) {
+          alert("Vendor ID not found. Cannot delete this vendor.");
+          return;
+        }
+
+        // 2️⃣ Call delete API using fetched vendor ID
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          id: vendorId,
+          updated_by: createdBy,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/delete",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error deleting vendor: ${response.statusText}`);
+        }
+
+        const result = await response.text();
+        console.log("✅ Vendor deleted successfully:", result);
+        alert(`✅ Vendor "${selectedVendor}" deleted successfully!`);
+
+        fetchVendors();
+        setSelectedVendor("");
+      } catch (error) {
+        console.error("❌ Error deleting vendor:", error);
+        alert("Failed to delete vendor. Check console for details.");
+      }
+    }
   };
 
   return (
@@ -537,7 +784,8 @@ const VendorConfiguration = () => {
               Select operation
             </option>
             <option>Onboard Vendor</option>
-            <option>Edit Vendor</option>
+            <option>Update Vendor</option>
+            <option>Delete Vendor</option>
           </select>
         </div>
         <div className="flex-1">
@@ -616,26 +864,54 @@ const VendorConfiguration = () => {
       </div>
 
       {/* Created By */}
+      {/* Created By / Updated By */}
       <div className="mb-6">
         <label className="block text-gray-700 font-semibold mb-2">
-          Created By
+          {selectedOperation === "Update Vendor" ||
+          selectedOperation === "Delete Vendor"
+            ? "Updated By"
+            : "Created By"}{" "}
+          <span className="text-red-500">*</span>
         </label>
         <input
           value={createdBy}
           onChange={(e) => setCreatedBy(e.target.value)}
-          placeholder="Enter creator name"
-          className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder={
+            selectedOperation === "Update Vendor" ||
+            selectedOperation === "Delete Vendor"
+              ? "Enter updater email"
+              : "Enter creator email"
+          }
+          className={`w-full px-4 py-3 rounded-lg border ${
+            !createdBy &&
+            (selectedOperation === "Update Vendor" ||
+              selectedOperation === "Delete Vendor" ||
+              selectedOperation === "Onboard Vendor")
+              ? "border-red-400"
+              : "border-gray-300"
+          } text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400`}
         />
       </div>
 
       {/* Add Vendor Button */}
-      <button
-        onClick={handleVendorAction}
-        className="bg-gradient-to-r from-green-500 to-indigo-600 text-white text-lg px-6 py-3 rounded-lg font-semibold hover:brightness-90 transition flex items-center justify-center gap-2"
-      >
-        <span>+</span>{" "}
-        {selectedOperation === "Edit Vendor" ? "Edit Vendor" : "Add Vendor"}
-      </button>
+      {selectedOperation === "Delete Vendor" ? (
+        <button
+          onClick={handleVendorAction}
+          className="bg-red-600 text-white text-lg px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center gap-2"
+        >
+          🗑 Delete Vendor
+        </button>
+      ) : (
+        <button
+          onClick={handleVendorAction}
+          className="bg-gradient-to-r from-green-500 to-indigo-600 text-white text-lg px-6 py-3 rounded-lg font-semibold hover:brightness-90 transition flex items-center justify-center gap-2"
+        >
+          <span>+</span>{" "}
+          {selectedOperation === "Update Vendor"
+            ? "Update Vendor"
+            : "Add Vendor"}
+        </button>
+      )}
     </div>
   );
 };
@@ -664,7 +940,7 @@ const SectionWithTable = ({ title, rows, loading }) => (
                 className="border-t border-gray-300 odd:bg-white even:bg-gray-50"
               >
                 <td className="py-2 px-4 border-r border-gray-300 align-top text-sm">
-                  {row.name || row.fieldname}
+                  {row.Name || row.fieldname}
                 </td>
                 <td className="py-2 px-4 text-sm">{row.Description}</td>
               </tr>
