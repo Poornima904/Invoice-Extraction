@@ -286,60 +286,69 @@ const InfoSection = ({
     setFieldsOrLines(data);
   }, [data]);
 
-  if (isLineItems) {
-    return (
-      <section>
-        <div
-          className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}
-        >
-          <BoltIcon className={`w-5 h-5 ${iconColor}`} />
-          {title}
-        </div>
-        <div className="bg-white rounded-b-xl p-3 sm:p-5 lg:p-7 shadow border-l-4 border-blue-100 overflow-x-auto">
-          <table className="min-w-[600px] w-full border divide-y divide-gray-200 text-sm">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Description
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Qty
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  UOM
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Tax
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Unit Price
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Amount
-                </th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm">
-                  Confidence
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {fieldsOrLines.map((line) => (
-                <EditableLineItemRow
-                  key={line.key}
-                  line={line}
-                  editable={editable}
-                  isEditing={editingKey === line.key}
-                  onStartEdit={() => startEdit(line.key)}
-                  onSave={saveLineEdit}
-                  onCancel={cancelEdit}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+if (isLineItems && Array.isArray(fieldsOrLines) && fieldsOrLines.length > 0) {
+  // ✅ 1️⃣ Gather all field names dynamically
+  const allKeys = Array.from(
+    new Set(fieldsOrLines.flatMap((item) => Object.keys(item)))
+  )
+    .filter(
+      (key) =>
+        key !== "key" && // remove internal keys
+        key !== "confidence" &&
+        key !== "color" &&
+        key !== "editable" &&
+        key !== "original" &&
+        key !== "isEditing" &&
+        fieldsOrLines.some(
+          (row) => row[key] !== undefined
+        ) 
     );
-  }
+
+  return (
+    <section className="rounded-xl shadow-md overflow-hidden">
+      <div
+        className={`${bgColor} ${borderColor} rounded-t-xl px-4 sm:px-5 py-3 border-l-4 flex items-center gap-2 text-sm sm:text-base font-semibold`}
+      >
+        <BoltIcon className={`w-5 h-5 ${iconColor}`} />
+        {title}
+      </div>
+
+      {/* ✅ Responsive dynamic table */}
+      <div className="bg-white rounded-b-xl p-3 sm:p-5 lg:p-7 border-l-4 border-blue-100 overflow-x-auto">
+        <table className="min-w-[900px] w-full border-collapse">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-300">
+              {allKeys.map((key) => (
+                <th
+                  key={key}
+                  className="px-3 py-2 text-left font-semibold text-gray-700 text-xs sm:text-sm uppercase tracking-wide"
+                >
+                  {key.replace(/_/g, " ")}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {fieldsOrLines.map((row, idx) => (
+              <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
+                {allKeys.map((key) => (
+                  <td
+                    key={key}
+                    className="px-3 py-2 text-xs sm:text-sm text-gray-800 whitespace-nowrap"
+                  >
+                    {row[key] || "—"}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+
 
   return (
     <section>
@@ -823,142 +832,154 @@ export default function ReviewPage({
   //   fetchInvoiceDetails();
   // }, [invoiceNumber]);
 
-  useEffect(() => {
-    debugger;
-    if (!invoiceNumber) return;
+useEffect(() => {
+  if (!invoiceNumber) return;
 
-    const fetchInvoiceDetails = async () => {
+  const fetchInvoiceDetails = async () => {
+    try {
+      debugger
+      const res = await fetch(
+        `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
+      );
+      const data = await res.json();
+
+      // handle different response shapes safely
+      const invoiceData = data.invoice || data.newInvoice || data;
+
+      if (!invoiceData) {
+        console.warn("⚠️ No invoice data found");
+        return;
+      }
+
+      // ✅ Parse Headers (handle string or object)
+      let headersObj = {};
       try {
-        const res = await fetch(
-          `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
-        );
-        const data = await res.json();
-        const invoiceData = data.newInvoice || data.invoice || data;
-
-        if (!invoiceData) return;
-
-        // 1️⃣ Parse Headers JSON safely
-        let headersObj = {};
-        try {
-          headersObj = invoiceData.Headers
+        headersObj =
+          typeof invoiceData.Headers === "string"
             ? JSON.parse(invoiceData.Headers)
-            : {};
-        } catch (e) {
-          console.error("Error parsing Headers JSON", e);
-          headersObj = {};
-        }
+            : invoiceData.Headers || {};
+      } catch (err) {
+        console.error("❌ Failed to parse Headers JSON", err);
+        headersObj = {};
+      }
 
-        // 2️⃣ Parse LineItems JSON safely
-        let lineItemsArr = [];
-        try {
-          lineItemsArr = invoiceData.LineItems
+      // ✅ Parse LineItems (handle string or object)
+      let lineItemsArr = [];
+      try {
+        lineItemsArr =
+          typeof invoiceData.LineItems === "string"
             ? JSON.parse(invoiceData.LineItems)
-            : [];
-        } catch (e) {
-          console.error("Error parsing LineItems JSON", e);
-          lineItemsArr = [];
-        }
+            : invoiceData.LineItems || [];
+      } catch (err) {
+        console.error("❌ Failed to parse LineItems JSON", err);
+        lineItemsArr = [];
+      }
 
-        // 3️⃣ Identify "totals-like" header fields (Total, Tax, Discount, etc.)
-        const totalHeaderEntries = Object.entries(headersObj).filter(
-          ([key]) => {
-            const k = key.toLowerCase();
-            return (
-              k.includes("total_") ||
-              k.includes("discount") ||
-              k.includes("tax") ||
-              k.includes("tcs") ||
-              k.includes("tds")
-            );
-          }
-        );
-
-        const totalsFields = totalHeaderEntries.map(([key, val]) => ({
+      // ✅ Header fields (skip empty)
+      const headerFields = Object.entries(headersObj)
+        .filter(([_, val]) => val !== "" && val !== null && val !== undefined)
+        .map(([key, val]) => ({
           key,
           label: key.replace(/_/g, " "),
-          value: val ?? "",
+          value: val,
           confidence: "High",
           percent: 90,
           color: "bg-green-100 text-green-800",
           editable: true,
         }));
 
-        // 4️⃣ Remaining header fields (non-total ones)
-        const totalKeys = new Set(totalsFields.map((f) => f.key));
+      // ✅ Totals section
+      const totalsFields = Object.entries(headersObj)
+        .filter(([key, val]) => {
+          const k = key.toLowerCase();
+          return (
+            (k.includes("total") ||
+              k.includes("discount") ||
+              k.includes("tax") ||
+              k.includes("tds") ||
+              k.includes("tcs")) &&
+            val !== "" &&
+            val !== null &&
+            val !== undefined
+          );
+        })
+        .map(([key, val]) => ({
+          key,
+          label: key.replace(/_/g, " "),
+          value: val,
+          confidence: "Medium",
+          percent: 85,
+          color: "bg-purple-100 text-purple-700",
+          editable: false,
+        }));
 
-        const headerFields = Object.entries(headersObj)
-          .filter(([key]) => !totalKeys.has(key))
-          .map(([key, val]) => ({
-            key,
-            label: key.replace(/_/g, " "),
-            value: val ?? "",
-            confidence: "High",
-            percent: 90,
-            color: "bg-green-100 text-green-800",
-            editable: true,
-          }));
+      // ✅ Line items (include all dynamic keys)
+      const mappedLineItems = Array.isArray(lineItemsArr)
+        ? lineItemsArr
+            .filter((row) =>
+              Object.values(row).some(
+                (v) => v !== "" && v !== null && v !== undefined
+              )
+            )
+            .map((item, idx) => ({
+              key: `line_${idx + 1}`,
+              ...item, // 👈 dynamic keys (20+ fields)
+            }))
+        : [];
 
-        // 5️⃣ Top-level invoice fields (Country, Status, Vendor, etc.)
-        const metaFields = Object.entries(invoiceData)
-          .filter(([key, val]) => {
-            // ignore technical / already-handled keys
-            return ![
+      // ✅ Other metadata (Country, Vendor, Status, etc.)
+      const metaFields = Object.entries(invoiceData)
+        .filter(
+          ([key]) =>
+            ![
               "Headers",
               "LineItems",
               "PdfBlobUrl",
               "PdfFileName",
               "CreatedAt",
               "UpdatedAt",
-            ].includes(key);
-          })
-          .map(([key, val]) => ({
-            key,
-            label: key.replace(/_/g, " "),
-            value:
-              typeof val === "string" || typeof val === "number"
-                ? String(val)
-                : JSON.stringify(val),
-            confidence: "Medium",
-            percent: 80,
-            color: "bg-purple-100 text-purple-700",
-            editable: false,
-          }));
+            ].includes(key)
+        )
+        .map(([key, val]) => ({
+          key,
+          label: key.replace(/_/g, " "),
+          value:
+            typeof val === "string" || typeof val === "number"
+              ? String(val)
+              : JSON.stringify(val),
+          confidence: "Medium",
+          percent: 80,
+          color: "bg-blue-100 text-blue-800",
+          editable: false,
+        }));
 
-        // 6️⃣ Map LineItems dynamically (using your existing columns)
-        const mappedLineItems = Array.isArray(lineItemsArr)
-          ? lineItemsArr.map((item, idx) => ({
-              key: `line_${idx + 1}`,
-              desc: item.Item_Description || "",
-              qty: item.Quantity || "",
-              UOM: item.Unit_Of_Measure || "",
-              Tax: item.Tax || "",
-              unit: item.Unit_Price || "",
-              amount: item.Total_Item_Amount || "",
-              confidence: "Medium",
-              color: "bg-orange-100 text-orange-700",
-              // keep original too, in case you need extra fields like testfield3:
-              original: item,
-            }))
-          : [];
-
-        // 7️⃣ PDF setup
-        if (invoiceData.PdfBlobUrl) {
-          setInvoicePdf(invoiceData.PdfBlobUrl);
-          setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
-        }
-
-        // 8️⃣ Push into state
-        setHeaderInfo(headerFields);
-        setTotalsSummary(totalsFields);
-        setSupplierInfo(metaFields); // this is now "Invoice Metadata / Other fields"
-        setLineItems(mappedLineItems);
-      } catch (error) {
-        console.error("Failed to fetch invoice details", error);
+      // ✅ PDF
+      if (invoiceData.PdfBlobUrl) {
+        setInvoicePdf(invoiceData.PdfBlobUrl);
+        setPdfFileName(
+          extractFilename(invoiceData.PdfFileName) || "invoice.pdf"
+        );
       }
-    };
 
-    fetchInvoiceDetails();
-  }, [invoiceNumber]);
+      // ✅ Update states
+      setHeaderInfo(headerFields);
+      setTotalsSummary(totalsFields);
+      setSupplierInfo(metaFields);
+      setLineItems(mappedLineItems);
+
+      console.log("✅ Invoice fetched successfully:", {
+        headerFields,
+        lineItems: mappedLineItems,
+        totalsFields,
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch invoice details", error);
+    }
+  };
+
+  fetchInvoiceDetails();
+}, [invoiceNumber]);
+
 
   useEffect(() => {
     if (!uploads) return;
