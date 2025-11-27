@@ -1,5 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { FiEye, FiDownload, FiTrash2 } from "react-icons/fi";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import Typography from "@mui/material/Typography";
 
 export default function UploadPage({
   setActivePage,
@@ -15,9 +22,17 @@ export default function UploadPage({
   const [uploadComplete, setUploadComplete] = useState(false);
   const [vendors, setVendors] = useState([]);
   const [loadingVendors, setLoadingVendors] = useState(false);
+  const [dialogInfo, setDialogInfo] = useState({
+    open: false,
+    type: "success", // or "error"
+    title: "",
+    message: "",
+  });
+
+
 
   const fetchVendors = async (selectedCountry) => {
-    debugger
+    debugger;
     setLoadingVendors(true);
     try {
       const response = await fetch(
@@ -208,11 +223,6 @@ export default function UploadPage({
     setIsUploading(true);
     try {
       for (const file of selectedFiles) {
-        // const myHeaders = new Headers();
-        // myHeaders.append(
-        //   "Authorization",
-        //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZTM1OWQ0YzMxODI0NDIwODcwZDExMSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc2MTE5NjQxNywiZXhwIjoxNzYxMjgyODE3fQ.cmJgdna8hguZ9BiCBVK_Pi-d9zc80pnHYD9ra-uqjyY"
-        // );
         const formdata = new FormData();
         formdata.append("pdf", file, file.name);
         formdata.append("country", country);
@@ -224,12 +234,24 @@ export default function UploadPage({
         );
         if (!response.ok) throw new Error(await response.text());
       }
-      alert("File(s) uploaded successfully!");
+      setDialogInfo({
+        open: true,
+        type: "success",
+        title: "Upload Successful",
+        message: "File(s) uploaded successfully!",
+      });
+
       fetchInvoices();
       setSelectedFiles([]);
       setUploadComplete(true);
     } catch (error) {
-      alert("Failed to upload file.");
+      setDialogInfo({
+        open: true,
+        type: "error",
+        title: "Upload Failed",
+        message:
+          "Something went wrong while uploading your file(s). Please try again.",
+      });
       console.error("❌ Error uploading file:", error);
     } finally {
       setIsUploading(false);
@@ -358,7 +380,7 @@ export default function UploadPage({
                   <option key={v} value={v}>
                     {v}
                   </option>
-               ))}
+                ))}
                 {/* <option key={vendors} value={vendors}>
                   {vendors}
                 </option> */}
@@ -521,6 +543,78 @@ export default function UploadPage({
           </table>
         )}
       </div>
+      <Dialog
+        open={dialogInfo.open}
+        keepMounted
+        onClose={() => setDialogInfo({ ...dialogInfo, open: false })}
+        aria-labelledby="upload-dialog-title"
+        PaperProps={{
+          sx: {
+            borderRadius: "18px",
+            padding: "12px 18px",
+            boxShadow: "0 8px 25px rgba(0,0,0,0.2)",
+            textAlign: "center",
+            position: "absolute",
+            top: "15%",
+            m: "auto",
+            minWidth: "340px",
+          },
+        }}
+      >
+        <DialogTitle
+          id="upload-dialog-title"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+            fontSize: "1.25rem",
+            fontWeight: 600,
+            color: dialogInfo.type === "success" ? "#2e7d32" : "#d32f2f",
+          }}
+        >
+          {dialogInfo.type === "success" ? (
+            <CheckCircleOutlineIcon
+              color="success"
+              sx={{ fontSize: 34, verticalAlign: "middle" }}
+            />
+          ) : (
+            <span style={{ fontSize: 30 }}>❌</span>
+          )}
+          {dialogInfo.title}
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography sx={{ fontSize: "0.95rem", color: "#444", mt: 1 }}>
+            {dialogInfo.message}
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+          <Button
+            onClick={() => setDialogInfo({ ...dialogInfo, open: false })}
+            variant="contained"
+            sx={{
+              px: 4,
+              borderRadius: "10px",
+              fontWeight: 600,
+              textTransform: "none",
+              background:
+                dialogInfo.type === "success"
+                  ? "linear-gradient(90deg, #53DEBA, #7C6BFA)"
+                  : "linear-gradient(90deg, #FF6B6B, #E63946)",
+              "&:hover": {
+                background:
+                  dialogInfo.type === "success"
+                    ? "linear-gradient(90deg, #47D8E0, #6951E6)"
+                    : "linear-gradient(90deg, #FF4C4C, #C53030)",
+              },
+            }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

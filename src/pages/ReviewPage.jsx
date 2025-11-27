@@ -336,7 +336,7 @@ if (isLineItems && Array.isArray(fieldsOrLines) && fieldsOrLines.length > 0) {
                     key={key}
                     className="px-3 py-2 text-xs sm:text-sm text-gray-800 whitespace-nowrap"
                   >
-                    {row[key] || "—"}
+                    {row[key]}
                   </td>
                 ))}
               </tr>
@@ -398,439 +398,15 @@ export default function ReviewPage({
   const [totalsSummary, setTotalsSummary] = useState([]);
   const [pdfFileName, setPdfFileName] = useState("");
 
-  // Zoom functionality
-  const handleZoomIn = () => {
-    setZoom((prev) => {
-      const newZoom = Math.min(prev + 25, 200);
-      return newZoom;
-    });
-  };
-
-  const handleZoomOut = () => {
-    setZoom((prev) => {
-      const newZoom = Math.max(prev - 25, 50);
-      return newZoom;
-    });
-  };
-
-  const handleResetZoom = () => {
-    setZoom(100);
-  };
-
-  // useEffect(() => {
-  //   debugger;
-  //   if (!invoiceNumber) return;
-
-  //   const fetchInvoiceDetails = async () => {
-  //     debugger;
-  //     try {
-  //       const res = await fetch(
-  //         `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
-  //       );
-  //       const data = await res.json();
-  //       const invoiceData = data.newInvoice || data.invoice || data;
-
-  //       if (!invoiceData) return;
-
-  //       let headers = {};
-  //       try {
-  //         headers = invoiceData.Headers ? JSON.parse(invoiceData.Headers) : {};
-  //       } catch {
-  //         headers = {};
-  //       }
-
-  //       let lineItems = [];
-  //       try {
-  //         lineItems = invoiceData.LineItems
-  //           ? JSON.parse(invoiceData.LineItems)
-  //           : [];
-  //       } catch {
-  //         lineItems = [];
-  //       }
-
-  //       if (invoiceData.PdfBlobUrl) {
-  //         setInvoicePdf(invoiceData.PdfBlobUrl);
-  //         setPdfFileName(invoiceData.PdfFileName || "invoice.pdf");
-  //       }
-
-  //       setHeaderInfo([
-  //         {
-  //           key: "invoice_number",
-  //           label: "Invoice Number",
-  //           value: headers.Invoice_Number || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "invoice_date",
-  //           label: "Invoice Date",
-  //           value: headers.Invoice_Date || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "po_number",
-  //           label: "PO Number",
-  //           value: headers.Purchase_Order_Number || "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-700",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "Payment_Terms",
-  //           label: "Payment Terms",
-  //           value: headers.Payment_Terms || "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-700",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "currency",
-  //           label: "Currency",
-  //           value: headers.Currency || "",
-  //           confidence: "High",
-  //           percent: 95,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "document_type",
-  //           label: "Document Type",
-  //           value: headers.Document_Type || "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-700",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "status",
-  //           label: "Status",
-  //           value: invoiceData.Status || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Property_Tax",
-  //           label: "Property_Tax",
-  //           value: invoiceData.Property_Tax || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Ship_To_Address",
-  //           label: "Ship_To_Address",
-  //           value: invoiceData.Ship_To_Address || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Ship_To_Name",
-  //           label: "Ship_To_Name",
-  //           value: invoiceData.Ship_To_Name || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Banking_Remittance_Instructions",
-  //           label: "Banking_Remittance_Instructions",
-  //           value: invoiceData.Banking_Remittance_Instructions || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Remit_To_Address",
-  //           label: "Remit_To_Address",
-  //           value: invoiceData.Remit_To_Address || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Remit_To_Name",
-  //           label: "Remit_To_Name",
-  //           value: invoiceData.Remit_To_Name || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Total_Invoice_Amount",
-  //           label: "Total_Invoice_Amount",
-  //           value: invoiceData.Total_Invoice_Amount || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Total_Discount_Amount",
-  //           label: "Total_Discount_Amount",
-  //           value: invoiceData.Total_Discount_Amount || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Total_Shipping_Charges",
-  //           label: "Total_Shipping_Charges",
-  //           value: invoiceData.Total_Shipping_Charges || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Total_Sales_Tax_Amount",
-  //           label: "Total_Sales_Tax_Amount",
-  //           value: invoiceData.Total_Sales_Tax_Amount || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Reference_Invoice_Number",
-  //           label: "Reference_Invoice_Number",
-  //           value: invoiceData.Reference_Invoice_Number || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Customer_Tax_ID",
-  //           label: "Customer_Tax_ID",
-  //           value: invoiceData.Customer_Tax_ID || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Customer_Address",
-  //           label: "Customer_Address",
-  //           value: invoiceData.Customer_Address || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Customer_Name",
-  //           label: "Customer_Name",
-  //           value: invoiceData.Customer_Name || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Vendor_Tax_ID",
-  //           label: "Vendor_Tax_ID",
-  //           value: invoiceData.Vendor_Tax_ID || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-
-  //         {
-  //           key: "Vendor_Address",
-  //           label: "Vendor_Address",
-  //           value: invoiceData.Vendor_Address || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Vendor_Name",
-  //           label: "Vendor_Name",
-  //           value: invoiceData.Vendor_Name || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //         {
-  //           key: "Property_Tax",
-  //           label: "Property_Tax",
-  //           value: invoiceData.Property_Tax || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //       ]);
-
-  //       setSupplierInfo([
-  //         {
-  //           key: "supplier_name",
-  //           label: "Supplier Name",
-  //           value: headers.Vendor_Name || "",
-  //           confidence: "High",
-  //           percent: 95,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "supplier_gstin",
-  //           label: "Supplier GSTIN",
-  //           value: headers.Vendor_GSTIN || "",
-  //           confidence: "Medium",
-  //           percent: 75,
-  //           color: "bg-purple-100 text-purple-700",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "customer_name",
-  //           label: "Customer Name",
-  //           value: headers.Customer_Name || "",
-  //           confidence: "High",
-  //           percent: 90,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "customer_gstin",
-  //           label: "Customer GSTIN",
-  //           value: headers.Customer_GSTIN || "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-700",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "country",
-  //           label: "Country",
-  //           value: invoiceData.Country || "",
-  //           confidence: "High",
-  //           percent: 95,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: false,
-  //         },
-  //       ]);
-
-  //       // ✅ Line items
-  //       const mappedLineItems = lineItems.map((item, idx) => ({
-  //         key: `line_${idx + 1}`,
-  //         desc: item.Item_Description || "",
-  //         qty: item.Quantity || 0,
-  //         UOM: item.Unit_Of_Measure || "",
-  //         Tax: item.Tax || "",
-  //         unit: item.Unit_Price
-  //           ? headers.Currency === "USD"
-  //             ? `$${Number(item.Unit_Price).toLocaleString()}`
-  //             : headers.Currency === "INR"
-  //             ? `₹${Number(item.Unit_Price).toLocaleString()}`
-  //             : `${Number(item.Unit_Price).toLocaleString()} ${
-  //                 item.Currency || ""
-  //               }`
-  //           : "",
-  //         amount: item.Total_Item_Amount
-  //           ? headers.Currency === "USD"
-  //             ? `$${Number(item.Total_Item_Amount).toLocaleString()}`
-  //             : headers.Currency === "INR"
-  //             ? `₹${Number(item.Total_Item_Amount).toLocaleString()}`
-  //             : `${Number(item.Total_Item_Amount).toLocaleString()} ${
-  //                 item.Currency || ""
-  //               }`
-  //           : "",
-  //         confidence: "Medium",
-  //         color: "bg-orange-100 text-orange-700",
-  //       }));
-  //       setLineItems(mappedLineItems);
-
-  //       // ✅ Totals summary
-  //       setTotalsSummary([
-  //         {
-  //           key: "total_igst_percent",
-  //           label: "Total IGST %",
-  //           value: headers.Total_IGST_Percent
-  //             ? `${headers.Total_IGST_Percent}%`
-  //             : "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "total_igst_amount",
-  //           label: "Total IGST Amount",
-  //           value: headers.Total_IGST_Amount
-  //             ? `₹${Number(headers.Total_IGST_Amount).toLocaleString()}`
-  //             : "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "discount_percent",
-  //           label: "Discount Percent",
-  //           value: headers.Discount_Percent
-  //             ? `${headers.Discount_Percent}%`
-  //             : "",
-  //           confidence: "Medium",
-  //           percent: 80,
-  //           color: "bg-purple-100 text-purple-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "discount_amount",
-  //           label: "Discount Amount",
-  //           value: headers.Discount_Amount
-  //             ? `₹${Number(headers.Discount_Amount).toLocaleString()}`
-  //             : "₹0",
-  //           confidence: "High",
-  //           percent: 95,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //         {
-  //           key: "total_amount",
-  //           label: "Total Amount",
-  //           value: headers.Total_Amount
-  //             ? headers.Currency === "USD"
-  //               ? `$${Number(headers.Total_Amount).toLocaleString()}`
-  //               : headers.Currency === "INR"
-  //               ? `₹${Number(headers.Total_Amount).toLocaleString()}`
-  //               : `${Number(headers.Total_Amount).toLocaleString()} ${
-  //                   headers.Currency || ""
-  //                 }`
-  //             : "",
-  //           confidence: "High",
-  //           percent: 95,
-  //           color: "bg-green-100 text-green-800",
-  //           editable: true,
-  //         },
-  //       ]);
-  //     } catch (error) {
-  //       console.error("Failed to fetch invoice details", error);
-  //     }
-  //   };
-
-  //   fetchInvoiceDetails();
-  // }, [invoiceNumber]);
+  const cleanValue = (val) => {
+  if (val === null || val === undefined) return "";
+  if (typeof val === "string") {
+    const trimmed = val.trim();
+    if (trimmed === "" || trimmed === "-" || trimmed === "—" || trimmed === "_") return "";
+    return trimmed;
+  }
+  return String(val);
+};
 
 useEffect(() => {
   if (!invoiceNumber) return;
@@ -881,7 +457,7 @@ useEffect(() => {
         .map(([key, val]) => ({
           key,
           label: key.replace(/_/g, " "),
-          value: val,
+           value: cleanValue(val),
           confidence: "High",
           percent: 90,
           color: "bg-green-100 text-green-800",
@@ -906,7 +482,7 @@ useEffect(() => {
         .map(([key, val]) => ({
           key,
           label: key.replace(/_/g, " "),
-          value: val,
+           value: cleanValue(val),
           confidence: "Medium",
           percent: 85,
           color: "bg-purple-100 text-purple-700",
@@ -914,18 +490,29 @@ useEffect(() => {
         }));
 
       // ✅ Line items (include all dynamic keys)
-      const mappedLineItems = Array.isArray(lineItemsArr)
-        ? lineItemsArr
-            .filter((row) =>
-              Object.values(row).some(
-                (v) => v !== "" && v !== null && v !== undefined
-              )
-            )
-            .map((item, idx) => ({
-              key: `line_${idx + 1}`,
-              ...item, // 👈 dynamic keys (20+ fields)
-            }))
-        : [];
+     // ✅ Line items (clean each field dynamically)
+const mappedLineItems = Array.isArray(lineItemsArr)
+  ? lineItemsArr
+      .filter((row) =>
+        Object.values(row).some(
+          (v) => v !== "" && v !== null && v !== undefined
+        )
+      )
+      .map((item, idx) => {
+        const cleanedItem = {};
+
+        // Clean every key-value pair inside each line item
+        Object.entries(item).forEach(([k, v]) => {
+          cleanedItem[k] = cleanValue(v);
+        });
+
+        return {
+          key: `line_${idx + 1}`,
+          ...cleanedItem, // ✅ cleaned key-value pairs
+        };
+      })
+  : [];
+
 
       // ✅ Other metadata (Country, Vendor, Status, etc.)
       const metaFields = Object.entries(invoiceData)
@@ -943,10 +530,11 @@ useEffect(() => {
         .map(([key, val]) => ({
           key,
           label: key.replace(/_/g, " "),
-          value:
-            typeof val === "string" || typeof val === "number"
-              ? String(val)
-              : JSON.stringify(val),
+         value: cleanValue(
+      typeof val === "string" || typeof val === "number"
+        ? val
+        : JSON.stringify(val)
+    ), 
           confidence: "Medium",
           percent: 80,
           color: "bg-blue-100 text-blue-800",
@@ -1033,7 +621,7 @@ useEffect(() => {
         {/* PDF Display & Zoom Controls */}
         <div className="flex flex-col flex-1 min-h-0">
           {/* Zoom Controls Bar - Improved for mobile */}
-          <div className="flex items-center justify-between sm:justify-start gap-2 py-2 px-3 bg-white border-b border-gray-200 sticky top-[60px] lg:top-[68px] z-20">
+          {/* <div className="flex items-center justify-between sm:justify-start gap-2 py-2 px-3 bg-white border-b border-gray-200 sticky top-[60px] lg:top-[68px] z-20">
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 onClick={handleZoomIn}
@@ -1060,7 +648,7 @@ useEffect(() => {
             <span className="text-gray-600 font-medium text-xs sm:text-sm flex-shrink-0">
               {zoom}%
             </span>
-          </div>
+          </div> */}
 
           {/* PDF Container with improved mobile scaling */}
           <div
@@ -1142,7 +730,7 @@ useEffect(() => {
               editable={true}
             />
           </div>
-          <div
+          {/* <div
             className="max-h-[500px] overflow-y-auto border rounded-lg"
             style={{
               scrollbarWidth: "thin",
@@ -1156,7 +744,7 @@ useEffect(() => {
               iconColor="text-green-800"
               editable={true}
             />
-          </div>
+          </div> */}
 
           <InfoSection
             title="Line Items"
