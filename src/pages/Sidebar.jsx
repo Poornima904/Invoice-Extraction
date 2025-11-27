@@ -151,17 +151,24 @@ export default function Sidebar({
               {/* <span className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
                 AI
               </span> */}
-              <div className="flex items-center justify-center w-auto h-auto p-2">
-                <img
-                  src={logo}
-                  alt="Logo"
-                  className="
+             <div className="flex items-center justify-center w-auto h-auto p-1">
+  <img
+    src={logo}
+    alt="Logo"
+    className="
       object-contain
-      max-h-12 sm:max-h-14 md:max-h-16 lg:max-h-20
+      max-h-6
+      sm:max-h-8
+      md:max-h-12
+      lg:max-h-16
+      xl:max-h-18
+      2xl:max-h-20
       w-auto
+      transition-all duration-300 ease-in-out
     "
-                />
-              </div>
+  />
+</div>
+
 
               <div>
                 <p className="text-gray-700 font-semibold text-sm m-0">
