@@ -146,16 +146,13 @@ export default function Sidebar({
 
         {/* Footer */}
         {isSidebarExpanded && (
-          <div className="border-t border-gray-200 p-4 mt-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {/* <span className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
-                AI
-              </span> */}
-             <div className="flex items-center justify-center w-auto h-auto p-1">
-  <img
-    src={logo}
-    alt="Logo"
-    className="
+          <div className="border-t border-gray-200 p-4 mt-auto flex items-center justify-between mx-1">
+         
+              <div className="flex items-center justify-center w-auto h-auto p-1">
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="
       object-contain
       max-h-6
       sm:max-h-8
@@ -166,20 +163,19 @@ export default function Sidebar({
       w-auto
       transition-all duration-300 ease-in-out
     "
-  />
-</div>
+                />
+              </div>
 
-
-              <div>
-                <p className="text-gray-700 font-semibold text-sm m-0">
+              {/* <div>
+                <p className="text-gray-700 font-semibold text-sm">
                   Professional
                 </p>
                 <p className="text-gray-400 text-xs m-0">v1.0</p>
-              </div>
-            </div>
-            <button className="px-3 py-1 border rounded text-gray-700 text-sm hover:bg-gray-100 transition">
+              </div> */}
+            
+            {/* <button className="px-3 py-1 border rounded text-gray-700 text-sm hover:bg-gray-100 transition">
               Theme
-            </button>
+            </button> */}
           </div>
         )}
       </aside>
