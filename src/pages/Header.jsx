@@ -1,5 +1,7 @@
 import React from "react";
 import { HelpCircle, Menu } from "lucide-react";
+import logo from '../assets/peollogo.jpg';
+
 
 export default function Header({ toggleMobileSidebar }) {
   return (
@@ -16,13 +18,23 @@ export default function Header({ toggleMobileSidebar }) {
         </button>
 
         {/* Logo */}
-        <div className="w-30 h-10 flex items-center justify-center">
-          <img
-            src="../../src/assets/peollogo.jpg"
-            alt="Logo"
-            className="w-28 h-16 object-contain"
-          />
-        </div>
+<div className="flex items-center justify-center w-auto h-auto">
+  <img
+    src={logo}
+    alt="Logo"
+    className="
+      object-contain
+      max-h-8 sm:max-h-10 md:max-h-12 lg:max-h-14
+      w-auto
+      transition-all duration-300
+    "
+  />
+</div>
+
+
+
+
+
       </div>
 
       {/* Center: Title */}

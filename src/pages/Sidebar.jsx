@@ -9,6 +9,7 @@ import {
   FiChevronRight,
   FiX,
 } from "react-icons/fi";
+import logo from "../assets/peollogo.jpg";
 
 const MENU = [
   { name: "Upload", icon: FiUpload },
@@ -50,7 +51,9 @@ export default function Sidebar({
       <aside
         style={{
           top: HEADER_HEIGHT,
-          width: isSidebarExpanded ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED,
+          width: isSidebarExpanded
+            ? SIDEBAR_WIDTH_EXPANDED
+            : SIDEBAR_WIDTH_COLLAPSED,
           height: `calc(100vh - ${HEADER_HEIGHT}px)`,
         }}
         className={`fixed left-0 z-40 flex flex-col bg-white border-r border-gray-200 shadow-sm transition-all
@@ -73,8 +76,12 @@ export default function Sidebar({
           <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500" />
           {isSidebarExpanded && (
             <div>
-              <h2 className="text-gray-900 font-bold text-lg leading-none">InvoiceAI</h2>
-              <p className="text-gray-400 text-[10px]">Smart Invoice Processing</p>
+              <h2 className="text-gray-900 font-bold text-lg leading-none">
+                InvoiceAI
+              </h2>
+              <p className="text-gray-400 text-[10px]">
+                Smart Invoice Processing
+              </p>
             </div>
           )}
         </div>
@@ -86,7 +93,11 @@ export default function Sidebar({
               onClick={() => toggleExpand(!expanded)}
               className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
             >
-              {expanded ? <FiChevronLeft size={18} /> : <FiChevronRight size={18} />}
+              {expanded ? (
+                <FiChevronLeft size={18} />
+              ) : (
+                <FiChevronRight size={18} />
+              )}
             </button>
           </div>
         )}
@@ -105,9 +116,10 @@ export default function Sidebar({
                   setMobileOpen(false);
                 }}
                 className={`flex items-center justify-between p-3 rounded-lg transition cursor-pointer
-                  ${isActive
-                    ? "bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold"
-                    : "text-gray-700 hover:bg-gray-50"
+                  ${
+                    isActive
+                      ? "bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold"
+                      : "text-gray-700 hover:bg-gray-50"
                   }`}
                 title={name}
                 aria-current={isActive ? "page" : undefined}
@@ -136,11 +148,25 @@ export default function Sidebar({
         {isSidebarExpanded && (
           <div className="border-t border-gray-200 p-4 mt-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
+              {/* <span className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
                 AI
-              </span>
+              </span> */}
+              <div className="flex items-center justify-center w-auto h-auto p-2">
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="
+      object-contain
+      max-h-12 sm:max-h-14 md:max-h-16 lg:max-h-20
+      w-auto
+    "
+                />
+              </div>
+
               <div>
-                <p className="text-gray-700 font-semibold text-sm m-0">Professional</p>
+                <p className="text-gray-700 font-semibold text-sm m-0">
+                  Professional
+                </p>
                 <p className="text-gray-400 text-xs m-0">v1.0</p>
               </div>
             </div>
