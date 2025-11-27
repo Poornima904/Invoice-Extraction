@@ -24,12 +24,12 @@ export default function Header({ toggleMobileSidebar }) {
     alt="Logo"
     className="
       object-contain
-      max-h-6
-      sm:max-h-8
-      md:max-h-12
-      lg:max-h-12
-      xl:max-h-14
-      2xl:max-h-16
+      max-h-4
+      sm:max-h-6
+      md:max-h-8
+      lg:max-h-9
+      xl:max-h-10
+      2xl:max-h-12
       w-auto
       transition-all duration-300 ease-in-out
     "
