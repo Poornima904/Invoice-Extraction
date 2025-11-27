@@ -173,27 +173,24 @@ export default function UploadPage({
     ]);
   }, []);
 
-  const handleDownload = (upload) => {
-    try {
-      if (upload.fileUrl) {
-        const apiUrl = `https://hczbk50t-5050.inc1.devtunnels.ms/download/remote?url=${encodeURIComponent(
-          upload.fileUrl
-        )}&filename=${encodeURIComponent(
-          upload.fileName || "downloaded_file"
-        )}`;
-        const link = document.createElement("a");
-        link.href = apiUrl;
-        link.download = upload.fileName || "downloaded_file";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        alert("No file available to download.");
-      }
-    } catch (error) {
-      console.error("Download failed:", error);
+const handleDownload = (upload) => {
+  try {
+    if (!upload?.fileUrl) {
+      alert("No file available to download.");
+      return;
     }
-  };
+    const link = document.createElement("a");
+    link.href = upload.fileUrl; // Direct SAS URL
+    link.download = upload.fileName || "downloaded_file.pdf";
+    link.target = "_blank"; // optional: opens in new tab for safety
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("❌ Download failed:", error);
+  }
+};
+
 
   const handleView = (upload) => {
     setSelectedInvoice(upload.invoiceNumber);
