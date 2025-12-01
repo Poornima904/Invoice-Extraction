@@ -4,6 +4,7 @@ import { FiSettings } from "react-icons/fi";
 // -------------------- MAIN COMPONENT --------------------
 const Configuration = () => {
   const [activeTab, setActiveTab] = useState("field");
+  
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -68,7 +69,7 @@ const FieldMaster = () => {
   const [fieldType, setFieldType] = useState("");
   const [country, setCountry] = useState("");
   const [createdBy, setCreatedBy] = useState("");
- 
+  const BASE_URL =import.meta.env.VITE_BASE_URL;
 
   // Fetch fields from API
   const fetchFields = async (country) => {
@@ -90,7 +91,7 @@ const FieldMaster = () => {
       };
 
       const response = await fetch(
-        "https://hczbk50t-5000.inc1.devtunnels.ms/fields/all",
+        `${BASE_URL}/fields/all`,
         requestOptions
       );
 
@@ -152,7 +153,7 @@ const FieldMaster = () => {
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/fields/create_field",
+          `${BASE_URL}/fields/create_field`,
           requestOptions
         );
 
@@ -208,7 +209,7 @@ const FieldMaster = () => {
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/fields/delete",
+          `${BASE_URL}/fields/delete`,
           requestOptions
         );
 
@@ -492,6 +493,7 @@ It has to be strictly a dict: {"data": [{"line_item_1 fields"}, {"line_item_2 fi
 STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
 
 ## Content`;
+ const BASE_URL =import.meta.env.VITE_BASE_URL;
 
   const fetchVendors = async () => {
     debugger;
@@ -512,7 +514,7 @@ STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
       };
 
       const response = await fetch(
-        "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/all",
+       `${BASE_URL}/vendor/all`,
         requestOptions
       );
 
@@ -578,7 +580,7 @@ STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/config",
+          `${BASE_URL}/vendor/config`,
           requestOptions
         );
 
@@ -626,7 +628,7 @@ STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/create",
+          `${BASE_URL}/vendor/create`,
           requestOptions
         );
 
@@ -684,7 +686,7 @@ STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/update",
+         `${BASE_URL}/vendor/update`,
           requestOptions
         );
 
@@ -742,7 +744,7 @@ STRICTLY DO NOT CALCULATE THE TAX FIELDS ON YOUR OWN.
         };
 
         const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/delete",
+          `${BASE_URL}/vendor/delete`,
           requestOptions
         );
 

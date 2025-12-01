@@ -6,6 +6,8 @@ import ReviewPage from "./pages/ReviewPage";
 import ProcessingPage from "./pages/ProcessingPage";
 import DashboardPage from "./pages/DashboardPage";
 import ConfigurationPage from "./components/Configuration";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const invoices = [
   { id: 1, status: "Processed" },
@@ -22,19 +24,18 @@ function App() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [uploads, setUploads] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // login | signup
 
-  // counts
-  const reviewCount = invoices.filter(inv => inv.status === "Needs Review").length;
-  const processingCount = invoices.filter(inv => inv.status === "Processing").length;
+  const reviewCount = invoices.filter((inv) => inv.status === "Needs Review").length;
+  const processingCount = invoices.filter((inv) => inv.status === "Processing").length;
 
-  // window resize
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // auto collapse sidebar on small screens
   useEffect(() => {
     if (windowWidth < 1024) setExpanded(false);
     else setExpanded(true);
@@ -42,14 +43,48 @@ function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case "Upload": return <UploadPage setActivePage={setActivePage} uploads={uploads} setUploads={setUploads} setSelectedInvoice={setSelectedInvoice} />;
-      case "Review": return <ReviewPage setActivePage={setActivePage} uploads={uploads} invoiceNumber={selectedInvoice} />;
-      case "Processing": return <ProcessingPage setActivePage={setActivePage} />;
-      case "Dashboard": return <DashboardPage setActivePage={setActivePage} />;
-      case "Configuration": return <ConfigurationPage />;
-      default: return <UploadPage setActivePage={setActivePage} />;
+      case "Upload":
+        return (
+          <UploadPage
+            setActivePage={setActivePage}
+            uploads={uploads}
+            setUploads={setUploads}
+            setSelectedInvoice={setSelectedInvoice}
+          />
+        );
+      case "Review":
+        return (
+          <ReviewPage
+            setActivePage={setActivePage}
+            uploads={uploads}
+            invoiceNumber={selectedInvoice}
+          />
+        );
+      case "Processing":
+        return <ProcessingPage setActivePage={setActivePage} />;
+      case "Dashboard":
+        return <DashboardPage setActivePage={setActivePage} />;
+      case "Configuration":
+        return <ConfigurationPage />;
+      default:
+        return <UploadPage setActivePage={setActivePage} />;
     }
   };
+
+  // Authentication section
+  if (!isAuthenticated) {
+    return authMode === "login" ? (
+      <LoginPage onLogin={(success, mode) => {
+        if (mode === "signup") setAuthMode("signup");
+        else if (success) setIsAuthenticated(true);
+      }} />
+    ) : (
+      <SignupPage onSignup={(success, mode) => {
+        if (mode === "login") setAuthMode("login");
+        else if (success) setIsAuthenticated(true);
+      }} />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -66,7 +101,6 @@ function App() {
         setMobileOpen={setMobileSidebarOpen}
       />
 
-      {/* Main content area - Fixed positioning to avoid header in scroll */}
       <main
         className="fixed top-[53px] bottom-0 left-0 right-0 bg-white overflow-auto transition-all duration-300"
         style={{

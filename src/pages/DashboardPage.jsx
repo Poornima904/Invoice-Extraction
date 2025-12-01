@@ -7,6 +7,7 @@ const DashboardPage = ({ setActivePage }) => {
   const [highlightIds, setHighlightIds] = useState([]);
   const [invoiceCount, setInvoiceCount] = useState(0);
   const [totalInvoiceValue, setTotalInvoiceValue] = useState(0);
+   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const invoicesToDisplay = apiInvoices.length > 0 ? apiInvoices : uploads;
 
@@ -14,7 +15,7 @@ const DashboardPage = ({ setActivePage }) => {
     debugger;
     try {
       const response = await fetch(
-        "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
+      `${BASE_URL}/invoice`,
         {
           method: "GET",
         }

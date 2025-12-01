@@ -391,7 +391,8 @@ export default function ReviewPage({
   const [recentPdf, setRecentPdf] = useState(null);
   const [invoicePdf, setInvoicePdf] = useState(null);
   const pdfContainerRef = useRef(null);
-
+  
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [headerInfo, setHeaderInfo] = useState([]);
   const [supplierInfo, setSupplierInfo] = useState([]);
   const [lineItems, setLineItems] = useState([]);
@@ -415,7 +416,7 @@ useEffect(() => {
     try {
       debugger
       const res = await fetch(
-        `https://hczbk50t-5000.inc1.devtunnels.ms/invoice/${invoiceNumber}`
+        `${BASE_URL}/invoice/${invoiceNumber}`
       );
       const data = await res.json();
 

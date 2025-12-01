@@ -14,6 +14,7 @@ export default function UploadPage({
   setUploads,
   setSelectedInvoice,
 }) {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [highlightIds, setHighlightIds] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -29,25 +30,21 @@ export default function UploadPage({
     message: "",
   });
 
-
-
   const fetchVendors = async (selectedCountry) => {
     debugger;
+    console.log(BASE_URL, "baseurllllllll");
     setLoadingVendors(true);
     try {
-      const response = await fetch(
-        "https://hczbk50t-5000.inc1.devtunnels.ms/vendor/all",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            country: selectedCountry,
-            active: true,
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/vendor/all`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          country: selectedCountry,
+          active: true,
+        }),
+      });
       if (!response.ok) throw new Error("Failed to fetch vendors");
 
       const data = await response.json();
@@ -77,15 +74,12 @@ export default function UploadPage({
   const fetchInvoices = async () => {
     debugger;
     try {
-      const response = await fetch(
-        "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/invoice`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const text = await response.text(); // safer to read text only once
@@ -173,24 +167,23 @@ export default function UploadPage({
     ]);
   }, []);
 
-const handleDownload = (upload) => {
-  try {
-    if (!upload?.fileUrl) {
-      alert("No file available to download.");
-      return;
+  const handleDownload = (upload) => {
+    try {
+      if (!upload?.fileUrl) {
+        alert("No file available to download.");
+        return;
+      }
+      const link = document.createElement("a");
+      link.href = upload.fileUrl; // Direct SAS URL
+      link.download = upload.fileName || "downloaded_file.pdf";
+      link.target = "_blank"; // optional: opens in new tab for safety
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("❌ Download failed:", error);
     }
-    const link = document.createElement("a");
-    link.href = upload.fileUrl; // Direct SAS URL
-    link.download = upload.fileName || "downloaded_file.pdf";
-    link.target = "_blank"; // optional: opens in new tab for safety
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (error) {
-    console.error("❌ Download failed:", error);
-  }
-};
-
+  };
 
   const handleView = (upload) => {
     setSelectedInvoice(upload.invoiceNumber);
@@ -225,10 +218,10 @@ const handleDownload = (upload) => {
         formdata.append("country", country);
         formdata.append("vendor", vendor);
         formdata.append("save_metadata", "true");
-        const response = await fetch(
-          "https://hczbk50t-5000.inc1.devtunnels.ms/invoice",
-          { method: "POST", body: formdata }
-        );
+        const response = await fetch(`${BASE_URL}/invoice`, {
+          method: "POST",
+          body: formdata,
+        });
         if (!response.ok) throw new Error(await response.text());
       }
       setDialogInfo({
